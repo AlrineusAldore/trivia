@@ -7,10 +7,11 @@ class Server
 {
 public:
 	
+	Server();
 	void run();
 
 private:
 
-	Communicator m_communlcator;
+	Communicator m_communicator;
 };
 
