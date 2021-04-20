@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "IRequestHandler.h"
 
 #pragma once
@@ -16,7 +15,7 @@ private:
 	void handleNewClient(SOCKET Sock);
 
 	SOCKET m_serverSocket;
-	std::map<SOCKET, IRequestHandler*> m_clients;
+	map<SOCKET, IRequestHandler*> m_clients;
 	Helper func;
 };
 
