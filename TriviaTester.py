@@ -18,7 +18,7 @@ def main():
     print("Server:", server_msg)
 
     # Send data to server
-    msg = "Hello! I'm the client here, and they say to treat the clients like gods. SO WORSHIP ME MORTAL!"
+    msg = " Hello! I'm the client here, and they say to treat the clients like gods. SO WORSHIP ME MORTAL!"
     sock.sendall(msg.encode())
 
 

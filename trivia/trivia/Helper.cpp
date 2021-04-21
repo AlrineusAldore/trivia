@@ -1,12 +1,12 @@
 #include "Helper.h"
 
-void Helper::sendData(SOCKET sc, std::string message)
+void Helper::sendData(SOCKET sc, string message)
 {
 	const char* data = message.c_str();
 
 	if (send(sc, data, message.size(), 0) == INVALID_SOCKET)
 	{
-		throw std::exception("Error while sending message to client");
+		throw exception("Error while sending message to client");
 	}
 }
 
@@ -22,16 +22,16 @@ char* Helper::getPartFromSocket(SOCKET sc, int bytesNum, int flags)
 		return (char*)"";
 	}
 
-	char* data = new char[bytesNum + 1];
-	int res = recv(sc, data, bytesNum, flags);
+	char* data = new char[static_cast<unsigned __int64>(bytesNum) + 1];
+	int resSize = recv(sc, data, bytesNum, flags);
 
-	if (res == INVALID_SOCKET)
+	if (resSize == INVALID_SOCKET)
 	{
-		std::string s = "Error while recieving from socket: ";
+		string s = "Error while recieving from socket: ";
 		s += std::to_string(sc);
-		throw std::exception(s.c_str());
+		throw exception(s.c_str());
 	}
 
-	data[bytesNum] = 0;
+	data[resSize] = 0;
 	return data;
 }

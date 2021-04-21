@@ -16,6 +16,6 @@ private:
 
 	SOCKET m_serverSocket;
 	map<SOCKET, IRequestHandler*> m_clients;
-	Helper func;
+	Helper helper;
 };
 

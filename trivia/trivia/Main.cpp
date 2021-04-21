@@ -1,9 +1,13 @@
+#pragma comment (lib, "ws2_32.lib")
+
 #include "Server.h"
+#include "WSAInitializer.h"
 
 int main()
 {
 	try
 	{
+		WSAInitializer wsaInit;
 		Server myServer;
 
 		myServer.run();

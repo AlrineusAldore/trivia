@@ -11,6 +11,6 @@ public:
 
 private:
 
-	Communicator m_communicator;
+	Communicator* m_communicator;
 };
 
