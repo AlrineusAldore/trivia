@@ -5,11 +5,13 @@
 #include <iostream>
 #include <thread>
 #include <string>
+#include <vector>
 #include <map>
 
 using std::exception;
 using std::string;
 using std::thread;
+using std::vector;
 using std::endl;
 using std::cout;
 using std::cin;
