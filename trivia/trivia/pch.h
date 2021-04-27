@@ -7,18 +7,27 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <bitset>
 
+using std::to_string;
 using std::exception;
 using std::string;
 using std::thread;
 using std::vector;
+using std::bitset;
 using std::endl;
 using std::cout;
 using std::cin;
 using std::map;
 
+#include "json.hpp"
 #include "Helper.h" //extra helping funcs 
 
-#define MAX_BYTE_NUM 1024
 #define PORT 8820
+#define OK_CODE 'E'
 
+//magic values
+#define MAX_BYTE_NUM 1024
+#define BITS_IN_CHAR 8
+#define CODE_PART 1
+#define LEN_PART 5
