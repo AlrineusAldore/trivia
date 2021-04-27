@@ -1,7 +1,8 @@
 #include "pch.h"
 #include "HandlersStructs.h"
+#include "IRequestHandler.h"
 
-class LoginRequestHandler
+class LoginRequestHandler : public IRequestHandler
 {
 public:
 	bool isRequstRelevent(RequestInfo RI);

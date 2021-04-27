@@ -1,8 +1,7 @@
 #pragma once
 #include "LoginRequestHandler.h"
-#include "HandlersStructs.h"
 
-class IRequestHandler : public LoginRequestHandler
+class IRequestHandler 
 {
 public:
 	bool isRequstRelevent(RequestInfo RI);
