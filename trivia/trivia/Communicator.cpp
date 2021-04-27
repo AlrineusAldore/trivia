@@ -98,3 +98,7 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 
 }
 
+void Communicator::handleNewClient(SOCKET sock)
+{
+}
+

@@ -13,6 +13,7 @@ private:
 
 	void bindAndRequests();
 	void handleNewClient(SOCKET Sock);
+	void handleNewClient(SOCKET sock);
 
 	SOCKET m_serverSocket;
 	map<SOCKET, IRequestHandler*> m_clients;
