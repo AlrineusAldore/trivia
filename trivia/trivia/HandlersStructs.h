@@ -10,7 +10,7 @@ struct RequestResult
 
 struct RequestInfo
 {
-	//Requestid id;
+	int id;
 	std::time_t receivalTime;
 	vector<byte> buffer;
 }typedef RequestInfo;

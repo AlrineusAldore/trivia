@@ -22,4 +22,6 @@ using std::map;
 
 #define MAX_BYTE_NUM 1024
 #define PORT 8820
+#define LOGIN_CODE 69
+#define SIGNUP_CODE 420
 

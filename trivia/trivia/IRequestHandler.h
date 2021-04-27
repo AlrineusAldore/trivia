@@ -4,8 +4,8 @@
 class IRequestHandler 
 {
 public:
-	bool isRequstRelevent(RequestInfo RI);
-	RequestResult handleRequst(RequestInfo RI);
+	virtual bool isRequstRelevent(RequestInfo RI) = 0;
+	virtual RequestResult handleRequst(RequestInfo RI) = 0;
 
 private:
 
