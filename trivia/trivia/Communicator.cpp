@@ -2,16 +2,13 @@
 
 Communicator::Communicator()
 {
-
-	helper = Helper();
-
 	// this server use TCP. that why SOCK_STREAM & IPPROTO_TCP
 	// if the server use UDP we will use: SOCK_DGRAM & IPPROTO_UDP
 	m_serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
 	if (m_serverSocket == INVALID_SOCKET)
 		throw exception(__FUNCTION__ " - socket");
-	
+
 	cout << "nice socket bro. not too large and is the perfect length. the girth is just right too. I'll give it a 9/10 for the nice angle" << endl;
 	cout << "when the socket is sus" << endl;
 }
@@ -85,9 +82,9 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 {
 	try
 	{
-		helper.sendData(clientSocket, "hello");
+		Helper::sendData(clientSocket, "hello");
 
-		string hallo = helper.getPartFromSocket(clientSocket, MAX_BYTE_NUM);
+		string hallo = Helper::getPartFromSocket(clientSocket, MAX_BYTE_NUM);
 		cout << "this is hello --> " << hallo << "." << endl;
 	}
 	catch (const exception& e)
