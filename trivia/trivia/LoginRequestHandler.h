@@ -1,14 +1,14 @@
 #pragma once
 
 #include "pch.h"
-#include "HandlersStructs.h"
+#include "HandlerStructs.h"
 #include "IRequestHandler.h"
 
 class LoginRequestHandler : public IRequestHandler
 {
 public:
-	bool isRequstRelevent(RequestInfo RI);
-	RequestResult handleRequst(RequestInfo RI);
+	virtual bool isRequestRelevant(RequestInfo RI);
+	virtual RequestResult handleRequest(RequestInfo RI);
 private:
 
 };

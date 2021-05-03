@@ -16,6 +16,9 @@
     <Filter Include="Header Files\RequestHandlers">
       <UniqueIdentifier>{b41d39c9-cb78-43c5-96fe-ad2858e94e8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Structs">
+      <UniqueIdentifier>{0fe86689-7aaf-4614-9b0b-1e3ac597c500}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Communicator.h">
@@ -33,12 +36,6 @@
     <ClInclude Include="WSAInitializer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StructsRequest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ResponseStructs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="json.hpp">
       <Filter>Resource Files</Filter>
     </ClInclude>
@@ -53,6 +50,15 @@
     </ClInclude>
     <ClInclude Include="LoginRequestHandler.h">
       <Filter>Header Files\RequestHandlers</Filter>
+    </ClInclude>
+    <ClInclude Include="ResponseStructs.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="RequestStructs.h">
+      <Filter>Header Files\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="HandlerStructs.h">
+      <Filter>Header Files\Structs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

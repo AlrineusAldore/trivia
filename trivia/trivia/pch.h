@@ -6,9 +6,9 @@
 #include <thread>
 #include <string>
 #include <vector>
+#include <bitset>
 #include <ctime>
 #include <map>
-#include <bitset>
 
 using std::to_string;
 using std::exception;

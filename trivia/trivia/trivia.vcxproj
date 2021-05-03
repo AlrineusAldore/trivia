@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Communicator.h" />
+    <ClInclude Include="HandlerStructs.h" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="IRequestHandler.h" />
     <ClInclude Include="json.hpp" />
@@ -149,7 +150,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="ResponseStructs.h" />
     <ClInclude Include="Server.h" />
-    <ClInclude Include="StructsRequest.h" />
+    <ClInclude Include="RequestStructs.h" />
     <ClInclude Include="WSAInitializer.h" />
   </ItemGroup>
   <ItemGroup>
