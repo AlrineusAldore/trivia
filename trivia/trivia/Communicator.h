@@ -12,7 +12,7 @@ public:
 private:
 
 	void bindAndRequests();
-	void handleNewClient(SOCKET Sock);
+	void handleNewClient(SOCKET clientSock);
 
 	SOCKET m_serverSocket;
 	map<SOCKET, IRequestHandler*> m_clients;

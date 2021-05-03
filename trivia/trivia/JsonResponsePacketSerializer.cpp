@@ -30,7 +30,7 @@ vector<byte> JsonResponsePacketSerializer::unpackJsonResponse(string strBin)
 
     for (int i = 0; i < strBin.length() - BITS_IN_CHAR; i += BITS_IN_CHAR)
     {
-        currByte = static_cast<byte>(bitset<BITS_IN_CHAR>(strBin.substr(i, i+BITS_IN_CHAR)).to_ulong());
+        currByte = static_cast<byte>(bitset<BITS_IN_CHAR>(strBin.substr(i, i + BITS_IN_CHAR)).to_ulong());
         buffer.push_back(currByte);
 
         cout << "curr is: " << currByte << endl;

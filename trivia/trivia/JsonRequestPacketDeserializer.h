@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include "StructsRequest.h"
+#include "RequestStructs.h"
 
 class JsonRequestPacketDeserializer
 {

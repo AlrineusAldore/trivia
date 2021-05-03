@@ -2,9 +2,6 @@
 
 Communicator::Communicator()
 {
-
-	helper = Helper();
-
 	// this server use TCP. that why SOCK_STREAM & IPPROTO_TCP
 	// if the server use UDP we will use: SOCK_DGRAM & IPPROTO_UDP
 	m_serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -81,20 +78,22 @@ void Communicator::bindAndRequests()
 }
 
 
+/*
+The method that handles a new client that connects and is called 1 time per client connected
+Input: clientSocket
+Output: none
+*/
 void Communicator::handleNewClient(SOCKET clientSocket)
 {
 	try
 	{
-		helper.sendData(clientSocket, "hello");
+		Helper::sendData(clientSocket, "hello");
 
-		string hallo = helper.getPartFromSocket(clientSocket, MAX_BYTE_NUM);
+		string hallo = Helper::getPartFromSocket(clientSocket, MAX_BYTE_NUM);
 		cout << "this is hello --> " << hallo << "." << endl;
 	}
 	catch (const exception& e)
 	{
 		closesocket(clientSocket);
 	}
-
-
 }
-

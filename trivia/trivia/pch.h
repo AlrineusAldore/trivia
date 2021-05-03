@@ -6,6 +6,7 @@
 #include <thread>
 #include <string>
 #include <vector>
+#include <ctime>
 #include <map>
 #include <bitset>
 
@@ -25,6 +26,8 @@ using std::map;
 
 #define PORT 8820
 #define OK_CODE 'E'
+#define LOGIN_CODE 420
+#define SIGNUP_CODE 69
 
 //magic values
 #define MAX_BYTE_NUM 1024

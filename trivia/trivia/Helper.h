@@ -5,8 +5,8 @@
 class Helper
 {
 public:
-	void sendData(SOCKET sc, std::string message);
-	char* getPartFromSocket(SOCKET sc, int bytesNum);
-	char* getPartFromSocket(SOCKET sc, int bytesNum, int flags);
+	static void sendData(SOCKET sc, std::string message);
+	static char* getPartFromSocket(SOCKET sc, int bytesNum);
+	static char* getPartFromSocket(SOCKET sc, int bytesNum, int flags);
 };
 
