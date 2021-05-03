@@ -12,8 +12,8 @@ Communicator::Communicator()
 	if (m_serverSocket == INVALID_SOCKET)
 		throw exception(__FUNCTION__ " - socket");
 	
-	cout << "nice socket bro. not too large and is the perfect length. the girth is just right too. I'll give it a 9/10 for the nice angle" << endl;
-	cout << "when the socket is sus" << endl;
+	cout << "nice socket bro. not too large and is the perfect length. the girth is just right too. with this nice angle, it's a 9/10" << endl;
+	cout << "\nwhen the socket is sus imgur.com/a/hVABhCu" << endl << endl;
 }
 
 Communicator::~Communicator()
