@@ -51,7 +51,7 @@ void Communicator::startHandleRequests()
 	{
 		// the main thread is only accepting clients 
 		// and add then to the list of handlers
-		cout << "Waiting for client connection request" << endl;
+		cout << "Waiting for client connection request" << endl << endl;
 
 		bindAndRequests();
 	}
@@ -96,7 +96,6 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 		Helper::sendData(clientSocket, "hello");
 
 		string clientMsg = Helper::getPartFromSocket(clientSocket, MAX_BYTE_NUM);
-		cout << "Client msg: " << clientMsg << endl;
 		
 		//Turn client's msg to buffer and then make RequestInfo struct from it
 		buffer = Helper::binStrToBuffer(clientMsg);
@@ -107,7 +106,7 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 		//Handle the request
 		RR = m_clients[clientSocket]->handleRequest(RI);
 
-		/*
+		//Print the cilent's message details
 		if (RI.id == LOGIN_CODE)
 		{
 			LoginRequest lr = JsonRequestPacketDeserializer::deserializerLoginRequest(buffer);
@@ -120,7 +119,7 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 		}
 		else
 			cout << "Not login nor signup" << endl;
-		*/
+		
 
 		//Turn RR.buffer to bin string and send it to client
 		//Helper::sendData(clientSocket, (string ver of RR.buffer));

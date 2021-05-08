@@ -29,15 +29,14 @@ def main():
     code = 0
         #making the msg
     if mail == '0':
-        msg = '{"username":"' + username + '", "password":' + password + '}'
+        msg = '{"username":"' + username + '", "password":"' + password + '"}'
         code = LOGIN_CODE
     else:
-        msg = '{"username":"' + username + '", "password":' + password + ', "email":"' + mail + '"}'
+        msg = '{"username":"' + username + '", "password":"' + password + '", "email":"' + mail + '"}'
         code = SIGNUP_CODE
         #creating the protocol
     binMsg = ''.join((format(ord(x), 'b').zfill(8)) for x in msg) #turns string into binary
-    print(msg)
-    print(binMsg, "\n")
+    print("msg: ", msg)
     msg = "{0:b}".format(code).zfill(8) + "{0:b}".format(len(msg)).zfill(32) + binMsg #msg len
         #seding msg
     sock.sendall(msg.encode())
