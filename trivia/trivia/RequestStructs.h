@@ -7,9 +7,9 @@ struct LoginRequest
 	string password;
 }typedef LoginRequest;
 
-struct SingupRequest
+struct SignupRequest
 {
 	string username;
 	string password;
 	string email;
-}typedef SingupRequest;
+}typedef SignupRequest;

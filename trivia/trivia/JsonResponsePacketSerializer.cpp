@@ -2,50 +2,42 @@
 
 vector<byte> JsonResponsePacketSerializer::serializeResponse(ErrorResponse errorRes)
 {
-    return unpackJsonResponse(errorRes.message);
+    return unpackJsonResponse(ERROR_CODE, errorRes.message);
 }
 
 vector<byte> JsonResponsePacketSerializer::serializeResponse(LoginResponse loginRes)
 {
-    return unpackJsonResponse(to_string(loginRes.status));
+    return unpackJsonResponse(loginRes.status, "The login was successful!");
 }
 
 vector<byte> JsonResponsePacketSerializer::serializeResponse(SignupResponse signupRes)
 {
-    return unpackJsonResponse(to_string(signupRes.status));
+
+    return unpackJsonResponse(signupRes.status, "You signed up successfuly!");
 }
 
 
 /*
-Gets a string representing a binary sequence of our buffer and turn it into vector<byte>
-Input: string strBin
+Gets a string and returns it as binary buffer
+Input: string str, int code
 Output: buffer
 */
-vector<byte> JsonResponsePacketSerializer::unpackJsonResponse(string strBin)
+vector<byte> JsonResponsePacketSerializer::unpackJsonResponse(int code, string str)
 {
-    vector<byte> buffer = vector<byte>();
-    byte currByte = '\0';
-    unsigned int currInt = 0;
-    unsigned int lenSum = 0;
+    vector<byte> buffer;
+    buffer.push_back(code);
+    int len = str.length();
 
-    for (int i = 0; i < strBin.length() - BITS_IN_CHAR; i += BITS_IN_CHAR)
+    //push the len to buffer as 4 bytes
+    buffer.push_back((len >> 24) & 0xFF);
+    buffer.push_back((len >> 16) & 0xFF);
+    buffer.push_back((len >> 8) & 0xFF);
+    buffer.push_back((len >> 0) & 0xFF);
+
+    for (int i = 0; i < len; i++)
     {
-        currByte = static_cast<byte>(bitset<BITS_IN_CHAR>(strBin.substr(i, i + BITS_IN_CHAR)).to_ulong());
-        buffer.push_back(currByte);
-
-        cout << "curr is: " << currByte << endl;
-        if (i < CODE_PART)
-        {
-            if (currByte != OK_CODE)
-                throw("WRONG CODE ERROR");
-        }
-        else if (i < LEN_PART)
-        {
-            lenSum += static_cast<unsigned int>(bitset<BITS_IN_CHAR>(strBin.substr(i, i + BITS_IN_CHAR)).to_ulong());
-        }
-        else
-        {
-            //?
-        }
+        buffer.push_back(str[i]);
     }
+
+    return buffer;
 }

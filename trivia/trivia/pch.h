@@ -10,6 +10,10 @@
 #include <ctime>
 #include <map>
 
+#include "json.hpp"
+#include "Helper.h" //extra helping funcs 
+
+using nlohmann::json;
 using std::to_string;
 using std::exception;
 using std::string;
@@ -21,13 +25,11 @@ using std::cout;
 using std::cin;
 using std::map;
 
-#include "json.hpp"
-#include "Helper.h" //extra helping funcs 
-
 #define PORT 8820
 #define OK_CODE 'E'
 #define LOGIN_CODE 420
 #define SIGNUP_CODE 69
+#define ERROR_CODE 42
 
 //magic values
 #define MAX_BYTE_NUM 1024
