@@ -14,20 +14,20 @@ RequestResult LoginRequestHandler::handleRequest(RequestInfo RI)
 	RequestResult RR;
 	if (!isRequestRelevant(RI))
 	{
-		struct ErrorResponse ER;
+		ErrorResponse ER;
 		ER.message = "the request is not relevent";
 		RR.buffer = JsonResponsePacketSerializer::serializeResponse(ER);
 	}
 	else if (RI.id == LOGIN_CODE)
 	{
-		struct LoginResponse LR;
+		LoginResponse LR;
 		LR.status = LOGIN_CODE;
 		RR.buffer = JsonResponsePacketSerializer::serializeResponse(LR);
 	}
 	else
 	{
-		struct SignupResponse SR;
-		SR.status = LOGIN_CODE;
+		SignupResponse SR;
+		SR.status = SIGNUP_CODE;
 		RR.buffer = JsonResponsePacketSerializer::serializeResponse(SR);
 	}
 	RR.newHandler = NULL;
