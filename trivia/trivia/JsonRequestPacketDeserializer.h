@@ -5,6 +5,6 @@
 class JsonRequestPacketDeserializer
 {
 	static LoginRequest deserializerLoginRequest(vector<byte> buffer);
-	static SingupRequest deserializerSingupRequest(vector<byte> buffer);
+	static SignupRequest deserializerSingupRequest(vector<byte> buffer);
 };
 
