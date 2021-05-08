@@ -1,8 +1,9 @@
 #pragma once
 
-#include "IRequestHandler.h"
+#include "LoginRequestHandler.h"
 #include "JsonRequestPacketDeserializer.h"
 #include "JsonResponsePacketSerializer.h"
+#include "Helper.h"
 
 class Communicator
 {

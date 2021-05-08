@@ -8,11 +8,10 @@ struct RequestInfo
 	int id;
 	time_t receivalTime;
 	vector<byte> buffer;
-}typedef RequestInfo;
+} typedef RequestInfo;
 
 struct RequestResult
 {
 	vector<byte> buffer;
-
 	IRequestHandler* newHandler;
-}typedef RequestResult;
+} typedef RequestResult;
