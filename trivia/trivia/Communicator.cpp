@@ -89,8 +89,8 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 	{
 		Helper::sendData(clientSocket, "hello");
 
-		string hallo = Helper::getPartFromSocket(clientSocket, MAX_BYTE_NUM);
-		cout << "this is hello --> " << hallo << "." << endl;
+		string clientMsg = Helper::getPartFromSocket(clientSocket, MAX_BYTE_NUM);
+		cout << "Client msg: " << clientMsg << endl;
 	}
 	catch (const exception& e)
 	{

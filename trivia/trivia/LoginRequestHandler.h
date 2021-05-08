@@ -1,7 +1,6 @@
 #pragma once
 
 #include "pch.h"
-#include "HandlerStructs.h"
 #include "IRequestHandler.h"
 
 class LoginRequestHandler : public IRequestHandler
