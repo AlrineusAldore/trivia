@@ -3,7 +3,9 @@ import json
 
 SERVER_IP = "127.0.0.1"
 SERVER_PORT = 8820
-get_bin = lambda x: format(x, 'b')
+LOGIN_CODE = 420
+SIGNUP_CODE = 69
+get_bin = lambda x, n: format(x, 'b').zfill(n)
 
 
 def main():
@@ -28,12 +30,13 @@ def main():
         #making the msg
     if mail == '0':
         msg = '{ "username":"' + username + '", "password":' + password + '}'
-        code = 420
+        code = LOGIN_CODE
     else:
         msg = '{ "username":"' + username + '", "password":' + password + ', "mail":"' + mail + '"}'
-        code = 69
+        code = SIGNUP_CODE
         #creating the protocol
-    msg = get_bin(code, 8) + get_bin(len(msg), 32) + get_bin(msg) #msg len
+    binMsg = ' '.join(format(ord(x), 'b') for x in msg)
+    msg = bin(code).zfill(8) + bin(len(msg)).zfill(32) + binMsg #msg len
         #seding msg
     sock.sendall(msg.encode())
 
