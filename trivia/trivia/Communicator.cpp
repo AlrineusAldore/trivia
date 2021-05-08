@@ -87,10 +87,44 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 {
 	try
 	{
+		m_clients.insert({ clientSocket, new LoginRequestHandler() });
+
+		RequestInfo RI;
+		RequestResult RR;
+		vector<byte> buffer;
+
 		Helper::sendData(clientSocket, "hello");
 
 		string clientMsg = Helper::getPartFromSocket(clientSocket, MAX_BYTE_NUM);
 		cout << "Client msg: " << clientMsg << endl;
+		
+		//Turn client's msg to buffer and then make RequestInfo struct from it
+		buffer = Helper::binStrToBuffer(clientMsg);
+		RI.id = buffer[0];
+		time(&RI.receivalTime);
+		RI.buffer = buffer;
+
+		//Handle the request
+		RR = m_clients[clientSocket]->handleRequest(RI);
+
+		/*
+		if (RI.id == LOGIN_CODE)
+		{
+			LoginRequest lr = JsonRequestPacketDeserializer::deserializerLoginRequest(buffer);
+			cout << "username: " << lr.username << "\tpassword: " << lr.password << endl;
+		}
+		else if (RI.id == SIGNUP_CODE)
+		{
+			SignupRequest sr = JsonRequestPacketDeserializer::deserializerSingupRequest(buffer);
+			cout << "username: " << sr.username << "\tpassword: " << sr.password << "\temail: " << sr.email << endl;
+		}
+		else
+			cout << "Not login nor signup" << endl;
+		*/
+
+		//Turn RR.buffer to bin string and send it to client
+		//Helper::sendData(clientSocket, (string ver of RR.buffer));
+		//Supposedly the end of 1.0.2
 	}
 	catch (const exception& e)
 	{

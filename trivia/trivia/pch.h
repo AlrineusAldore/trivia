@@ -11,7 +11,6 @@
 #include <map>
 
 #include "json.hpp"
-#include "Helper.h" //extra helping funcs 
 
 using nlohmann::json;
 using std::to_string;
@@ -22,12 +21,13 @@ using std::vector;
 using std::bitset;
 using std::endl;
 using std::cout;
+using std::cerr;
 using std::cin;
 using std::map;
 
 #define PORT 8820
-#define OK_CODE 'E'
-#define LOGIN_CODE 420
+#define OK_CODE 60
+#define LOGIN_CODE 100
 #define SIGNUP_CODE 69
 #define ERROR_CODE 42
 
@@ -36,3 +36,4 @@ using std::map;
 #define BITS_IN_CHAR 8
 #define CODE_PART 1
 #define LEN_PART 5
+#define LEN_LEN 4

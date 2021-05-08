@@ -35,3 +35,34 @@ char* Helper::getPartFromSocket(SOCKET sc, int bytesNum, int flags)
 	data[resSize] = 0;
 	return data;
 }
+
+/*
+Function gets a string representing buffer and turns it into buffer
+Input: binStr
+Output: buffer
+*/
+vector<byte> Helper::binStrToBuffer(string binStr)
+{
+	vector<byte> buffer;
+	int len = 0;
+
+	bitset<BITS_IN_CHAR> status(binStr);
+	buffer.push_back(status.to_ulong());
+
+	//Get the len part of the buffer
+	for (int i = CODE_PART; i < LEN_PART; i++) //iterate for each byte
+	{
+		bitset<BITS_IN_CHAR> lenByte(binStr.substr(i * BITS_IN_CHAR, BITS_IN_CHAR)); //get each byte
+		len += lenByte.to_ulong();
+		buffer.push_back(lenByte.to_ulong());
+	}
+	
+	//Get each byte in the message
+	for (int i = LEN_PART; i < binStr.length() / BITS_IN_CHAR; i++)
+	{
+		bitset<BITS_IN_CHAR> strByte(binStr.substr(i * BITS_IN_CHAR, BITS_IN_CHAR)); //get each byte
+		buffer.push_back(strByte.to_ulong());
+	}
+	
+	return buffer;
+}

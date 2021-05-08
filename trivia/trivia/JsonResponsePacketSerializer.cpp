@@ -24,20 +24,27 @@ Output: buffer
 */
 vector<byte> JsonResponsePacketSerializer::unpackJsonResponse(int code, string str)
 {
-    vector<byte> buffer;
-    buffer.push_back(code);
-    int len = str.length();
-
-    //push the len to buffer as 4 bytes
-    buffer.push_back((len >> 24) & 0xFF);
-    buffer.push_back((len >> 16) & 0xFF);
-    buffer.push_back((len >> 8) & 0xFF);
-    buffer.push_back((len >> 0) & 0xFF);
-
-    for (int i = 0; i < len; i++)
+    try
     {
-        buffer.push_back(str[i]);
-    }
+        vector<byte> buffer;
+        buffer.push_back(code);
+        int len = str.length();
 
-    return buffer;
+        //push the len to buffer as 4 bytes
+        buffer.push_back((len >> 24) & 0xFF);
+        buffer.push_back((len >> 16) & 0xFF);
+        buffer.push_back((len >> 8) & 0xFF);
+        buffer.push_back((len >> 0) & 0xFF);
+
+        for (int i = 0; i < len; i++)
+        {
+            buffer.push_back(str[i]);
+        }
+
+        return buffer;
+    }
+    catch (const exception& e)
+    {
+        cerr << "Error at " << (__FUNCTION__) << ".\tError: " << e.what() << endl;
+    }
 }

@@ -20,8 +20,8 @@ LoginRequest JsonRequestPacketDeserializer::deserializerLoginRequest(vector<byte
 		{
 			str += buffer[i];
 		}
-
-		j = str;
+		
+		j = json::parse(str);
 
 		lr.password = j["password"];
 		lr.username = j["username"];
@@ -55,7 +55,7 @@ SignupRequest JsonRequestPacketDeserializer::deserializerSingupRequest(vector<by
 			str += buffer[i];
 		}
 
-		j = str;
+		j = json::parse(str);
 
 		sr.username = j["username"];
 		sr.password = j["password"];

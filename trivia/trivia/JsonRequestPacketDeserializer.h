@@ -4,6 +4,7 @@
 
 class JsonRequestPacketDeserializer
 {
+public:
 	static LoginRequest deserializerLoginRequest(vector<byte> buffer);
 	static SignupRequest deserializerSingupRequest(vector<byte> buffer);
 };
