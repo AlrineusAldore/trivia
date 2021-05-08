@@ -21,10 +21,10 @@ def main():
 
     # Send data to server
         #getting data
-    username = input("enter username")
-    password = input("enter password")
-    mail = input("enter mail without mail type 0")
-    code = 0;
+    username = input("Enter username: ")
+    password = input("Enter password: ")
+    mail = input("Enter mail or 0 if you dont have one: ")
+    code = 0
         #making the msg
     if mail == '0':
         msg = '{ "username":"' + username + '", "password":' + password + '}'
@@ -33,7 +33,7 @@ def main():
         msg = '{ "username":"' + username + '", "password":' + password + ', "mail":"' + mail + '"}'
         code = 69
         #creating the protocol
-    msg = get_bin(code, 8) + get_bin(len(msg), 32) + msg #msg len
+    msg = get_bin(code, 8) + get_bin(len(msg), 32) + get_bin(msg) #msg len
         #seding msg
     sock.sendall(msg.encode())
 

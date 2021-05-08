@@ -6,7 +6,7 @@
 class JsonResponsePacketSerializer
 {
 private:
-	vector<byte> unpackJsonResponse(int code, string str);
+	static vector<byte> unpackJsonResponse(int code, string str);
 
 public:
 	static vector<byte> serializeResponse(ErrorResponse errorRes);
