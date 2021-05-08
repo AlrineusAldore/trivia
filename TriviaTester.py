@@ -35,8 +35,8 @@ def main():
         msg = '{ "username":"' + username + '", "password":' + password + ', "mail":"' + mail + '"}'
         code = SIGNUP_CODE
         #creating the protocol
-    binMsg = ' '.join(format(ord(x), 'b') for x in msg)
-    msg = bin(code).zfill(8) + bin(len(msg)).zfill(32) + binMsg #msg len
+    binMsg = ''.join(format(ord(x), 'b') for x in msg) #turns string into binary
+    msg = "{0:b}".format(code).zfill(8) + "{0:b}".format(len(msg)).zfill(32) + binMsg #msg len
         #seding msg
     sock.sendall(msg.encode())
 
