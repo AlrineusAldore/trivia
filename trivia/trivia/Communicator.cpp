@@ -2,9 +2,6 @@
 
 Communicator::Communicator()
 {
-
-	helper = Helper();
-
 	// this server use TCP. that why SOCK_STREAM & IPPROTO_TCP
 	// if the server use UDP we will use: SOCK_DGRAM & IPPROTO_UDP
 	m_serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -12,8 +9,8 @@ Communicator::Communicator()
 	if (m_serverSocket == INVALID_SOCKET)
 		throw exception(__FUNCTION__ " - socket");
 	
-	cout << "nice socket bro. not too large and is the perfect length. the girth is just right too. I'll give it a 9/10 for the nice angle" << endl;
-	cout << "when the socket is sus" << endl;
+	cout << "nice socket bro. not too large and is the perfect length. the girth is just right too. with this nice angle, it's a 9/10" << endl;
+	cout << "\nwhen the socket is sus imgur.com/a/hVABhCu" << endl << endl;
 }
 
 Communicator::~Communicator()
@@ -54,7 +51,7 @@ void Communicator::startHandleRequests()
 	{
 		// the main thread is only accepting clients 
 		// and add then to the list of handlers
-		cout << "Waiting for client connection request" << endl;
+		cout << "Waiting for client connection request" << endl << endl;
 
 		bindAndRequests();
 	}
@@ -81,20 +78,56 @@ void Communicator::bindAndRequests()
 }
 
 
+/*
+The method that handles a new client that connects and is called 1 time per client connected
+Input: clientSocket
+Output: none
+*/
 void Communicator::handleNewClient(SOCKET clientSocket)
 {
 	try
 	{
-		helper.sendData(clientSocket, "hello");
+		m_clients.insert({ clientSocket, new LoginRequestHandler() });
 
-		string hallo = helper.getPartFromSocket(clientSocket, MAX_BYTE_NUM);
-		cout << "this is hello --> " << hallo << "." << endl;
+		RequestInfo RI;
+		RequestResult RR;
+		vector<byte> buffer;
+		string clientMsg = "";
+		string msg = "";
+
+		Helper::sendData(clientSocket, "Welcome! Please sign up or log in to continue.");
+
+		clientMsg = Helper::getPartFromSocket(clientSocket, MAX_BYTE_NUM);
+		
+		//Turn client's msg to buffer and make RequestInfo struct from it
+		buffer = Helper::binStrToBuffer(clientMsg);
+		RI.id = buffer[0];
+		time(&RI.receivalTime);
+		RI.buffer = buffer;
+
+		//Handle the request
+		RR = m_clients[clientSocket]->handleRequest(RI);
+
+		//Print the cilent's message details
+		if (RI.id == LOGIN_CODE)
+		{
+			LoginRequest lr = JsonRequestPacketDeserializer::deserializerLoginRequest(buffer);
+			cout << "username: " << lr.username << "\t\tpassword: " << lr.password << endl;
+		}
+		else if (RI.id == SIGNUP_CODE)
+		{
+			SignupRequest sr = JsonRequestPacketDeserializer::deserializerSingupRequest(buffer);
+			cout << "username: " << sr.username << "\t\tpassword: " << sr.password << "\t\temail: " << sr.email << endl;
+		}
+		else
+			cout << "Not login nor signup" << endl;
+		
+		//Send response to client
+		msg = Helper::bufferToBinStr(RR.buffer);
+		Helper::sendData(clientSocket, msg);
 	}
 	catch (const exception& e)
 	{
 		closesocket(clientSocket);
 	}
-
-
 }
-

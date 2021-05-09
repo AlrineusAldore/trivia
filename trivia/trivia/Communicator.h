@@ -1,6 +1,10 @@
-#include "IRequestHandler.h"
-
 #pragma once
+
+#include "LoginRequestHandler.h"
+#include "JsonRequestPacketDeserializer.h"
+#include "JsonResponsePacketSerializer.h"
+#include "Helper.h"
+
 class Communicator
 {
 public:
@@ -12,7 +16,7 @@ public:
 private:
 
 	void bindAndRequests();
-	void handleNewClient(SOCKET Sock);
+	void handleNewClient(SOCKET clientSock);
 
 	SOCKET m_serverSocket;
 	map<SOCKET, IRequestHandler*> m_clients;
