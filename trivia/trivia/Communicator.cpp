@@ -51,7 +51,7 @@ void Communicator::startHandleRequests()
 	{
 		// the main thread is only accepting clients 
 		// and add then to the list of handlers
-		cout << "Waiting for client connection request" << endl;
+		cout << "Waiting for client connection request" << endl << endl;
 
 		bindAndRequests();
 	}
@@ -92,13 +92,14 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 		RequestInfo RI;
 		RequestResult RR;
 		vector<byte> buffer;
+		string clientMsg = "";
+		string msg = "";
 
-		Helper::sendData(clientSocket, "hello");
+		Helper::sendData(clientSocket, "Welcome! Please sign up or log in to continue.");
 
-		string clientMsg = Helper::getPartFromSocket(clientSocket, MAX_BYTE_NUM);
-		cout << "Client msg: " << clientMsg << endl;
+		clientMsg = Helper::getPartFromSocket(clientSocket, MAX_BYTE_NUM);
 		
-		//Turn client's msg to buffer and then make RequestInfo struct from it
+		//Turn client's msg to buffer and make RequestInfo struct from it
 		buffer = Helper::binStrToBuffer(clientMsg);
 		RI.id = buffer[0];
 		time(&RI.receivalTime);
@@ -107,24 +108,23 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 		//Handle the request
 		RR = m_clients[clientSocket]->handleRequest(RI);
 
-		/*
+		//Print the cilent's message details
 		if (RI.id == LOGIN_CODE)
 		{
 			LoginRequest lr = JsonRequestPacketDeserializer::deserializerLoginRequest(buffer);
-			cout << "username: " << lr.username << "\tpassword: " << lr.password << endl;
+			cout << "username: " << lr.username << "\t\tpassword: " << lr.password << endl;
 		}
 		else if (RI.id == SIGNUP_CODE)
 		{
 			SignupRequest sr = JsonRequestPacketDeserializer::deserializerSingupRequest(buffer);
-			cout << "username: " << sr.username << "\tpassword: " << sr.password << "\temail: " << sr.email << endl;
+			cout << "username: " << sr.username << "\t\tpassword: " << sr.password << "\t\temail: " << sr.email << endl;
 		}
 		else
 			cout << "Not login nor signup" << endl;
-		*/
-
-		//Turn RR.buffer to bin string and send it to client
-		//Helper::sendData(clientSocket, (string ver of RR.buffer));
-		//Supposedly the end of 1.0.2
+		
+		//Send response to client
+		msg = Helper::bufferToBinStr(RR.buffer);
+		Helper::sendData(clientSocket, msg);
 	}
 	catch (const exception& e)
 	{

@@ -43,7 +43,7 @@ SignupRequest JsonRequestPacketDeserializer::deserializerSingupRequest(vector<by
 	string str = "";
 	json j;
 
-	if (buffer[0] == LOGIN_CODE)
+	if (buffer[0] == SIGNUP_CODE)
 	{
 		for (int i = 1; i < 5; i++)
 		{
