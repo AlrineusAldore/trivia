@@ -112,12 +112,12 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 		if (RI.id == LOGIN_CODE)
 		{
 			LoginRequest lr = JsonRequestPacketDeserializer::deserializerLoginRequest(buffer);
-			cout << "username: " << lr.username << "\tpassword: " << lr.password << endl;
+			cout << "username: " << lr.username << "\t\tpassword: " << lr.password << endl;
 		}
 		else if (RI.id == SIGNUP_CODE)
 		{
 			SignupRequest sr = JsonRequestPacketDeserializer::deserializerSingupRequest(buffer);
-			cout << "username: " << sr.username << "\tpassword: " << sr.password << "\temail: " << sr.email << endl;
+			cout << "username: " << sr.username << "\t\tpassword: " << sr.password << "\t\temail: " << sr.email << endl;
 		}
 		else
 			cout << "Not login nor signup" << endl;
