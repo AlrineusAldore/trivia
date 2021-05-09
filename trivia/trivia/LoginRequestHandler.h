@@ -3,12 +3,13 @@
 #include "pch.h"
 #include "IRequestHandler.h"
 #include "RequestHandlerFactory.h"
+#include "MenuRequestHandler.h"
 
 class LoginRequestHandler : public IRequestHandler
 {
 private:
-	RequestHandlerFactory& m_handlerFactory;
-	LoginManager& m_loginManager;
+	//RequestHandlerFactory& m_handlerFactory;
+	//LoginManager& m_loginManager;
 
 public:
 	virtual bool isRequestRelevant(RequestInfo RI);
