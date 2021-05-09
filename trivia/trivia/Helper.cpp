@@ -66,3 +66,21 @@ vector<byte> Helper::binStrToBuffer(string binStr)
 	
 	return buffer;
 }
+
+/*
+Function gets buffer and turns it into a binary string, then returns it
+Input: buffer
+Output: binStr
+*/
+string Helper::bufferToBinStr(vector<byte> buffer)
+{
+	string binStr = "";
+
+	//Convert all of buffer's "bytes" to actual binary and put them in a string
+	for (int i = 0; i < buffer.size(); i++)
+	{
+		binStr += bitset<BITS_IN_CHAR>(buffer[i]).to_string();
+	}
+
+	return binStr;
+}

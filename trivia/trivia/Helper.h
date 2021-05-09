@@ -9,5 +9,6 @@ public:
 	static char* getPartFromSocket(SOCKET sc, int bytesNum);
 	static char* getPartFromSocket(SOCKET sc, int bytesNum, int flags);
 	static vector<byte> binStrToBuffer(string binStr);
+	static string bufferToBinStr(vector<byte> buffer);
 };
 

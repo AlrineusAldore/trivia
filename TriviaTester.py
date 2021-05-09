@@ -21,33 +21,47 @@ def main():
     server_msg = server_msg.decode()
     print("Server:", server_msg)
 
-    # Send data to server
-        #getting data
     username = input("Enter username: ")
     password = input("Enter password: ")
-    mail = input("Enter mail or 0 if you dont have one: ")
+    mail = input("Enter mail to sign up with or 0 if you want to log in: ")
     code = 0
-        #making the msg
+
+    # Constructing the json message
     if mail == '0':
         msg = '{"username":"' + username + '", "password":"' + password + '"}'
         code = LOGIN_CODE
     else:
         msg = '{"username":"' + username + '", "password":"' + password + '", "email":"' + mail + '"}'
         code = SIGNUP_CODE
-        #creating the protocol
-    binMsg = ''.join((format(ord(x), 'b').zfill(8)) for x in msg) #turns string into binary
-    print("msg: ", msg)
-    msg = "{0:b}".format(code).zfill(8) + "{0:b}".format(len(msg)).zfill(32) + binMsg #msg len
-        #seding msg
+
+    # Converting json message to binary by the protocol
+    binMsg = ''.join((format(ord(x), 'b').zfill(8)) for x in msg)  # Turns string into binary
+    msg = "{0:b}".format(code).zfill(8) + "{0:b}".format(len(msg)).zfill(32) + binMsg  # Turn status and len to binary
+
+    # sending msg
     sock.sendall(msg.encode())
 
-    # The server's message
+    # The server's response
     server_msg = sock.recv(1024)
     server_msg = server_msg.decode()
-    print("Server:", server_msg)
+    print("\nServer: ", (binStrToStr(server_msg))[2:])  # First char is status and second char is len, so we skip them
 
-if __name__ == "__main__":
-    main()
+
+def binStrToStr(binStr):
+    string = ""
+
+    # Get the status
+    string += chr(int(binStr[:8], 2))
+
+    # Get the len
+    string += chr(int(binStr[8:40], 2))
+
+    # Get the message
+    for i in range(40, len(binStr), 8):
+        string += chr(int(binStr[i:i+8], 2))
+
+    return string
+
 
 def tobits(s):
     result = []
@@ -56,3 +70,8 @@ def tobits(s):
         bits = '00000000'[len(bits):] + bits
         result.extend([int(b) for b in bits])
     return result
+
+
+
+if __name__ == "__main__":
+    main()

@@ -92,12 +92,14 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 		RequestInfo RI;
 		RequestResult RR;
 		vector<byte> buffer;
+		string clientMsg = "";
+		string msg = "";
 
-		Helper::sendData(clientSocket, "hello");
+		Helper::sendData(clientSocket, "Welcome! Please sign up or log in to continue.");
 
-		string clientMsg = Helper::getPartFromSocket(clientSocket, MAX_BYTE_NUM);
+		clientMsg = Helper::getPartFromSocket(clientSocket, MAX_BYTE_NUM);
 		
-		//Turn client's msg to buffer and then make RequestInfo struct from it
+		//Turn client's msg to buffer and make RequestInfo struct from it
 		buffer = Helper::binStrToBuffer(clientMsg);
 		RI.id = buffer[0];
 		time(&RI.receivalTime);
@@ -120,10 +122,9 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 		else
 			cout << "Not login nor signup" << endl;
 		
-
-		//Turn RR.buffer to bin string and send it to client
-		//Helper::sendData(clientSocket, (string ver of RR.buffer));
-		//Supposedly the end of 1.0.2
+		//Send response to client
+		msg = Helper::bufferToBinStr(RR.buffer);
+		Helper::sendData(clientSocket, msg);
 	}
 	catch (const exception& e)
 	{
