@@ -13,3 +13,5 @@ struct SignupRequest
 	string password;
 	string email;
 }typedef SignupRequest;
+
+typedef SignupRequest User;

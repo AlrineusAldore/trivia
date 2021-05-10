@@ -8,9 +8,12 @@
 #include <vector>
 #include <bitset>
 #include <ctime>
+#include <list>
+#include <io.h>
 #include <map>
 
 #include "json.hpp"
+#include "sqlite3.h"
 
 using nlohmann::json;
 using std::to_string;
@@ -24,12 +27,14 @@ using std::cout;
 using std::cerr;
 using std::cin;
 using std::map;
+using std::list;
 
 #define PORT 8820
 #define OK_CODE 60
 #define LOGIN_CODE 100
 #define SIGNUP_CODE 69
 #define ERROR_CODE 42
+#define DB_FILE_NAME "triviaDB.sqlite"
 
 //magic values
 #define MAX_BYTE_NUM 1024
@@ -37,3 +42,4 @@ using std::map;
 #define CODE_PART 1
 #define LEN_PART 5
 #define LEN_LEN 4
+#define ENDL '\n'
