@@ -2,6 +2,11 @@
 #include "JsonResponsePacketSerializer.h"
 #include "ResponseStructs.h"
 
+LoginRequestHandler::LoginRequestHandler()
+{
+	
+}
+
 bool LoginRequestHandler::isRequestRelevant(RequestInfo RI)
 {
 	int id = RI.id;
@@ -26,6 +31,8 @@ RequestResult LoginRequestHandler::handleRequest(RequestInfo RI)
 		//call login manager needed
 		RR.buffer = JsonResponsePacketSerializer::serializeResponse(LR);
 		RR.newHandler = new MenuRequestHandler();
+		LoginRequest LS = JsonRequestPacketDeserializer::deserializerLoginRequest(RR.buffer);
+		this->m_loginManager.login(LS.username, LS.password);
 	}
 	else
 	{
@@ -33,6 +40,8 @@ RequestResult LoginRequestHandler::handleRequest(RequestInfo RI)
 		SR.status = SIGNUP_CODE;
 		RR.buffer = JsonResponsePacketSerializer::serializeResponse(SR);
 		RR.newHandler = new MenuRequestHandler();
+		SignupRequest SS = JsonRequestPacketDeserializer::deserializerSingupRequest(RR.buffer);
+		this->m_loginManager.signup(SS.username, SS.password, SS.email);
 	}
 	RR.newHandler = NULL;
 	return RR;

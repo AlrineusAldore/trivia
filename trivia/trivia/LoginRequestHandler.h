@@ -4,14 +4,18 @@
 #include "IRequestHandler.h"
 #include "RequestHandlerFactory.h"
 #include "MenuRequestHandler.h"
+#include "LoginManager.h"
+#include "JsonRequestPacketDeserializer.h"
+#include "RequestStructs.h"
 
 class LoginRequestHandler : public IRequestHandler
 {
 private:
-	//RequestHandlerFactory& m_handlerFactory;
-	//LoginManager& m_loginManager;
+	RequestHandlerFactory& m_handlerFactory;
+	LoginManager& m_loginManager;
 
 public:
+	LoginRequestHandler();
 	virtual bool isRequestRelevant(RequestInfo RI);
 	virtual RequestResult handleRequest(RequestInfo RI);
 private:
