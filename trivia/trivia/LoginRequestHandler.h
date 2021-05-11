@@ -14,12 +14,12 @@ private:
 	RequestHandlerFactory& m_handlerFactory;
 	LoginManager& m_loginManager;
 
-public:
-	LoginRequestHandler();
-	virtual bool isRequestRelevant(RequestInfo RI);
-	virtual RequestResult handleRequest(RequestInfo RI);
-private:
 	RequestResult login(RequestInfo RI);
 	RequestResult signup(RequestInfo RI);
 
+public:
+	//LoginRequestHandler(IDatabase* db);
+
+	virtual bool isRequestRelevant(RequestInfo RI);
+	virtual RequestResult handleRequest(RequestInfo RI);
 };

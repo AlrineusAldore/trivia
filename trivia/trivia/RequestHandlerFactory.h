@@ -7,10 +7,12 @@
 class RequestHandlerFactory
 {
 private:
-	LoginManager m_loginManager;
+	LoginManager* m_loginManager;
 	IDatabase* m_database;
 public:
-	RequestHandlerFactory();
+	RequestHandlerFactory(IDatabase* db);
+	~RequestHandlerFactory();
+
 	LoginRequestHandler* createLoginRequestHandler();	
 	LoginManager& getLoginManager();
 };

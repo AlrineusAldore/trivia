@@ -2,10 +2,12 @@
 #include "JsonResponsePacketSerializer.h"
 #include "ResponseStructs.h"
 
-LoginRequestHandler::LoginRequestHandler()
+/*
+LoginRequestHandler::LoginRequestHandler(IDatabase* db)
 {
-	
-}
+	m_handlerFactory = RequestHandlerFactory(db);
+	m_loginManager = LoginManager(db);
+}*/
 
 bool LoginRequestHandler::isRequestRelevant(RequestInfo RI)
 {
@@ -14,34 +16,42 @@ bool LoginRequestHandler::isRequestRelevant(RequestInfo RI)
 		return true;
 	return false;
 }
+
 RequestResult LoginRequestHandler::handleRequest(RequestInfo RI)
 {
 	RequestResult RR;
+
 	if (!isRequestRelevant(RI))
 	{
 		ErrorResponse ER;
 		ER.message = "the request is not relevent";
 		RR.buffer = JsonResponsePacketSerializer::serializeResponse(ER);
-		RR.newHandler = new LoginRequestHandler();
+		RR.newHandler = nullptr;
 	}
 	else if (RI.id == LOGIN_CODE)
 	{
 		LoginResponse LR;
 		LR.status = LOGIN_CODE;
-		//call login manager needed
+
+		//Serialize login buffer with next handler
 		RR.buffer = JsonResponsePacketSerializer::serializeResponse(LR);
 		RR.newHandler = new MenuRequestHandler();
-		LoginRequest LS = JsonRequestPacketDeserializer::deserializerLoginRequest(RR.buffer);
-		this->m_loginManager.login(LS.username, LS.password);
+
+		//login request 
+		LoginRequest lr = JsonRequestPacketDeserializer::deserializerLoginRequest(RR.buffer);
+		m_loginManager.login(lr.username, lr.password);
 	}
 	else
 	{
 		SignupResponse SR;
 		SR.status = SIGNUP_CODE;
+
+		//serialize signup buffer with next handler
 		RR.buffer = JsonResponsePacketSerializer::serializeResponse(SR);
 		RR.newHandler = new MenuRequestHandler();
-		SignupRequest SS = JsonRequestPacketDeserializer::deserializerSingupRequest(RR.buffer);
-		this->m_loginManager.signup(SS.username, SS.password, SS.email);
+
+		SignupRequest sr = JsonRequestPacketDeserializer::deserializerSingupRequest(RR.buffer);
+		m_loginManager.signup(sr.username, sr.password, sr.email);
 	}
 	RR.newHandler = NULL;
 	return RR;
