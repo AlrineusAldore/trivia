@@ -44,7 +44,12 @@ def main():
     # The server's response
     server_msg = sock.recv(1024)
     server_msg = server_msg.decode()
-    print("\nServer: ", (binStrToStr(server_msg))[2:])  # First char is status and second char is len, so we skip them
+
+    responseStatus = (binStrToStr(server_msg))[0]
+    if(responseStatus == 42):
+        print("\nerror: ", (binStrToStr(server_msg))[2:])  # First char is status and second char is len, so we skip them
+    else:
+        print("\nServer: ", (binStrToStr(server_msg))[2:])  # First char is status and second char is len, so we skip them
 
 
 def binStrToStr(binStr):
