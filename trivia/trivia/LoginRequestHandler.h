@@ -18,7 +18,7 @@ private:
 	RequestResult signup(RequestInfo RI);
 
 public:
-	//LoginRequestHandler(IDatabase* db);
+	LoginRequestHandler(RequestHandlerFactory RHF, LoginManager LM);
 
 	virtual bool isRequestRelevant(RequestInfo RI);
 	virtual RequestResult handleRequest(RequestInfo RI);

@@ -2,12 +2,10 @@
 #include "JsonResponsePacketSerializer.h"
 #include "ResponseStructs.h"
 
-/*
-LoginRequestHandler::LoginRequestHandler(IDatabase* db)
+
+LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory RHF, LoginManager LM) : m_handlerFactory(RHF), m_loginManager(LM)
 {
-	m_handlerFactory = RequestHandlerFactory(db);
-	m_loginManager = LoginManager(db);
-}*/
+}
 
 bool LoginRequestHandler::isRequestRelevant(RequestInfo RI)
 {
