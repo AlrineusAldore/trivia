@@ -7,19 +7,18 @@
 
 class Communicator
 {
-public:
-	Communicator();
-	~Communicator();
-
-	void startHandleRequests();
-
 private:
+	SOCKET m_serverSocket;
+	map<SOCKET, IRequestHandler*> m_clients;
+	RequestHandlerFactory& m_handlerFactory;
 
 	void bindAndRequests();
 	void handleNewClient(SOCKET clientSock);
 
-	SOCKET m_serverSocket;
-	map<SOCKET, IRequestHandler*> m_clients;
-	Helper helper;
+public:
+	Communicator(RequestHandlerFactory RHF);
+	~Communicator();
+
+	void startHandleRequests();
 };
 

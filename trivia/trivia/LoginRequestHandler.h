@@ -2,11 +2,12 @@
 
 #include "pch.h"
 #include "IRequestHandler.h"
-#include "RequestHandlerFactory.h"
 #include "MenuRequestHandler.h"
 #include "LoginManager.h"
 #include "JsonRequestPacketDeserializer.h"
 #include "RequestStructs.h"
+
+#include "RequestHandlerFactory.h"
 
 class LoginRequestHandler : public IRequestHandler
 {
@@ -14,12 +15,12 @@ private:
 	RequestHandlerFactory& m_handlerFactory;
 	LoginManager& m_loginManager;
 
-public:
-	LoginRequestHandler();
-	virtual bool isRequestRelevant(RequestInfo RI);
-	virtual RequestResult handleRequest(RequestInfo RI);
-private:
-	RequestResult login(RequestInfo RI);
-	RequestResult signup(RequestInfo RI);
+	RequestResult login(RequestInfo reqInfo);
+	RequestResult signup(RequestInfo reqInfo);
 
+public:
+	LoginRequestHandler(RequestHandlerFactory RHF, LoginManager LM);
+
+	virtual bool isRequestRelevant(RequestInfo reqInfo);
+	virtual RequestResult handleRequest(RequestInfo reqInfo);
 };

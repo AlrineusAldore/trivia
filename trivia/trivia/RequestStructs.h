@@ -1,17 +1,17 @@
 #pragma once
 #include "pch.h"
 
-struct LoginRequest
+typedef struct LoginRequest
 {
 	string username;
 	string password;
-}typedef LoginRequest;
+} LoginRequest;
 
-struct SignupRequest
+typedef struct SignupRequest
 {
 	string username;
 	string password;
 	string email;
-}typedef SignupRequest;
+} SignupRequest;
 
 typedef SignupRequest User;

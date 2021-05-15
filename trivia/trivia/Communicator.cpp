@@ -1,6 +1,6 @@
 #include "Communicator.h"
 
-Communicator::Communicator()
+Communicator::Communicator(RequestHandlerFactory RHF) : m_handlerFactory(RHF)
 {
 	// this server use TCP. that why SOCK_STREAM & IPPROTO_TCP
 	// if the server use UDP we will use: SOCK_DGRAM & IPPROTO_UDP
@@ -87,10 +87,10 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 {
 	try
 	{
-		m_clients.insert({ clientSocket, new LoginRequestHandler() });
+		m_clients.insert({ clientSocket, m_handlerFactory.createLoginRequestHandler() });
 
-		RequestInfo RI;
-		RequestResult RR;
+		RequestInfo reqInfo;
+		RequestResult reqResu;
 		vector<byte> buffer;
 		string clientMsg = "";
 		string msg = "";
@@ -101,20 +101,20 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 		
 		//Turn client's msg to buffer and make RequestInfo struct from it
 		buffer = Helper::binStrToBuffer(clientMsg);
-		RI.id = buffer[0];
-		time(&RI.receivalTime);
-		RI.buffer = buffer;
+		reqInfo.id = buffer[0];
+		time(&reqInfo.receivalTime);
+		reqInfo.buffer = buffer;
 
 		//Handle the request
-		RR = m_clients[clientSocket]->handleRequest(RI);
+		reqResu = m_clients[clientSocket]->handleRequest(reqInfo);
 
 		//Print the cilent's message details
-		if (RI.id == LOGIN_CODE)
+		if (reqInfo.id == LOGIN_CODE)
 		{
 			LoginRequest lr = JsonRequestPacketDeserializer::deserializerLoginRequest(buffer);
 			cout << "username: " << lr.username << "\t\tpassword: " << lr.password << endl;
 		}
-		else if (RI.id == SIGNUP_CODE)
+		else if (reqInfo.id == SIGNUP_CODE)
 		{
 			SignupRequest sr = JsonRequestPacketDeserializer::deserializerSingupRequest(buffer);
 			cout << "username: " << sr.username << "\t\tpassword: " << sr.password << "\t\temail: " << sr.email << endl;
@@ -123,11 +123,12 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 			cout << "Not login nor signup" << endl;
 		
 		//Send response to client
-		msg = Helper::bufferToBinStr(RR.buffer);
+		msg = Helper::bufferToBinStr(reqResu.buffer);
 		Helper::sendData(clientSocket, msg);
 	}
 	catch (const exception& e)
 	{
 		closesocket(clientSocket);
+		cerr << "error: " << e.what() << endl;
 	}
 }

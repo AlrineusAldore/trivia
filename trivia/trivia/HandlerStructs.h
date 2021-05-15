@@ -3,15 +3,15 @@
 
 class IRequestHandler; //To make compiler recognize and link it since we can't include it
 
-struct RequestInfo
+typedef struct RequestInfo
 {
 	int id;
 	time_t receivalTime;
 	vector<byte> buffer;
-} typedef RequestInfo;
+} RequestInfo;
 
-struct RequestResult
+typedef struct RequestResult
 {
 	vector<byte> buffer;
 	IRequestHandler* newHandler;
-} typedef RequestResult;
+} RequestResult;

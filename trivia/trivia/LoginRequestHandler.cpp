@@ -2,47 +2,87 @@
 #include "JsonResponsePacketSerializer.h"
 #include "ResponseStructs.h"
 
-LoginRequestHandler::LoginRequestHandler()
+
+LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory RHF, LoginManager LM) : m_handlerFactory(RHF), m_loginManager(LM)
 {
-	
 }
 
-bool LoginRequestHandler::isRequestRelevant(RequestInfo RI)
+bool LoginRequestHandler::isRequestRelevant(RequestInfo reqInfo)
 {
-	int id = RI.id;
-	if (id == LOGIN_CODE || id == SIGNUP_CODE)
-		return true;
-	return false;
+	return reqInfo.id == LOGIN_CODE || reqInfo.id == SIGNUP_CODE;
 }
-RequestResult LoginRequestHandler::handleRequest(RequestInfo RI)
+
+/*
+Function handles a new request by checking if its login/signup and proceeding accordingly
+Input: reqInfo
+Output: reqRes
+*/
+RequestResult LoginRequestHandler::handleRequest(RequestInfo reqInfo)
 {
-	RequestResult RR;
-	if (!isRequestRelevant(RI))
+	RequestResult reqRes;
+	reqRes.newHandler = nullptr;
+
+	if (!isRequestRelevant(reqInfo))
 	{
-		ErrorResponse ER;
-		ER.message = "the request is not relevent";
-		RR.buffer = JsonResponsePacketSerializer::serializeResponse(ER);
-		RR.newHandler = new LoginRequestHandler();
+		ErrorResponse errResp;
+		errResp.message = "the request is not relevent";
+		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
+		reqRes.newHandler = nullptr;
 	}
-	else if (RI.id == LOGIN_CODE)
+	else if (reqInfo.id == LOGIN_CODE)
 	{
-		LoginResponse LR;
-		LR.status = LOGIN_CODE;
-		//call login manager needed
-		RR.buffer = JsonResponsePacketSerializer::serializeResponse(LR);
-		RR.newHandler = new MenuRequestHandler();
-		LoginRequest LS = JsonRequestPacketDeserializer::deserializerLoginRequest(RR.buffer);
-		this->m_loginManager.login(LS.username, LS.password);
+		reqRes = login(reqInfo);
 	}
-	else
+	else if (reqInfo.id == SIGNUP_CODE)
 	{
-		SignupResponse SR;
-		SR.status = SIGNUP_CODE;
-		RR.buffer = JsonResponsePacketSerializer::serializeResponse(SR);
-		RR.newHandler = new MenuRequestHandler();
-		SignupRequest SS = JsonRequestPacketDeserializer::deserializerSingupRequest(RR.buffer);
-		this->m_loginManager.signup(SS.username, SS.password, SS.email);
+		reqRes = signup(reqInfo);
 	}
-	RR.newHandler = NULL;
-	return RR;
+
+	return reqRes;
+}
+
+/*
+Function gets info of a request with login code, logs in the person, and returns the result of the request
+Input: reqInfo
+Output: reqResu
+*/
+RequestResult LoginRequestHandler::login(RequestInfo reqInfo)
+{
+	RequestResult reqResu;
+	if (reqInfo.id != LOGIN_CODE)
+		return reqResu;
+
+	//Serialize login buffer with next handler
+	LoginResponse loginResp = { LOGIN_CODE };
+	reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(loginResp);
+	reqResu.newHandler = new MenuRequestHandler();
+
+	//Make a login-request to log in with
+	LoginRequest loginReq = JsonRequestPacketDeserializer::deserializerLoginRequest(reqInfo.buffer);
+	m_loginManager.login(loginReq.username, loginReq.password);
+
+	return reqResu;
+}
+
+/*
+Function gets info of a request with signup code, signs up the person, and returns the result of the request
+Input: reqInfo
+Output: reqResu
+*/
+RequestResult LoginRequestHandler::signup(RequestInfo reqInfo)
+{
+	RequestResult reqResu;
+	if (reqInfo.id != SIGNUP_CODE)
+		return reqResu;
+
+	//Serialize signup buffer with next handler
+	SignupResponse signupResp = { SIGNUP_CODE };
+	reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(signupResp);
+	reqResu.newHandler = new MenuRequestHandler();
+
+	//Make a signup-request to sign up with
+	SignupRequest signupReq = JsonRequestPacketDeserializer::deserializerSingupRequest(reqInfo.buffer);
+	m_loginManager.signup(signupReq.username, signupReq.password, signupReq.email);
+
+	return reqResu;
 }

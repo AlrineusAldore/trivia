@@ -47,4 +47,6 @@ vector<byte> JsonResponsePacketSerializer::unpackJsonResponse(int code, string s
     {
         cerr << "Error at " << (__FUNCTION__) << ".\tError: " << e.what() << endl;
     }
+
+    return vector<byte>();
 }
