@@ -129,5 +129,6 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 	catch (const exception& e)
 	{
 		closesocket(clientSocket);
+		cerr << "error: " << e.what() << endl;
 	}
 }
