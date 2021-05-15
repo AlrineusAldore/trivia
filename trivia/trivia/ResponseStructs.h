@@ -2,17 +2,17 @@
 
 #include "pch.h"
 
-struct ErrorResponse
+typedef struct ErrorResponse
 {
 	string message;
-}; typedef ErrorResponse;
+} ErrorResponse;
 
-struct LoginResponse
+typedef struct LoginResponse
 {
 	unsigned int status;
-}; typedef LoginResponse;
+} LoginResponse;
 
-struct SignupResponse
+typedef struct SignupResponse
 {
 	unsigned int status;
-}; typedef SignupResponse;
+} SignupResponse;

@@ -1,4 +1,5 @@
 #include "RequestHandlerFactory.h"
+#include "LoginRequestHandler.h"
 
 RequestHandlerFactory::RequestHandlerFactory(IDatabase* db)
 {
@@ -12,7 +13,7 @@ RequestHandlerFactory::~RequestHandlerFactory()
 
 LoginRequestHandler* RequestHandlerFactory::createLoginRequestHandler()
 {
-	return new LoginRequestHandler();
+	return new LoginRequestHandler(*this, LoginManager(m_database));
 }
 
 LoginManager& RequestHandlerFactory::getLoginManager()

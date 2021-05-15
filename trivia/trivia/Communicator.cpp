@@ -1,6 +1,6 @@
 #include "Communicator.h"
 
-Communicator::Communicator()
+Communicator::Communicator(RequestHandlerFactory RHF) : m_handlerFactory(RHF)
 {
 	// this server use TCP. that why SOCK_STREAM & IPPROTO_TCP
 	// if the server use UDP we will use: SOCK_DGRAM & IPPROTO_UDP
@@ -87,7 +87,7 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 {
 	try
 	{
-		m_clients.insert({ clientSocket, new LoginRequestHandler() });
+		m_clients.insert({ clientSocket, m_handlerFactory.createLoginRequestHandler() });
 
 		RequestInfo RI;
 		RequestResult RR;

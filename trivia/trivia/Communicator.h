@@ -8,7 +8,7 @@
 class Communicator
 {
 public:
-	Communicator();
+	Communicator(RequestHandlerFactory RHF);
 	~Communicator();
 
 	void startHandleRequests();
@@ -20,6 +20,6 @@ private:
 
 	SOCKET m_serverSocket;
 	map<SOCKET, IRequestHandler*> m_clients;
-	Helper helper;
+	RequestHandlerFactory& m_handlerFactory;
 };
 

@@ -2,11 +2,12 @@
 
 #include "pch.h"
 #include "IRequestHandler.h"
-#include "RequestHandlerFactory.h"
 #include "MenuRequestHandler.h"
 #include "LoginManager.h"
 #include "JsonRequestPacketDeserializer.h"
 #include "RequestStructs.h"
+
+#include "RequestHandlerFactory.h"
 
 class LoginRequestHandler : public IRequestHandler
 {
