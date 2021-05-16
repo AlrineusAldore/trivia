@@ -6,5 +6,6 @@ Server::Server() : m_database(new SqliteDatabase()), m_handlerFactory(RequestHan
 
 void Server::run()
 {
+	//m_communicator.setFactory(m_handlerFactory);
 	m_communicator.startHandleRequests();
 }

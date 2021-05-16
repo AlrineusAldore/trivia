@@ -17,6 +17,7 @@ private:
 
 public:
 	Communicator(RequestHandlerFactory RHF);
+	void setFactory(RequestHandlerFactory RHF);
 	~Communicator();
 
 	void startHandleRequests();
