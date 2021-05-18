@@ -1,6 +1,6 @@
 #include "Communicator.h"
 
-Communicator::Communicator(RequestHandlerFactory RHF) : m_handlerFactory(RHF)
+Communicator::Communicator(RequestHandlerFactory& RHF) : m_handlerFactory(RHF)
 {
 	// this server use TCP. that why SOCK_STREAM & IPPROTO_TCP
 	// if the server use UDP we will use: SOCK_DGRAM & IPPROTO_UDP

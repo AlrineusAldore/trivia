@@ -19,7 +19,7 @@ private:
 	RequestResult signup(RequestInfo reqInfo);
 
 public:
-	LoginRequestHandler(RequestHandlerFactory RHF, LoginManager LM);
+	LoginRequestHandler(RequestHandlerFactory& RHF, LoginManager& LM);
 
 	virtual bool isRequestRelevant(RequestInfo reqInfo);
 	virtual RequestResult handleRequest(RequestInfo reqInfo);

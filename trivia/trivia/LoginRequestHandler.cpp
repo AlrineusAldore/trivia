@@ -3,7 +3,7 @@
 #include "ResponseStructs.h"
 
 
-LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory RHF, LoginManager LM) : m_handlerFactory(RHF), m_loginManager(LM)
+LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& RHF, LoginManager& LM) : m_handlerFactory(RHF), m_loginManager(LM)
 {
 }
 

@@ -16,7 +16,7 @@ private:
 	void handleNewClient(SOCKET clientSock);
 
 public:
-	Communicator(RequestHandlerFactory RHF);
+	Communicator(RequestHandlerFactory& RHF);
 	void setFactory(RequestHandlerFactory RHF);
 	~Communicator();
 
