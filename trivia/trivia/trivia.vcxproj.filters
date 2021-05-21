@@ -40,6 +40,12 @@
     <Filter Include="Source Files\Json">
       <UniqueIdentifier>{01a4b946-8a76-4ecb-8530-326cb94ce2f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Exceptions">
+      <UniqueIdentifier>{35a00b00-7bcc-46f3-b551-cbd8f74bea5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Exceptions\NullExceptions">
+      <UniqueIdentifier>{2b0f969c-1a66-444c-8de3-9c7d109926a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Communicator.h">
@@ -101,6 +107,24 @@
     </ClInclude>
     <ClInclude Include="MenuRequestHandler.h">
       <Filter>Header Files\Handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginException.h">
+      <Filter>Header Files\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="SignupException.h">
+      <Filter>Header Files\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="NullPasswordException.h">
+      <Filter>Header Files\Exceptions\NullExceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="NullUsernameException.h">
+      <Filter>Header Files\Exceptions\NullExceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="NullEmailException.h">
+      <Filter>Header Files\Exceptions\NullExceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="AllExceptions.h">
+      <Filter>Header Files\Exceptions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

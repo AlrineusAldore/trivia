@@ -52,14 +52,25 @@ RequestResult LoginRequestHandler::login(RequestInfo reqInfo)
 	if (reqInfo.id != LOGIN_CODE)
 		return reqResu;
 
-	//Serialize login buffer with next handler
-	LoginResponse loginResp = { LOGIN_CODE };
-	reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(loginResp);
-	reqResu.newHandler = new MenuRequestHandler();
+	try
+	{
+		//Make a login-request to log in with
+		LoginRequest loginReq = JsonRequestPacketDeserializer::deserializerLoginRequest(reqInfo.buffer);
+		checkLoginForNull(loginReq);
+		m_loginManager.login(loginReq.username, loginReq.password);
 
-	//Make a login-request to log in with
-	LoginRequest loginReq = JsonRequestPacketDeserializer::deserializerLoginRequest(reqInfo.buffer);
-	m_loginManager.login(loginReq.username, loginReq.password);
+		//Serialize login buffer with next handler
+		LoginResponse loginResp = { LOGIN_CODE };
+		reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(loginResp);
+		reqResu.newHandler = new MenuRequestHandler();
+	}
+	catch (exception& e)
+	{
+		//Make a login error result
+		ErrorResponse errResp = { e.what() };
+		reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
+		reqResu.newHandler = nullptr;
+	}
 
 	return reqResu;
 }
@@ -75,14 +86,43 @@ RequestResult LoginRequestHandler::signup(RequestInfo reqInfo)
 	if (reqInfo.id != SIGNUP_CODE)
 		return reqResu;
 
-	//Serialize signup buffer with next handler
-	SignupResponse signupResp = { SIGNUP_CODE };
-	reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(signupResp);
-	reqResu.newHandler = new MenuRequestHandler();
+	try
+	{
+		//Make a signup-request to sign up with
+		SignupRequest signupReq = JsonRequestPacketDeserializer::deserializerSingupRequest(reqInfo.buffer);
+		checkSignupForNull(signupReq);
+		m_loginManager.signup(signupReq.username, signupReq.password, signupReq.email);
 
-	//Make a signup-request to sign up with
-	SignupRequest signupReq = JsonRequestPacketDeserializer::deserializerSingupRequest(reqInfo.buffer);
-	m_loginManager.signup(signupReq.username, signupReq.password, signupReq.email);
+		//Serialize signup buffer with next handler
+		SignupResponse signupResp = { SIGNUP_CODE };
+		reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(signupResp);
+		reqResu.newHandler = new MenuRequestHandler();
+	}
+	catch (exception& e)
+	{
+		//Make a signup error result
+		ErrorResponse errResp = { e.what() };
+		reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
+		reqResu.newHandler = nullptr;
+	}
 
 	return reqResu;
+}
+
+void LoginRequestHandler::checkLoginForNull(LoginRequest loginReq)
+{
+	if (loginReq.username == "")
+		throw NullUsernameException();
+	if (loginReq.password == "")
+		throw NullPasswordException();
+}
+
+void LoginRequestHandler::checkSignupForNull(SignupRequest signupReq)
+{
+	if (signupReq.username == "")
+		throw NullUsernameException();
+	if (signupReq.password == "")
+		throw NullPasswordException();
+	if (signupReq.email == "")
+		throw NullEmailException();
 }

@@ -9,7 +9,6 @@ Communicator::Communicator(RequestHandlerFactory& RHF) : m_handlerFactory(RHF)
 	if (m_serverSocket == INVALID_SOCKET)
 		throw exception(__FUNCTION__ " - socket");
 	
-	cout << "nice socket bro. not too large and is the perfect length. the girth is just right too. with this nice angle, it's a 9/10" << endl;
 	cout << "\nwhen the socket is sus imgur.com/a/hVABhCu" << endl << endl;
 }
 

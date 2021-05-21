@@ -61,7 +61,7 @@ bool SqliteDatabase::doesUserExist(string username)
 	list<User> users;
 
 	//Get the user
-	string statement = "SELECT * FROM users WHERE username=" + username + ";";
+	string statement = "SELECT * FROM users WHERE username=\"" + username + "\";";
 	res = sqlite3_exec(_db, statement.c_str(), usersCallback, &users, errMsg);
 	checkResult(res, "check user's existance");
 
@@ -85,7 +85,7 @@ bool SqliteDatabase::doesPasswordMatch(string username, string password)
 	bool doesMatch = false;
 
 	//Get the user
-	string statement = "SELECT * FROM users WHERE username=" + username + ";";
+	string statement = "SELECT * FROM users WHERE username=\"" + username + "\";";
 	res = sqlite3_exec(_db, statement.c_str(), usersCallback, &users, errMsg);
 	checkResult(res, "check if password matches");
 
