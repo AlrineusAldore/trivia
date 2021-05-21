@@ -18,6 +18,9 @@ private:
 	RequestResult login(RequestInfo reqInfo);
 	RequestResult signup(RequestInfo reqInfo);
 
+	void checkLoginForNull(LoginRequest loginReq);
+	void checkSignupForNull(SignupRequest signupReq);
+
 public:
 	LoginRequestHandler(RequestHandlerFactory& RHF, LoginManager& LM);
 

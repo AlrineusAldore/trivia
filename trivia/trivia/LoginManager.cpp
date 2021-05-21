@@ -8,12 +8,12 @@ LoginManager::LoginManager(IDatabase* db)
 /*
 Function signs up a new user if the username isn't taken
 Input: username, password, email
-Output: none
+Output: throws error
 */
 void LoginManager::signup(string username, string password, string email)
 {
 	if (m_database->doesUserExist(username))
-		cerr << "username is already taken" << endl;
+		throw SignupException();
 	else
 		m_database->addNewUser(username, password, email);
 }
@@ -21,7 +21,7 @@ void LoginManager::signup(string username, string password, string email)
 /*
 Function logs in a person if their username and password match
 Input: username, password
-Output: none
+Output: throws error
 */
 void LoginManager::login(string username, string password)
 {
@@ -30,7 +30,7 @@ void LoginManager::login(string username, string password)
 		m_loggedUsers.push_back(LoggedUser(username));
 	}
 	else
-		cerr << "password didn't match to username. coulnd't log in" << endl;
+		throw LoginException();
 }
 
 /*

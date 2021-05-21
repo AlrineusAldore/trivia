@@ -2,6 +2,7 @@
 
 #include "IDatabase.h"
 #include "LoggedUser.h"
+#include "AllExceptions.h"
 
 class LoginManager
 {
