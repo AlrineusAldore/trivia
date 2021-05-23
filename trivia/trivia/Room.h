@@ -1,9 +1,7 @@
 #pragma once
 
-#include "pch.h"
+#include "RoomData.h"
 #include "LoggedUser.h"
-
-typedef struct RoomData RoomData;
 
 class Room
 {
@@ -12,17 +10,10 @@ private:
 	vector<LoggedUser> m_users;
 
 public:
+	Room(RoomData roomData);
+	RoomData getRoomData();
+
 	void addUser(LoggedUser& user);
 	void removeUser(LoggedUser& user);
 	vector<string> getAllUsers();
-};
-
-struct RoomData
-{
-	unsigned int id;
-	string name;
-	unsigned int maxPlayers;
-	unsigned int numOfQuestionsInGame;
-	unsigned int timePerQuestion;
-	unsigned int isActive;
 };
