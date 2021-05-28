@@ -1,7 +1,7 @@
 #pragma once
 
-#include "pch.h"
 #include "RequestStructs.h"
+#include "TablesStructs.h"
 
 class IDatabase
 {
@@ -10,4 +10,10 @@ public:
 
 	virtual bool doesUserExist(string username) = 0;
 	virtual bool doesPasswordMatch(string username, string password) = 0;
+
+	virtual list<Question> getQuestions(int numOfQuestions) = 0;
+	virtual float getPlayerAverageAnswerTime(string username) = 0;
+	virtual int getNumOfCorrectAnswers(string username) = 0;
+	virtual int getNumOfTotalAnswers(string username) = 0;
+	virtual int getNumOfPlayerGames(string username) = 0;
 };
