@@ -15,6 +15,7 @@
 #include "json.hpp"
 #include "sqlite3.h"
 
+using std::ostringstream;
 using nlohmann::json;
 using std::to_string;
 using std::exception;
@@ -23,6 +24,7 @@ using std::thread;
 using std::vector;
 using std::bitset;
 using std::list;
+using std::pair;
 using std::stoi;
 using std::stof;
 using std::endl;
@@ -32,14 +34,20 @@ using std::cin;
 using std::map;
 using std::advance;
 
+typedef vector<byte> Buffer;
+
 #define PORT 8820
+#define DB_FILE_NAME "triviaDB.sqlite"
+#define USER_NOT_FOUND -1
+#define ERROR_EMPTY_FIELD -1
+
+//codes
 #define OK_CODE 60
 #define LOGIN_CODE 100
 #define SIGNUP_CODE 69
 #define ERROR_CODE 42
-#define DB_FILE_NAME "triviaDB.sqlite"
-#define USER_NOT_FOUND -1
-#define ERROR_EMPTY_FIELD -1
+#define GET_PLAYERS_IN_ROOM_CODE 3
+#define CREATE_JOIN_ROOM_CODE 2
 
 //magic values
 #define MAX_BYTE_NUM 1024
