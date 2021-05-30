@@ -90,7 +90,7 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 
 		RequestInfo reqInfo;
 		RequestResult reqResu;
-		vector<byte> buffer;
+		Buffer buffer;
 		string clientMsg = "";
 		string msg = "";
 
