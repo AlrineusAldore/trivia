@@ -7,6 +7,8 @@ int main()
 {
 	try
 	{
+		srand(time(0));
+
 		WSAInitializer wsaInit;
 		Server myServer;
 
