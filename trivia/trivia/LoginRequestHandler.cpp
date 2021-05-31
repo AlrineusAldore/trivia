@@ -55,14 +55,14 @@ RequestResult LoginRequestHandler::login(RequestInfo reqInfo)
 	try
 	{
 		//Make a login-request to log in with
-		LoginRequest loginReq = JsonRequestPacketDeserializer::deserializerLoginRequest(reqInfo.buffer);
+		LoginRequest loginReq = JsonRequestPacketDeserializer::deserializeLoginRequest(reqInfo.buffer);
 		checkLoginForNull(loginReq);
 		m_loginManager.login(loginReq.username, loginReq.password);
 
 		//Serialize login buffer with next handler
 		LoginResponse loginResp = { LOGIN_CODE };
 		reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(loginResp);
-		reqResu.newHandler = new MenuRequestHandler();
+		reqResu.newHandler = m_handlerFactory.createMenuRequestHandler();
 	}
 	catch (exception& e)
 	{
@@ -89,14 +89,14 @@ RequestResult LoginRequestHandler::signup(RequestInfo reqInfo)
 	try
 	{
 		//Make a signup-request to sign up with
-		SignupRequest signupReq = JsonRequestPacketDeserializer::deserializerSingupRequest(reqInfo.buffer);
+		SignupRequest signupReq = JsonRequestPacketDeserializer::deserializeSingupRequest(reqInfo.buffer);
 		checkSignupForNull(signupReq);
 		m_loginManager.signup(signupReq.username, signupReq.password, signupReq.email);
 
 		//Serialize signup buffer with next handler
 		SignupResponse signupResp = { SIGNUP_CODE };
 		reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(signupResp);
-		reqResu.newHandler = new MenuRequestHandler();
+		reqResu.newHandler = m_handlerFactory.createMenuRequestHandler();
 	}
 	catch (exception& e)
 	{

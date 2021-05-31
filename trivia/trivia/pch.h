@@ -52,7 +52,7 @@ typedef vector<byte> Buffer;
 #define ERROR_CODE 42
 #define GET_PLAYERS_IN_ROOM_CODE 3
 #define CREATE_JOIN_ROOM_CODE 2
-#define GET_HIGHSCORE_CODE 10
+#define GET_HIGH_SCORE_CODE 10
 #define LOGOUT_CODE 9
 #define GET_ROOM_CODE 8
 
