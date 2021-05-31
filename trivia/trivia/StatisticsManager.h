@@ -1,5 +1,5 @@
 #pragma once
-#include "pch.h"
+#include "Helper.h"
 #include "IDatabase.h"
 
 class StatisticsManager
@@ -10,7 +10,7 @@ private:
 public:
 	StatisticsManager(IDatabase* db);
 
-	vector<string> getHighScore();
-	vector<string> getUserStatistics(string username);
+	vector<pair<string, float>> getHighScore();
+	Stats getUserStatistics(string username);
 };
 

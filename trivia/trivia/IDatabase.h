@@ -17,5 +17,6 @@ public:
 	virtual int getNumOfTotalAnswers(string username) = 0;
 	virtual int getNumOfPlayerGames(string username) = 0;
 
-	
+	virtual Stats getStatsOfUser(string username) = 0;
+	virtual vector<string> getAllUsers() = 0;
 };

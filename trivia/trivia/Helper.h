@@ -13,5 +13,7 @@ public:
 
 	static float calculateScore(Stats stats);
 	template <typename T> static string toStr(const T& t);
+	static bool sortBySec(const pair<string, float>& a, const pair<string, float>& b);
+
 };
 

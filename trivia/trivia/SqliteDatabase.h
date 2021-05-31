@@ -7,7 +7,6 @@ private:
 	sqlite3* _db;
 
 	void checkResult(int res, string subject);
-	Stats* getStatsOfUser(string username);
 
 public:
 	SqliteDatabase();
@@ -23,5 +22,8 @@ public:
 	virtual int getNumOfCorrectAnswers(string username);
 	virtual int getNumOfTotalAnswers(string username);
 	virtual int getNumOfPlayerGames(string username);
+
+	virtual Stats getStatsOfUser(string username);
+	virtual vector<string> getAllUsers();
 };
 

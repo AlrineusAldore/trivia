@@ -9,6 +9,7 @@ typedef struct Stats
 	int rightAnswers;
 	float totalAnswerTime;
 	int bestScore;
+	bool initialized;
 } Stats;
 
 typedef struct Question

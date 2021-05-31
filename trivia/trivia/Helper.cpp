@@ -108,3 +108,9 @@ template <typename T> string Helper::toStr(const T& t)
 	os << t;
 	return os.str();
 }
+
+//Function helps sorting by the second element instead of first
+bool Helper::sortBySec(const pair<string, float>& a, const pair<string, float>& b)
+{
+	return (a.second < b.second);
+}

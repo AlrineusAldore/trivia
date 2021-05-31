@@ -150,12 +150,11 @@ list<Question> SqliteDatabase::getQuestions(int numOfQuestions)
 //returns the average time per answer of a user
 float SqliteDatabase::getPlayerAverageAnswerTime(string username)
 {
-	Stats* stats = getStatsOfUser(username);
+	Stats stats = getStatsOfUser(username);
 
-	if (stats != nullptr)
+	if (stats.initialized)
 	{
-		float avrgTime = stats->totalAnswerTime / stats->totalAnswers;
-		delete stats;
+		float avrgTime = stats.totalAnswerTime / stats.totalAnswers;
 
 		return avrgTime;
 	}
@@ -166,12 +165,11 @@ float SqliteDatabase::getPlayerAverageAnswerTime(string username)
 //Returns number of correct answers of user
 int SqliteDatabase::getNumOfCorrectAnswers(string username)
 {
-	Stats* stats = getStatsOfUser(username);
+	Stats stats = getStatsOfUser(username);
 
-	if (stats != nullptr)
+	if (stats.initialized)
 	{
-		int rightAnswers = stats->rightAnswers;
-		delete stats;
+		int rightAnswers = stats.rightAnswers;
 
 		return rightAnswers;
 	}
@@ -182,12 +180,11 @@ int SqliteDatabase::getNumOfCorrectAnswers(string username)
 //Returns number of total answers of user
 int SqliteDatabase::getNumOfTotalAnswers(string username)
 {
-	Stats* stats = getStatsOfUser(username);
+	Stats stats = getStatsOfUser(username);
 
-	if (stats != nullptr)
+	if (stats.initialized)
 	{
-		int totalAnswers = stats->totalAnswers;
-		delete stats;
+		int totalAnswers = stats.totalAnswers;
 
 		return totalAnswers;
 	}
@@ -198,17 +195,37 @@ int SqliteDatabase::getNumOfTotalAnswers(string username)
 //Returns the number of games the user played
 int SqliteDatabase::getNumOfPlayerGames(string username)
 {
-	Stats* stats = getStatsOfUser(username);
+	Stats stats = getStatsOfUser(username);
 
-	if (stats != nullptr)
+	if (stats.initialized)
 	{
-		int gamesPlayed = stats->gamesPlayed;
-		delete stats;
+		int gamesPlayed = stats.gamesPlayed;
 
 		return gamesPlayed;
 	}
 
 	return USER_NOT_FOUND;
+}
+
+//Returns a vector of all the users in the database
+vector<string> SqliteDatabase::getAllUsers()
+{
+	char** errMsg = nullptr;
+	int res;
+	list<User> users;
+	vector<string> usernames;
+
+	//Get the user
+	string statement = "SELECT * FROM users;";
+	res = sqlite3_exec(_db, statement.c_str(), usersCallback, &users, errMsg);
+	checkResult(res, "check user's existance");
+
+	for (auto it = users.begin(); it != users.end(); it++)
+	{
+		usernames.push_back(it->username);
+	}
+
+	return usernames;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -226,7 +243,7 @@ void SqliteDatabase::checkResult(int res, string subject)
 	}
 }
 
-Stats* SqliteDatabase::getStatsOfUser(string username)
+Stats SqliteDatabase::getStatsOfUser(string username)
 {
 	char** errMsg = nullptr;
 	int res;
@@ -239,10 +256,10 @@ Stats* SqliteDatabase::getStatsOfUser(string username)
 
 	if (!stats.empty())
 	{
-		return &stats.front();
+		return stats.front();
 	}
 
-	return nullptr;
+	return Stats();
 }
 
 //callback function for users
@@ -267,7 +284,7 @@ int usersCallback(void* data, int argc, char** argv, char** azColName)
 //Callback for stats
 int statsCallback(void* data, int argc, char** argv, char** azColName)
 {
-	Stats stat { "", 0, 0, 0, 0, 0 };
+	Stats stat { "", 0, 0, 0, 0, 0, true };
 	for (int i = 0; i < argc; i++) {
 		if (string(azColName[i]) == "username") {
 			stat.username = argv[i];
@@ -288,6 +305,7 @@ int statsCallback(void* data, int argc, char** argv, char** azColName)
 			stat.bestScore = stoi(argv[i]);
 		}
 	}
+	stat.initialized = true;
 	((list<Stats>*)data)->push_back(stat);
 	return 0;
 }
