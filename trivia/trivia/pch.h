@@ -36,10 +36,14 @@ using std::map;
 
 typedef vector<byte> Buffer;
 
+#undef ERROR //un-define it
+#define ERROR -1 //redefine it with the new value
+
 #define PORT 8820
 #define DB_FILE_NAME "triviaDB.sqlite"
-#define USER_NOT_FOUND -1
-#define ERROR_EMPTY_FIELD -1
+#define USER_NOT_FOUND	ERROR
+#define ERROR_EMPTY_FIELD	ERROR
+#define ERROR_INVALID_ROOM_ID	ERROR
 
 //codes
 #define OK_CODE 60
@@ -48,6 +52,9 @@ typedef vector<byte> Buffer;
 #define ERROR_CODE 42
 #define GET_PLAYERS_IN_ROOM_CODE 3
 #define CREATE_JOIN_ROOM_CODE 2
+#define GET_HIGHSCORE_CODE 10
+#define LOGOUT_CODE 9
+#define GET_ROOM_CODE 8
 
 //magic values
 #define MAX_BYTE_NUM 1024
