@@ -19,6 +19,7 @@ using std::ostringstream;
 using nlohmann::json;
 using std::to_string;
 using std::exception;
+using std::advance;
 using std::string;
 using std::thread;
 using std::vector;
@@ -32,7 +33,6 @@ using std::cout;
 using std::cerr;
 using std::cin;
 using std::map;
-using std::advance;
 
 typedef vector<byte> Buffer;
 
@@ -51,6 +51,7 @@ typedef vector<byte> Buffer;
 
 //magic values
 #define MAX_BYTE_NUM 1024
+#define MAX_HIGHSCORES 5
 #define MAX_QUESTIONS 10
 #define BITS_IN_CHAR 8
 #define CODE_PART 1
