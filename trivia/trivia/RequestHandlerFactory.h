@@ -22,7 +22,7 @@ public:
 	LoginRequestHandler* createLoginRequestHandler();	
 	LoginManager& getLoginManager();
 
-	MenuRequestHandler* createMenuRequestHandler();
+	MenuRequestHandler* createMenuRequestHandler(LoggedUser user);
 	StatisticsManager& getStatisticsManager();
 	RoomManager& getRoomManager();
 };

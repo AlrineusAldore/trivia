@@ -18,6 +18,8 @@ private:
 	RequestResult joinRoom(RequestInfo reqInfo);
 	RequestResult createRoom(RequestInfo reqInfo);
 public:
+	MenuRequestHandler(RequestHandlerFactory& RHF, RoomManager& RM, StatisticsManager& SM, LoggedUser user);
+
 	virtual bool isRequestRelevant(RequestInfo RI);
 	virtual RequestResult handleRequest(RequestInfo RI);
 };
