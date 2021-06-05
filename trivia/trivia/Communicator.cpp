@@ -131,8 +131,3 @@ void Communicator::handleNewClient(SOCKET clientSocket)
 		cerr << "error: " << e.what() << endl;
 	}
 }
-
-void Communicator::setFactory(RequestHandlerFactory RHF)
-{
-	m_handlerFactory = RHF;
-}

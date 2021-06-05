@@ -17,8 +17,9 @@
 
 using std::ostringstream;
 using nlohmann::json;
-using std::to_string;
 using std::exception;
+using std::make_pair;
+using std::to_string;
 using std::advance;
 using std::string;
 using std::thread;
@@ -61,7 +62,7 @@ typedef vector<byte> Buffer;
 #define GET_ROOMS_CODE 8
 #define CLOSE_ROOM_CODE 7
 #define START_GAME_CODE 6
-#define GET_ROOM_STATE 5
+#define GET_ROOM_STATE_CODE 5
 #define LEAVE_ROOM 4
 
 //magic values

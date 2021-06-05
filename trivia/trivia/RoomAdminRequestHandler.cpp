@@ -1,0 +1,107 @@
+#include "RoomAdminRequestHandler.h"
+
+RoomAdminRequestHandler::RoomAdminRequestHandler(RequestHandlerFactory& RHF, RoomManager& RM, LoggedUser user, Room room) : m_handlerFactory(RHF), m_roomManager(RM), m_user(user), m_room(room)
+{ }
+
+RequestResult RoomAdminRequestHandler::closeRoom(RequestInfo reqInfo)
+{
+	RequestResult reqRes;
+	reqRes.newHandler = nullptr;
+	if (reqInfo.id != CLOSE_ROOM_CODE)
+		return reqRes;
+
+	try
+	{
+		vector<string> users = m_room.getAllUsers();
+		for (auto it = users.begin(); it != users.end(); it++)
+		{
+			//remove user from room
+			//send them leaveGameResponse
+		}
+		//Remove room from roomManager and delete it
+		m_roomManager.deleteRoom(m_room.getRoomData().id);
+
+		//Serialize response buffer
+		CloseRoomResponse closeRoomRes;
+		closeRoomRes.status = CLOSE_ROOM_CODE;
+
+		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(closeRoomRes);
+		reqRes.newHandler = this;
+	}
+	catch (exception& e)
+	{
+		//Make an error response
+		ErrorResponse errResp = { e.what() };
+		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
+		reqRes.newHandler = nullptr;
+	}
+
+	return reqRes;
+}
+
+RequestResult RoomAdminRequestHandler::startGame(RequestInfo reqInfo)
+{
+	RequestResult reqRes;
+	reqRes.newHandler = nullptr;
+	if (reqInfo.id != START_GAME_CODE)
+		return reqRes;
+
+	try
+	{
+		vector<string> users = m_room.getAllUsers();
+		for (auto it = users.begin(); it != users.end(); it++)
+		{
+			//do something?
+			//send them startGameResponse
+		}
+
+		//Serialize response buffer
+		StartGameResponse startGameRes;
+		startGameRes.status = START_GAME_CODE;
+
+		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(startGameRes);
+		reqRes.newHandler = this;
+	}
+	catch (exception& e)
+	{
+		//Make an error response
+		ErrorResponse errResp = { e.what() };
+		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
+		reqRes.newHandler = nullptr;
+	}
+
+	return reqRes;
+}
+
+RequestResult RoomAdminRequestHandler::getRoomState(RequestInfo reqInfo)
+{
+	RequestResult reqRes;
+	reqRes.newHandler = nullptr;
+	if (reqInfo.id != GET_ROOM_STATE_CODE)
+		return reqRes;
+
+	try
+	{
+		RoomData roomData = m_room.getRoomData();
+
+		//Serialize response buffer
+		GetRoomStateResponse getRoomStateRes;
+		getRoomStateRes.status = GET_ROOM_STATE_CODE;
+		getRoomStateRes.answerTimeout = roomData.timePerQuestion;
+		getRoomStateRes.hasGameBegan = roomData.isActive;
+		getRoomStateRes.questionCount = roomData.numOfQuestionsInGame;
+		getRoomStateRes.players = m_room.getAllUsers();
+
+		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(getRoomStateRes);
+		reqRes.newHandler = this;
+	}
+	catch (exception& e)
+	{
+		//Make an error response
+		ErrorResponse errResp = { e.what() };
+		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
+		reqRes.newHandler = nullptr;
+	}
+
+	return reqRes;
+}

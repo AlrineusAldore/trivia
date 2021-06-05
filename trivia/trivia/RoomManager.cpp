@@ -16,17 +16,17 @@ void RoomManager::createRoom(LoggedUser& user, RoomData roomData)
 }
 
 //Removes a room from the room list and deletes it
-void RoomManager::deleteRoom(int id)
+void RoomManager::deleteRoom(unsigned int id)
 {
-	Room room = m_rooms[id];
+	Room room = getRoom(id);
 	m_rooms.erase(id);
 	delete &room;
 }
 
 //Returns if the room is in a state of waiting for a game to start or mid game
-unsigned int RoomManager::getRoomState(int id)
+unsigned int RoomManager::getRoomState(unsigned int id)
 {
-	return m_rooms[id].getRoomData().isActive;
+	return getRoom(id).getRoomData().isActive;
 }
 
 //Function returns a vector containing the room data of every room
@@ -43,11 +43,16 @@ vector<RoomData> RoomManager::getRooms()
 }
 
 //Get room based on id
-Room& RoomManager::getRoom(int id)
+Room& RoomManager::getRoom(unsigned int id)
 {
 	//throw exception if there isn't a room with this id
-	if (m_rooms.count(id) > 0)
+	if (doesRoomExist(id))
 		return m_rooms[id];
 	
 	throw UnknownRoomIdException();
+}
+
+bool RoomManager::doesRoomExist(unsigned int id)
+{
+	return m_rooms.count(id) > 0;
 }

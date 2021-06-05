@@ -11,15 +11,14 @@ private:
 	SOCKET m_serverSocket;
 	map<SOCKET, IRequestHandler*> m_clients;
 	RequestHandlerFactory& m_handlerFactory;
+	//map<LoggedUser, SOCKET> m_socketsByUser;
 
 	void bindAndRequests();
 	void handleNewClient(SOCKET clientSock);
 
 public:
 	Communicator(RequestHandlerFactory& RHF);
-	void setFactory(RequestHandlerFactory RHF);
 	~Communicator();
 
 	void startHandleRequests();
 };
-

@@ -121,25 +121,11 @@ RequestResult MenuRequestHandler::getPlayesrInRoom(RequestInfo reqInfo)
 
 	try
 	{
-		GetPlayersInRoomRequest getPlayersInRoomReq = JsonRequestPacketDeserializer::deserializeGetPlayersRequest(reqInfo.buffer);
-		vector<RoomData> rooms = m_roomManager.getRooms();
-		RoomData roomData {UNINITIALIZED , "", ERROR, ERROR, ERROR, ERROR};
-
-		//Iterate through roomDatas to find the room we want
-		for (auto it = rooms.begin(); it != rooms.end(); it++)
-		{
-			if (it->id == getPlayersInRoomReq.roomId)
-			{
-				roomData = *it;
-				break;
-			}
-		}
-		if (roomData.id == UNINITIALIZED)
-			throw UnknownRoomIdException();
+		unsigned int roomId = JsonRequestPacketDeserializer::deserializeGetPlayersRequest(reqInfo.buffer).roomId;
 		
 		//Serialize response buffer
 		GetPlayersInRoomResponse getPlayersInRoomResp;
-		getPlayersInRoomResp.players = m_roomManager.getRoom(roomData.id).getAllUsers();
+		getPlayersInRoomResp.players = m_roomManager.getRoom(roomId).getAllUsers();
 		
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(getPlayersInRoomResp);
 		reqRes.newHandler = this;
