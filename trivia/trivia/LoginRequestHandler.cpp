@@ -1,7 +1,4 @@
 #include "LoginRequestHandler.h"
-#include "JsonResponsePacketSerializer.h"
-#include "ResponseStructs.h"
-
 
 LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& RHF, LoginManager& LM) : m_handlerFactory(RHF), m_loginManager(LM)
 {
@@ -49,6 +46,7 @@ Output: reqResu
 RequestResult LoginRequestHandler::login(RequestInfo reqInfo)
 {
 	RequestResult reqResu;
+	reqResu.newHandler = nullptr;
 	if (reqInfo.id != LOGIN_CODE)
 		return reqResu;
 
@@ -62,7 +60,7 @@ RequestResult LoginRequestHandler::login(RequestInfo reqInfo)
 		//Serialize login buffer with next handler
 		LoginResponse loginResp = { LOGIN_CODE };
 		reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(loginResp);
-		reqResu.newHandler = m_handlerFactory.createMenuRequestHandler();
+		reqResu.newHandler = m_handlerFactory.createMenuRequestHandler(LoggedUser(loginReq.username));
 	}
 	catch (exception& e)
 	{
@@ -83,6 +81,7 @@ Output: reqResu
 RequestResult LoginRequestHandler::signup(RequestInfo reqInfo)
 {
 	RequestResult reqResu;
+	reqResu.newHandler = nullptr;
 	if (reqInfo.id != SIGNUP_CODE)
 		return reqResu;
 
@@ -96,7 +95,7 @@ RequestResult LoginRequestHandler::signup(RequestInfo reqInfo)
 		//Serialize signup buffer with next handler
 		SignupResponse signupResp = { SIGNUP_CODE };
 		reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(signupResp);
-		reqResu.newHandler = m_handlerFactory.createMenuRequestHandler();
+		reqResu.newHandler = m_handlerFactory.createMenuRequestHandler(LoggedUser(signupReq.username));
 	}
 	catch (exception& e)
 	{
