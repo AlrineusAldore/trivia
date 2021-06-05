@@ -3,6 +3,41 @@
 RoomAdminRequestHandler::RoomAdminRequestHandler(RequestHandlerFactory& RHF, RoomManager& RM, LoggedUser user, Room room) : m_handlerFactory(RHF), m_roomManager(RM), m_user(user), m_room(room)
 { }
 
+bool RoomAdminRequestHandler::isRequestRelevant(RequestInfo reqInfo)
+{
+	int id = reqInfo.id;
+	return (id == CLOSE_ROOM_CODE || id == START_GAME_CODE || id == GET_ROOM_STATE_CODE);
+}
+
+RequestResult RoomAdminRequestHandler::handleRequest(RequestInfo reqInfo)
+{
+	RequestResult reqRes;
+	reqRes.newHandler = nullptr;
+
+	switch (reqInfo.id)
+	{
+	case CLOSE_ROOM_CODE:
+		reqRes = closeRoom(reqInfo);
+		break;
+	case START_GAME_CODE:
+		reqRes = startGame(reqInfo);
+		break;
+	case GET_ROOM_STATE_CODE:
+		reqRes = getRoomState(reqInfo);
+		break;
+
+	default:
+		ErrorResponse errResp;
+		errResp.message = "The request is not relevent";
+		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
+		reqRes.newHandler = nullptr;
+		break;
+	}
+
+	return reqRes;
+}
+
+
 RequestResult RoomAdminRequestHandler::closeRoom(RequestInfo reqInfo)
 {
 	RequestResult reqRes;
