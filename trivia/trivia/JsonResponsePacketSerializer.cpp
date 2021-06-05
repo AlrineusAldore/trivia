@@ -33,20 +33,20 @@ Buffer JsonResponsePacketSerializer::serializeResponse(LogoutResponse logoutRes)
     "rooms":
     [
         {
-            "id": int(something),
-            "name": "string(something)",
-            "maxPlayers": int(something),
-            "numOfQuestionsInGame": int(something),
-            "timerPerQuestion": int(something),
-            "isActive": bool(something),
+            "id": int(value),
+            "name": "string(value)",
+            "maxPlayers": int(value),
+            "numOfQuestionsInGame": int(value),
+            "timerPerQuestion": int(value),
+            "isActive": bool(value),
         },
         {
-            "id": int(something),
-            "name": "string(something)",
-            "maxPlayers": int(something),
-            "numOfQuestionsInGame": int(something),
-            "timerPerQuestion": int(something),
-            "isActive": bool(something),
+            "id": int(value),
+            "name": "string(value)",
+            "maxPlayers": int(value),
+            "numOfQuestionsInGame": int(value),
+            "timerPerQuestion": int(value),
+            "isActive": bool(value),
         },
         //etc
     ]
@@ -147,12 +147,12 @@ Buffer JsonResponsePacketSerializer::serializeResponse(GetHighScoreResponse high
 
 /* Json looks like:
 {
-    "username": "string(something)",
-	"gamesPlayed": int(something),
-	"totalAnswers": int(something),
-	"rightAnswers": int(something),
-	"averageAnswerTime": float(something),
-	"bestScore": int(something)
+    "username": "string(value)",
+	"gamesPlayed": int(value),
+	"totalAnswers": int(value),
+	"rightAnswers": int(value),
+	"averageAnswerTime": float(value),
+	"bestScore": int(value)
 }
 */
 Buffer JsonResponsePacketSerializer::serializeResponse(GetPersonalStatsResponse personalStatsRes)
@@ -172,6 +172,65 @@ Buffer JsonResponsePacketSerializer::serializeResponse(GetPersonalStatsResponse 
 
     return createBuffer(personalStatsRes.status, jsonStr);
 }
+
+//Json looks like: { "message": "closeRoomMsg" }
+Buffer JsonResponsePacketSerializer::serializeResponse(CloseRoomResponse closeRoomRes)
+{
+    string jsonStr = "{ \"message\": \"The room has been closed\" }";
+    return createBuffer(closeRoomRes.status, jsonStr);
+    
+}
+
+//Json looks like: { "message": "startGameMsg" }
+Buffer JsonResponsePacketSerializer::serializeResponse(StartGameResponse startGameRes)
+{
+    string jsonStr = "{ \"message\": \"The game has started!\" }";
+    return createBuffer(startGameRes.status, jsonStr);
+}
+
+/* Json looks like:
+{
+    "hasGameBegan": bool(value),
+    "questionCount": int(value),
+    "answerTimeout": int(value),
+    "players": [
+        "string(username1)",
+        "string(username2)",
+        //etc
+    ]
+}
+*/
+Buffer JsonResponsePacketSerializer::serializeResponse(GetRoomStateResponse getRoomStateRes)
+{
+    string jsonStr = "{ ";
+    vector<string> users = getRoomStateRes.players;
+
+    jsonStr += "\"hasGameBegan\": " + getRoomStateRes.hasGameBegan;
+    jsonStr += ", \"questionCount\": " + getRoomStateRes.questionCount;
+    jsonStr += ", \"answerTimeout\": " + getRoomStateRes.answerTimeout;
+    jsonStr += ", \"players\": [ ";
+
+    for (auto it = users.begin(); it != users.end(); it++)
+    {
+        jsonStr += "\"" + *it + "\"";
+
+        if (it != users.end()) //if there are more users, add comma
+            jsonStr += ", ";
+        else                   //if its the last user, close array & json
+            jsonStr += " ] }";
+    }
+
+    return createBuffer(getRoomStateRes.status, jsonStr);
+}
+
+//Json looks like: { "message": "leaveRoomMsg" }
+Buffer JsonResponsePacketSerializer::serializeResponse(LeaveRoomResponse leaveRoomRes)
+{
+    string jsonStr = "{ \"message\": \"You have left the room\" }";
+    return createBuffer(leaveRoomRes.status, jsonStr);
+}
+
+
 
 /*
 Gets a string and returns it as binary buffer

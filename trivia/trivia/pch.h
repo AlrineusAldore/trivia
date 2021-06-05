@@ -53,11 +53,16 @@ typedef vector<byte> Buffer;
 #define ERROR_CODE 42
 #define GET_PLAYERS_IN_ROOM_CODE 3
 #define CREATE_ROOM_CODE 2
-#define JOIN_ROOM_CODE 4
+#define JOIN_ROOM_CODE 1
 #define GET_PERSONAL_STATS_CODE 11
+//codes without deserializer
 #define GET_HIGH_SCORE_CODE 10
 #define LOGOUT_CODE 9
 #define GET_ROOMS_CODE 8
+#define CLOSE_ROOM_CODE 7
+#define START_GAME_CODE 6
+#define GET_ROOM_STATE 5
+#define LEAVE_ROOM 4
 
 //magic values
 #define MAX_BYTE_NUM 1024
