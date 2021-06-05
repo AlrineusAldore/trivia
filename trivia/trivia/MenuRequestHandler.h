@@ -1,5 +1,8 @@
 #pragma once
 #include "IRequestHandler.h"
+#include "JsonRequestPacketDeserializer.h"
+#include "JsonResponsePacketSerializer.h"
+#include "RequestStructs.h"
 #include "RequestHandlerFactory.h"
 
 class MenuRequestHandler : public IRequestHandler
@@ -10,7 +13,7 @@ private:
 	StatisticsManager& m_statsManager;
 	RequestHandlerFactory& m_handlerFactory;
 
-	RequestResult signout(RequestInfo reqInfo);
+	RequestResult logout(RequestInfo reqInfo);
 	RequestResult getRooms(RequestInfo reqInfo);
 	RequestResult getPlayesrInRoom(RequestInfo reqInfo);
 	RequestResult getPersonalStats(RequestInfo reqInfo);
@@ -20,7 +23,7 @@ private:
 public:
 	MenuRequestHandler(RequestHandlerFactory& RHF, RoomManager& RM, StatisticsManager& SM, LoggedUser user);
 
-	virtual bool isRequestRelevant(RequestInfo RI);
-	virtual RequestResult handleRequest(RequestInfo RI);
+	virtual bool isRequestRelevant(RequestInfo reqInfo);
+	virtual RequestResult handleRequest(RequestInfo reqInfo);
 };
 

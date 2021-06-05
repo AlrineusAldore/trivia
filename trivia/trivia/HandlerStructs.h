@@ -13,5 +13,5 @@ typedef struct RequestInfo
 typedef struct RequestResult
 {
 	Buffer buffer;
-	IRequestHandler* newHandler;
+	IRequestHandler* newHandler{};
 } RequestResult;

@@ -132,7 +132,7 @@ Note: It's ordered from highest score to lowest
 Buffer JsonResponsePacketSerializer::serializeResponse(GetHighScoreResponse highScoreRes)
 {
     string jsonStr = "{ \"topPlayers\": [ ";
-    vector<pair<string, float>> stats = highScoreRes.statsList;
+    vector<pair<string, float>> stats = highScoreRes.highScores;
 
     for (int i = 0; i < stats.size(); i++)
     {

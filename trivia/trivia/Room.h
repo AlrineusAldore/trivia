@@ -1,5 +1,4 @@
 #pragma once
-
 #include "RoomData.h"
 #include "LoggedUser.h"
 

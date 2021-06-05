@@ -38,13 +38,13 @@ typedef struct GetPlayersInRoomResponse
 typedef struct GetHighScoreResponse
 {
 	unsigned int status;
-	vector<pair<string, float>> statsList;
+	vector<pair<string, float>> highScores;
 } GetHighScoreResponse;
 
 typedef struct GetPersonalStatsResponse
 {
 	unsigned int status;
-	vector<pair<string, float>> statsList;
+	Stats stats;
 } GetPersonalStatsResponse;
 
 //other structs

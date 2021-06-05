@@ -150,6 +150,9 @@
     <ClInclude Include="TablesStructs.h">
       <Filter>Header Files\Structs</Filter>
     </ClInclude>
+    <ClInclude Include="UnknownRoomIdException.h">
+      <Filter>Header Files\Exceptions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Server.cpp">
@@ -199,6 +202,9 @@
     </ClCompile>
     <ClCompile Include="Helper.cpp">
       <Filter>Source Files\Varies</Filter>
+    </ClCompile>
+    <ClCompile Include="StatisticsManager.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

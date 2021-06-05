@@ -10,7 +10,7 @@ Function returns the top high scores in order
 Input: none
 Output: highScores
 */
-vector<pair<string, float>> StatisticsManager::getHighScore()
+vector<pair<string, float>> StatisticsManager::getHighScores()
 {
 	vector<pair<string, float>> highScores;
 	vector<string> usernames = m_database->getAllUsers();

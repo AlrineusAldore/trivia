@@ -7,7 +7,7 @@ private:
 	sqlite3* _db;
 
 	void checkResult(int res, string subject);
-	Stats* getStatsOfUser(string username);
+	Stats getStatsOfUser(string username);
 
 public:
 	SqliteDatabase();

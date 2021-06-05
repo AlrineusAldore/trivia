@@ -1,6 +1,6 @@
 #include "JsonRequestPacketDeserializer.h"
 
-LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(vector<byte> buffer)
+LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(Buffer buffer)
 {
 	LoginRequest lr { "", "" };
 	int len = 0;
@@ -31,7 +31,7 @@ LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(vector<byte>
 /*
 
 */
-SignupRequest JsonRequestPacketDeserializer::deserializeSingupRequest(vector<byte> buffer)
+SignupRequest JsonRequestPacketDeserializer::deserializeSingupRequest(Buffer buffer)
 {
 	SignupRequest sr { "", "", "" };
 	int len = 0;
@@ -60,7 +60,7 @@ SignupRequest JsonRequestPacketDeserializer::deserializeSingupRequest(vector<byt
 	return sr;
 }
 
-GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersRequest(vector<byte> buffer)
+GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersRequest(Buffer buffer)
 {
 	GetPlayersInRoomRequest playersInRoomReq { ERROR_INVALID_ROOM_ID };
 	int len = 0;
@@ -81,13 +81,13 @@ GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersRequ
 
 		j = json::parse(str);
 
-		playersInRoomReq.roomId = j["id"];
+		playersInRoomReq.roomId = stoi(string(j["id"]));
 	}
 
 	return playersInRoomReq;
 }
 
-JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(vector<byte> buffer)
+JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(Buffer buffer)
 {
 	JoinRoomRequest joinRoomReq { ERROR_INVALID_ROOM_ID };
 	int len = 0;
@@ -108,13 +108,13 @@ JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(vector
 
 		j = json::parse(str);
 
-		joinRoomReq.roomId = j["id"];
+		joinRoomReq.roomId = stoi(string(j["id"]));
 	}
 
 	return joinRoomReq;
 }
 
-CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(vector<byte> buffer)
+CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(Buffer buffer)
 {
 	CreateRoomRequest createRoomReq { "", ERROR, ERROR, ERROR };
 	int len = 0;
@@ -136,9 +136,9 @@ CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(ve
 		j = json::parse(str);
 
 		createRoomReq.roomName = j["roomName"];
-		createRoomReq.maxUsers = j["maxUsers"];
-		createRoomReq.questionCount = j["questionCount"];
-		createRoomReq.answerTimeout = j["answerTimeout"];
+		createRoomReq.maxUsers = stoi(string(j["maxUsers"]));
+		createRoomReq.questionCount = stoi(string(j["questionCount"]));
+		createRoomReq.answerTimeout = stoi(string(j["answerTimeout"]));
 	}
 
 	return createRoomReq;
