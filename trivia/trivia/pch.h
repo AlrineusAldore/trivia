@@ -44,6 +44,7 @@ typedef vector<byte> Buffer;
 #define USER_NOT_FOUND	ERROR
 #define ERROR_EMPTY_FIELD	ERROR
 #define ERROR_INVALID_ROOM_ID	ERROR
+#define UNINITIALIZED	ERROR
 
 //codes
 #define OK_CODE 60
@@ -51,10 +52,12 @@ typedef vector<byte> Buffer;
 #define SIGNUP_CODE 69
 #define ERROR_CODE 42
 #define GET_PLAYERS_IN_ROOM_CODE 3
-#define CREATE_JOIN_ROOM_CODE 2
-#define GET_HIGHSCORE_CODE 10
+#define CREATE_ROOM_CODE 2
+#define JOIN_ROOM_CODE 4
+#define GET_PERSONAL_STATS_CODE 11
+#define GET_HIGH_SCORE_CODE 10
 #define LOGOUT_CODE 9
-#define GET_ROOM_CODE 8
+#define GET_ROOMS_CODE 8
 
 //magic values
 #define MAX_BYTE_NUM 1024

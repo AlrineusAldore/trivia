@@ -10,7 +10,7 @@ private:
 public:
 	StatisticsManager(IDatabase* db);
 
-	vector<pair<string, float>> getHighScore();
+	vector<pair<string, float>> getHighScores();
 	Stats getUserStatistics(string username);
 };
 

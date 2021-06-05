@@ -20,3 +20,20 @@ public:
 	virtual Stats getStatsOfUser(string username) = 0;
 	virtual vector<string> getAllUsers() = 0;
 };
+
+class Temp : IDatabase
+{
+	virtual void addNewUser(string username, string password, string email);
+
+	virtual bool doesUserExist(string username);
+	virtual bool doesPasswordMatch(string username, string password);
+
+	virtual list<Question> getQuestions(int numOfQuestions);
+	virtual float getPlayerAverageAnswerTime(string username);
+	virtual int getNumOfCorrectAnswers(string username);
+	virtual int getNumOfTotalAnswers(string username);
+	virtual int getNumOfPlayerGames(string username);
+
+	virtual Stats getStatsOfUser(string username);
+	virtual vector<string> getAllUsers();
+};

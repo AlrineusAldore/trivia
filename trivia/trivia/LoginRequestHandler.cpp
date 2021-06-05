@@ -1,7 +1,4 @@
 #include "LoginRequestHandler.h"
-#include "JsonResponsePacketSerializer.h"
-#include "ResponseStructs.h"
-
 
 LoginRequestHandler::LoginRequestHandler(RequestHandlerFactory& RHF, LoginManager& LM) : m_handlerFactory(RHF), m_loginManager(LM)
 {
@@ -49,20 +46,21 @@ Output: reqResu
 RequestResult LoginRequestHandler::login(RequestInfo reqInfo)
 {
 	RequestResult reqResu;
+	reqResu.newHandler = nullptr;
 	if (reqInfo.id != LOGIN_CODE)
 		return reqResu;
 
 	try
 	{
 		//Make a login-request to log in with
-		LoginRequest loginReq = JsonRequestPacketDeserializer::deserializerLoginRequest(reqInfo.buffer);
+		LoginRequest loginReq = JsonRequestPacketDeserializer::deserializeLoginRequest(reqInfo.buffer);
 		checkLoginForNull(loginReq);
 		m_loginManager.login(loginReq.username, loginReq.password);
 
 		//Serialize login buffer with next handler
 		LoginResponse loginResp = { LOGIN_CODE };
 		reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(loginResp);
-		reqResu.newHandler = new MenuRequestHandler();
+		reqResu.newHandler = m_handlerFactory.createMenuRequestHandler(LoggedUser(loginReq.username));
 	}
 	catch (exception& e)
 	{
@@ -83,20 +81,21 @@ Output: reqResu
 RequestResult LoginRequestHandler::signup(RequestInfo reqInfo)
 {
 	RequestResult reqResu;
+	reqResu.newHandler = nullptr;
 	if (reqInfo.id != SIGNUP_CODE)
 		return reqResu;
 
 	try
 	{
 		//Make a signup-request to sign up with
-		SignupRequest signupReq = JsonRequestPacketDeserializer::deserializerSingupRequest(reqInfo.buffer);
+		SignupRequest signupReq = JsonRequestPacketDeserializer::deserializeSingupRequest(reqInfo.buffer);
 		checkSignupForNull(signupReq);
 		m_loginManager.signup(signupReq.username, signupReq.password, signupReq.email);
 
 		//Serialize signup buffer with next handler
 		SignupResponse signupResp = { SIGNUP_CODE };
 		reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(signupResp);
-		reqResu.newHandler = new MenuRequestHandler();
+		reqResu.newHandler = m_handlerFactory.createMenuRequestHandler(LoggedUser(signupReq.username));
 	}
 	catch (exception& e)
 	{

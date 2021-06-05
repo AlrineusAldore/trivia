@@ -1,9 +1,17 @@
 #include "RoomManager.h"
 
-//Creates a room and adds it to the room list
-void RoomManager::createRoom(LoggedUser user, RoomData roomData)
+RoomManager::RoomManager()
 {
+	m_highestId = 0;
+}
+
+//Creates a room and adds it to the room list
+void RoomManager::createRoom(LoggedUser& user, RoomData roomData)
+{
+	roomData.id = ++m_highestId; //Makes sure each room has its own id
+
 	Room* room = new Room(roomData);
+	room->addUser(user);
 	m_rooms.insert({ roomData.id, *room });
 }
 
@@ -32,4 +40,14 @@ vector<RoomData> RoomManager::getRooms()
 	}
 
 	return roomDatas;
+}
+
+//Get room based on id
+Room& RoomManager::getRoom(int id)
+{
+	//throw exception if there isn't a room with this id
+	if (m_rooms.count(id) > 0)
+		return m_rooms[id];
+	
+	throw UnknownRoomIdException();
 }
