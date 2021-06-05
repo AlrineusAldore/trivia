@@ -1,29 +1,57 @@
 #include "JsonResponsePacketSerializer.h"
 
+//Json looks like: { "message": "errMsg" }
 Buffer JsonResponsePacketSerializer::serializeResponse(ErrorResponse errorRes)
 {
     string jsonStr = "{ \"message\": \"" +errorRes.message+ "\" }";
     return createBuffer(ERROR_CODE, jsonStr);
 }
 
+//Json looks like: { "message": "loginMsg" }
 Buffer JsonResponsePacketSerializer::serializeResponse(LoginResponse loginRes)
 {
     string jsonStr = "{ \"message\": \"The login was successful!\" }";
     return createBuffer(loginRes.status, jsonStr);
 }
 
+//Json looks like: { "message": "signupMsg" }
 Buffer JsonResponsePacketSerializer::serializeResponse(SignupResponse signupRes)
 {
     string jsonStr = "{ \"message\": \"You signed up successfuly!\" }";
     return createBuffer(signupRes.status, jsonStr);
 }
 
+//String looks like: { "message": "logoutMsg" }
 Buffer JsonResponsePacketSerializer::serializeResponse(LogoutResponse logoutRes)
 {
     string jsonStr = "{ \"message\": \"You've logged out successfuly!\" }";
     return createBuffer(logoutRes.status, jsonStr);
 }
 
+/* Json looks like:
+{
+    "rooms":
+    [
+        {
+            "id": int(something),
+            "name": "string(something)",
+            "maxPlayers": int(something),
+            "numOfQuestionsInGame": int(something),
+            "timerPerQuestion": int(something),
+            "isActive": bool(something),
+        },
+        {
+            "id": int(something),
+            "name": "string(something)",
+            "maxPlayers": int(something),
+            "numOfQuestionsInGame": int(something),
+            "timerPerQuestion": int(something),
+            "isActive": bool(something),
+        },
+        //etc
+    ]
+}
+*/
 Buffer JsonResponsePacketSerializer::serializeResponse(GetRoomsResponse getRoomsRes)
 {
     vector<RoomData> rooms = getRoomsRes.rooms; //to shorten lines
@@ -49,6 +77,16 @@ Buffer JsonResponsePacketSerializer::serializeResponse(GetRoomsResponse getRooms
     return createBuffer(getRoomsRes.status, jsonStr);
 }
 
+/* Json looks like:
+{
+    "players":
+    [
+        "string(name)",
+        "string(name)",
+        //etc
+    ]
+}
+*/
 Buffer JsonResponsePacketSerializer::serializeResponse(GetPlayersInRoomResponse playersInRoomRes)
 {
     vector<string> players = playersInRoomRes.players; //to shorten the lines
@@ -66,18 +104,31 @@ Buffer JsonResponsePacketSerializer::serializeResponse(GetPlayersInRoomResponse 
     return createBuffer(GET_PLAYERS_IN_ROOM_CODE, jsonStr);
 }
 
+//Json looks like: { "message": "joinRoomMsg" }
 Buffer JsonResponsePacketSerializer::serializeResponse(JoinRoomResponse joinRoomRes)
 {
     string jsonStr = "{ \"message\": \"You've joined the room!\" }";
     return createBuffer(joinRoomRes.status, jsonStr);
 }
 
+//Json looks like: { "message": "createRoomMsg" }
 Buffer JsonResponsePacketSerializer::serializeResponse(CreateRoomResponse createRoomRes)
 {
     string jsonStr = "{ \"message\": \"You've created a room successfully!\" }";
     return createBuffer(createRoomRes.status, jsonStr);
 }
 
+/* Json looks like:
+{
+    "topPlayers":
+    [
+        { "string(firstPlayerName)": float(score) },
+        { "string(secondPlayerName)": float(score) },
+        //etc (until 5 players)
+    ]
+}
+Note: It's ordered from highest score to lowest
+*/
 Buffer JsonResponsePacketSerializer::serializeResponse(GetHighScoreResponse highScoreRes)
 {
     string jsonStr = "{ \"topPlayers\": [ ";
@@ -94,7 +145,33 @@ Buffer JsonResponsePacketSerializer::serializeResponse(GetHighScoreResponse high
     return createBuffer(highScoreRes.status, jsonStr);
 }
 
+/* Json looks like:
+{
+    "username": "string(something)",
+	"gamesPlayed": int(something),
+	"totalAnswers": int(something),
+	"rightAnswers": int(something),
+	"averageAnswerTime": float(something),
+	"bestScore": int(something)
+}
+*/
+Buffer JsonResponsePacketSerializer::serializeResponse(GetPersonalStatsResponse personalStatsRes)
+{
+    string jsonStr = "{ ";
+    Stats stats = personalStatsRes.stats;
+    float avrgAnswerTime = stats.totalAnswerTime / stats.totalAnswers;
 
+    jsonStr += "\"username\": \"" + stats.username + "\"";
+    jsonStr += ", \"gamesPlayed\": " + stats.gamesPlayed;
+    jsonStr += ", \"totalAnswers\": " + stats.totalAnswers;
+    jsonStr += ", \"rightAnswers\": " + stats.rightAnswers;
+    jsonStr += ", \"averageAnswerTime\": " + Helper::toStr(avrgAnswerTime);
+    jsonStr += ", \"bestScore\": " + stats.bestScore;
+    
+    jsonStr += " }";
+
+    return createBuffer(personalStatsRes.status, jsonStr);
+}
 
 /*
 Gets a string and returns it as binary buffer
