@@ -5,14 +5,16 @@ RoomManager::RoomManager()
 	m_highestId = 0;
 }
 
-//Creates a room and adds it to the room list
-void RoomManager::createRoom(LoggedUser& user, RoomData roomData)
+//Creates a room and adds it to the room list. Returns room's id
+unsigned int RoomManager::createRoom(LoggedUser& user, RoomData roomData)
 {
 	roomData.id = ++m_highestId; //Makes sure each room has its own id
 
 	Room* room = new Room(roomData);
 	room->addUser(user);
 	m_rooms.insert({ roomData.id, *room });
+
+	return roomData.id;
 }
 
 //Removes a room from the room list and deletes it

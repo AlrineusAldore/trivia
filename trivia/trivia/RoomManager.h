@@ -11,7 +11,7 @@ private:
 public:
 	RoomManager();
 
-	void createRoom(LoggedUser& user, RoomData roomData);
+	unsigned int createRoom(LoggedUser& user, RoomData roomData);
 	void deleteRoom(unsigned int id);
 	unsigned int getRoomState(unsigned int id);
 	vector<RoomData> getRooms();
