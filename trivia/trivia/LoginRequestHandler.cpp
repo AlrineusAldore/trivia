@@ -38,9 +38,9 @@ RequestResult LoginRequestHandler::handleRequest(RequestInfo reqInfo)
 	return reqRes;
 }
 
-RequestHandlerType LoginRequestHandler::getHandlerType()
+HandlerType LoginRequestHandler::getHandlerType()
 {
-	return RequestHandlerType::Login;
+	return HandlerType::Login;
 }
 
 /*
