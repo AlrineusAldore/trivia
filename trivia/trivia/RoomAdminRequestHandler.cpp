@@ -9,6 +9,11 @@ bool RoomAdminRequestHandler::isRequestRelevant(RequestInfo reqInfo)
 	return (id == CLOSE_ROOM_CODE || id == START_GAME_CODE || id == GET_ROOM_STATE_CODE);
 }
 
+RequestHandlerType RoomAdminRequestHandler::getHandlerType()
+{
+	return RequestHandlerType::RoomAdmin;
+}
+
 RequestResult RoomAdminRequestHandler::handleRequest(RequestInfo reqInfo)
 {
 	RequestResult reqRes;

@@ -19,4 +19,6 @@ public:
 
 	virtual bool isRequestRelevant(RequestInfo reqInfo);
 	virtual RequestResult handleRequest(RequestInfo reqInfo);
+
+	virtual RequestHandlerType getHandlerType();
 };

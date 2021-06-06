@@ -38,6 +38,11 @@ RequestResult LoginRequestHandler::handleRequest(RequestInfo reqInfo)
 	return reqRes;
 }
 
+RequestHandlerType LoginRequestHandler::getHandlerType()
+{
+	return RequestHandlerType::Login;
+}
+
 /*
 Function gets info of a request with login code, logs in the person, and returns the result of the request
 Input: reqInfo

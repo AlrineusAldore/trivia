@@ -34,6 +34,11 @@ RequestResult RoomMemberRequestHandler::handleRequest(RequestInfo reqInfo)
 	return reqRes;
 }
 
+RequestHandlerType RoomMemberRequestHandler::getHandlerType()
+{
+	return RequestHandlerType::RoomMember;
+}
+
 RequestResult RoomMemberRequestHandler::leaveRoom(RequestInfo reqInfo)
 {
 	RequestResult reqRes;

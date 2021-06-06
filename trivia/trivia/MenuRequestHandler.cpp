@@ -243,6 +243,11 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo reqInfo)
 	return reqRes;
 }
 
+RequestHandlerType MenuRequestHandler::getHandlerType()
+{
+	return RequestHandlerType::Menu;
+}
+
 /*
 Function creates a room
 Input: reqInfo containing all of the room's properties
