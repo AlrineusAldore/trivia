@@ -1,4 +1,5 @@
 #include "RoomAdminRequestHandler.h"
+#include "Communicator.h"
 
 RoomAdminRequestHandler::RoomAdminRequestHandler(RequestHandlerFactory& RHF, RoomManager& RM, LoggedUser user, Room room) : m_handlerFactory(RHF), m_roomManager(RM), m_user(user), m_room(room)
 { }
@@ -52,11 +53,11 @@ RequestResult RoomAdminRequestHandler::closeRoom(RequestInfo reqInfo)
 
 	try
 	{
-		vector<string> users = m_room.getAllUsers();
-		for (auto it = users.begin(); it != users.end(); it++)
+		//Send every other user a leaveRoomResponse
+		for (auto& it : m_room.getAllUsers())
 		{
-			//remove user from room
-			//send them leaveGameResponse
+			if (it != m_user)
+				m_handlerFactory.getCommunicator().sendUserLeaveRoomResponse(it);
 		}
 		//Remove room from roomManager and delete it
 		m_roomManager.deleteRoom(m_room.getRoomData().id);
@@ -88,11 +89,11 @@ RequestResult RoomAdminRequestHandler::startGame(RequestInfo reqInfo)
 
 	try
 	{
-		vector<string> users = m_room.getAllUsers();
-		for (auto it = users.begin(); it != users.end(); it++)
+		//Start game for every other player in room
+		for (auto& it : m_room.getAllUsers())
 		{
-			//do something?
-			//send them startGameResponse
+			if (it != m_user)
+				m_handlerFactory.getCommunicator().sendUserStartGameResponse(it);
 		}
 
 		//Serialize response buffer

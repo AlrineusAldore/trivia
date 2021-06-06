@@ -93,6 +93,11 @@ void Communicator::handleNewClient(SOCKET clientSock)
 		RequestInfo reqInfo;
 		RequestResult reqResu;
 
+		if (reqInfo.id == CLOSE_ROOM_CODE)
+		{
+			
+		}
+		
 		//Until client closes program
 		while (true)
 		{
@@ -246,4 +251,45 @@ void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, Re
 			}
 		}
 	}
+}
+
+
+//For when 1 user needs to notify others
+void Communicator::sendUserLeaveRoomResponse(LoggedUser user)
+{
+	RequestResult reqResu;
+	SOCKET clientSock = m_socketByUser[user];
+
+	//Serialize response buffer
+	LeaveRoomResponse leaveRoomRes;
+	leaveRoomRes.status = LEAVE_ROOM_CODE;
+
+	reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(leaveRoomRes);
+	reqResu.newHandler = m_clients[clientSock]; //Should be correct handler
+
+	//Send the server's response to the client
+	Helper::sendData(clientSock, Helper::bufferToStr(reqResu.buffer));
+
+	//change client's handler to the new one
+	m_clients[clientSock] = reqResu.newHandler;
+}
+
+//For when 1 user needs to notify others
+void Communicator::sendUserStartGameResponse(LoggedUser user)
+{
+	RequestResult reqResu;
+	SOCKET clientSock = m_socketByUser[user];
+
+	//Serialize response buffer
+	StartGameResponse startGameRes;
+	startGameRes.status = LEAVE_ROOM_CODE;
+
+	reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(startGameRes);
+	reqResu.newHandler = m_clients[clientSock]; //Should be correct handler
+
+	//Send the server's response to the client
+	Helper::sendData(clientSock, Helper::bufferToStr(reqResu.buffer));
+
+	//change client's handler to the new one
+	m_clients[clientSock] = reqResu.newHandler;
 }

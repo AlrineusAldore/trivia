@@ -27,7 +27,7 @@ public:
 
 	void startHandleRequests();
 
-	void sendUserLeaveRoomResponse();
-	void sendUserStartGameResponse();
+	void sendUserLeaveRoomResponse(LoggedUser user);
+	void sendUserStartGameResponse(LoggedUser user);
 
 };
