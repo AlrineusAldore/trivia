@@ -1,9 +1,7 @@
 #pragma once
 #include "IRequestHandler.h"
-#include "JsonRequestPacketDeserializer.h"
-#include "JsonResponsePacketSerializer.h"
-#include "RequestStructs.h"
-#include "RequestHandlerFactory.h"
+#include "RoomAdminRequestHandler.h"
+#include "RoomMemberRequestHandler.h"
 
 class MenuRequestHandler : public IRequestHandler
 {
@@ -25,5 +23,7 @@ public:
 
 	virtual bool isRequestRelevant(RequestInfo reqInfo);
 	virtual RequestResult handleRequest(RequestInfo reqInfo);
+
+	virtual HandlerType getHandlerType();
 };
 

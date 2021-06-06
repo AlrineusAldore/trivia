@@ -94,7 +94,7 @@ JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(Buffer
 	string str = "";
 	json j;
 
-	if (buffer[0] == CREATE_JOIN_ROOM_CODE)
+	if (buffer[0] == JOIN_ROOM_CODE)
 	{
 		for (int i = 1; i < 5; i++)
 		{
@@ -121,7 +121,7 @@ CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(Bu
 	string str = "";
 	json j;
 
-	if (buffer[0] == CREATE_JOIN_ROOM_CODE)
+	if (buffer[0] == CREATE_ROOM_CODE)
 	{
 		for (int i = 1; i < 5; i++)
 		{

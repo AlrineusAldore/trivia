@@ -85,6 +85,26 @@ string Helper::bufferToBinStr(vector<byte> buffer)
 	return binStr;
 }
 
+//Gets string representing buffer and turns it into buffer
+Buffer Helper::strToBuffer(string str)
+{
+	Buffer buffer;
+	for (int i = 0; i < str.size(); i++)
+		buffer.push_back(str[i]);
+
+	return buffer;
+}
+
+//Gets a buffer and turns it into a string representing a buffer
+string Helper::bufferToStr(Buffer buffer)
+{
+	string str = "";
+	for (const auto it : buffer)
+		str += it;
+
+	return str;
+}
+
 /*
 Function calculates the score of the given stats with a formula
 Input: stats
@@ -113,4 +133,75 @@ template <typename T> string Helper::toStr(const T& t)
 bool Helper::sortBySec(const pair<string, float>& a, const pair<string, float>& b)
 {
 	return (a.second < b.second);
+}
+
+GetRoomStateResponse Helper::putRoomDataInRoomState(RoomData roomData, vector<string> users)
+{
+	GetRoomStateResponse getRoomStateRes;
+	getRoomStateRes.status = GET_ROOM_STATE_CODE;
+	getRoomStateRes.answerTimeout = roomData.timePerQuestion;
+	getRoomStateRes.hasGameBegan = roomData.isActive;
+	getRoomStateRes.questionCount = roomData.numOfQuestionsInGame;
+	getRoomStateRes.players = users;
+
+	return getRoomStateRes;
+}
+
+
+
+
+
+
+void Helper::sus()
+{
+	cout << endl << R"(MMMMMMMMMMMMMMMMMMMMMMMMMMMMMWNK0xc'......'''...................',:d0NWMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMWNOo:,'................................',:oONMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMNKkl,'....................................',:cxKNWMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMWKx:'.......',............'''''',,,,,,'''''''',;;:ldkKWMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMXx;'....  ...','...''',,;;::ccllloooooollcc:;;,,''''',:oOXMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMWKl'..... ....'',''',;:cclooddxxkkkOOOOOOkxxxxdolc;,''....,l0WMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMW0c'.........'',,,,';clooddxxxkkkOO00000000Okkxxxxdoc:,'....':xNMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMNOc,... ....',,,;;;,,:oddddxxxxkkkOO00000000OOkkxxkkxol:;'.....,dNMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMWKd:,'..  ..',;;;;:::;,coddddxxxxkkkOO000KKKKOOkkkkxxkxxdlc,'.....,kWMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMNo'.... ..',;::::::;;;:odddddxxxxkkkOOOO0KKKK0OOkkkkxxxxddl:,'.....:0WMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMXo'... ..',;:::::;;;;coddddddxxxxkkkOOOO00KK00OOkkkkkkxxddoc;,.....'dNMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMKl'.....',;;:::::;;:coddddxxxxxxkkkkkOOO000K000Okkkkkkxxddol:,.....,kWMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMM0:.....',;;;;;;:::clodddddxxdxxxxkkkkkkOO000000OOkkkkxxxxdol:,.....,kWMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMO;.....';;;;;;;:lloodddddddddddxxxxxkkkkkOO0KK00Okkkkxxxxddl:,.....'dNMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMWO;. ...,;;;;,;:loooodddddddddddddddxxxxxxxkO00OOkkkkkkxxxxdl:,......oNMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMKc. ...,;;;,,,;:cclloooooooooooddddddddddddxxxxdddddddxxxxddl;'....,OWMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMWx'...',;,,''.''',;;:ccclllllloooooooooolllc::;,,,,;;::cooddoc,....;0MMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMKc...','',,,,,''..'',,;;;;:cccloolllcc::;,'.......',,;;;:codl;... .kMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMK:...''',::;''........'',,;;:clooolcc::;,'.....'''...',:cldkx:....'kWMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMM0;. .',;;;'...','''''...'',;;ldxkkxlc:;'...'''',;c:'..':ldxkxl...';kWMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMKc...;::;,...',,.  .......',:odk00Odc;'..',,'....;lccc::loddxl'.,:lOWMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMNd..'::;;,'''',,...........;lodxO0Oko;'..'',,,;:cloooooodxxxxo,.,coOWMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMWd'.'::;,,''',,,,'''''....';ldxxk0Okdlc:;;;;::ccclloodoolllool;.':oONMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMXl..';:;;,,'''''''''',,,''';coxkOOkxdoooooollcc::clodxxxxolcol:',cd0NMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMKc..,;;;;;;::c:::::ccc:;,,,;coxkkxxdooddooolllcclloodxxxxxxolc:,;lx0WMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMK:..,;;;::clodddoollcc:;,,,;coxkxxdooooddooolllloooddddxxkkxoccclxkKWMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMM0;..',;;:ccloooolcc::;;;,,;:codxxxddoloodolcc::ccloooooooddxdoloxkOKWMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMM0c..';;;:cccllcc:;;;,;;;,,;cloodddddooodddollc:;,,,;:ccllllooooxkOOKWMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMWO:',;;;:::::;,,,,,,,;;;;;:clooooddddooooooooolc:;,'',;:cooccoodkO0NMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMWOl;;;;;;,,''''',,,,,,;;;;clodooooolccccloooolcc:;,''.';coc:lx0XNWMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMWKo;,,,,....''',,,,,,,,,,,;cclcc:;;::cllooolcc:;,'.....;lc:o0WMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMKl;,;,','....'',,,,,,'''',;;;;;;:clllllc:;;,'.......';c::dXMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMWk:;;;;;;,'.....',,,,,'''',;;::cccc:::::;;;,...';,'';cc:ckWMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMXo;;:::::;,....,,,;,,,,,,;;::::::ccclddoooc..:cc:;;ccccdXMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMW0c;;:::c:;,'.'loddoooccllcclokkxO0OOKK0Od:,:lll::clccoKWMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMNkc;:::::;,'..;oOOOK0O000kkOKNNXXNNXXKOo;,:loll:clccoKWMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMNOl;;:c::;,,..':dO000KKK00KKXXXXXKOOd:,;:looolllclxXWMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMWKd:;:c::;;,'...,:clxkOkkkOOOkdoolllc;:coddoollo0NMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMNOo;::::;,,'....,;;:;,,;;;:::oxkkdc:codddddxOXWMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMXx::::;;,,''',;cclllcclooddxkxdlccodddddd0WMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMMMMWNKOxxo:,;::;;;;;;;;;:clloooodoolllclloddxdddooxO00XNWMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMWXOxdl:;;,''',,;;;;;::::::::ccccclloooooddddxxxdolllodccdOXNWWMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMWNX0kdl:,',;::;..,,'',;;;;;;::ccccllllllooooddddddxxdoccloodl,;ldkOKKXNWMMMMMMMMMMMMMM
+MMMMMMMMMMWXOxol:;,,;;'';;::'.';,''',,;;;;:::cccllllllllooddddddddlc:cloodo;,lxxxkkkOO0KXNWMMMMMMMMM
+MMWNXK00Okdc;,,,,,,;;,'';::,.';;,''''',;::::ccclllllllloodddddddoc;,,:clodd:,lkkkkkkkkxxxkO0KNWWMMMM
+K0xolc:;;;;;,''',,,;;,'';:;,,;;,''''''',:cccclloooooooodddxxdddoc::::;;:ldd:;okkkkkkkkkkkxxkxkO0XWWM
+dlc:;,,,,;;,'''',,,;;,',;;;,',,'',,,,,'',:cclllloooooooodddddol:;::clc;,;colldxxxkxkkkkkkkkkkkkxkO0K
+c;,''''',;;,'.',,;;:;,',;;;,.','',,,,,,'',;:clllooooooooooooc:;;:cccool:,,;ldxxxxxkkkkkkkkkkkkkkkkxx
+''''''',,;;,''',;;;:;,'',;;,..',,,,,,,,,'''',:ccllllllllcc:;,,;:cccloddolcclddddxxxkkkkkkkkkkkkkkkkk
+''''''',,,;;''',;;;:;,'',,,,...',,,,,,,,,,''.'',;;;;::;;;,,,,,;cccloddddoooddddddxxxkkkkkkkkkxxkkOkk)" << endl << endl;
 }

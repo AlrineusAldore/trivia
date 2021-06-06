@@ -41,6 +41,11 @@ RequestResult MenuRequestHandler::handleRequest(RequestInfo reqInfo)
 	return reqRes;
 }
 
+HandlerType MenuRequestHandler::getHandlerType()
+{
+	return HandlerType::Menu;
+}
+
 /*
 Function logs out user out of the system with the request info
 Input: reqInfo
@@ -121,25 +126,11 @@ RequestResult MenuRequestHandler::getPlayesrInRoom(RequestInfo reqInfo)
 
 	try
 	{
-		GetPlayersInRoomRequest getPlayersInRoomReq = JsonRequestPacketDeserializer::deserializeGetPlayersRequest(reqInfo.buffer);
-		vector<RoomData> rooms = m_roomManager.getRooms();
-		RoomData roomData {UNINITIALIZED , "", ERROR, ERROR, ERROR, ERROR};
-
-		//Iterate through roomDatas to find the room we want
-		for (auto it = rooms.begin(); it != rooms.end(); it++)
-		{
-			if (it->id == getPlayersInRoomReq.roomId)
-			{
-				roomData = *it;
-				break;
-			}
-		}
-		if (roomData.id == UNINITIALIZED)
-			throw UnknownRoomIdException();
+		unsigned int roomId = JsonRequestPacketDeserializer::deserializeGetPlayersRequest(reqInfo.buffer).roomId;
 		
 		//Serialize response buffer
 		GetPlayersInRoomResponse getPlayersInRoomResp;
-		getPlayersInRoomResp.players = m_roomManager.getRoom(roomData.id).getAllUsers();
+		getPlayersInRoomResp.players = m_roomManager.getRoom(roomId).getAllUsers();
 		
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(getPlayersInRoomResp);
 		reqRes.newHandler = this;
@@ -236,7 +227,7 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo reqInfo)
 	try
 	{
 		//Add user to room
-		int roomId = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(reqInfo.buffer).roomId;
+		unsigned int roomId = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(reqInfo.buffer).roomId;
 		m_roomManager.getRoom(roomId).addUser(m_user);
 
 		//Serialize response buffer
@@ -244,7 +235,7 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo reqInfo)
 		joinRoomRes.status = JOIN_ROOM_CODE;
 
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(joinRoomRes);
-		reqRes.newHandler = this;
+		reqRes.newHandler = m_handlerFactory.createRoomMemberRequestHandler(m_user, m_roomManager.getRoom(roomId));
 	}
 	catch (exception& e)
 	{
@@ -281,14 +272,14 @@ RequestResult MenuRequestHandler::createRoom(RequestInfo reqInfo)
 		roomData.numOfQuestionsInGame = createRoomReq.questionCount;
 		roomData.timePerQuestion = createRoomReq.answerTimeout;
 
-		m_roomManager.createRoom(m_user, roomData);
+		unsigned int id = m_roomManager.createRoom(m_user, roomData);
 
 		//Serialize response buffer
 		CreateRoomResponse createRoomRes;
 		createRoomRes.status = CREATE_ROOM_CODE;
 
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(createRoomRes);
-		reqRes.newHandler = this;
+		reqRes.newHandler = m_handlerFactory.createRoomAdminRequestHandler(m_user, m_roomManager.getRoom(id));
 	}
 	catch (exception& e)
 	{

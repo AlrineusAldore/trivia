@@ -11,11 +11,12 @@ private:
 public:
 	RoomManager();
 
-	void createRoom(LoggedUser& user, RoomData roomData);
-	void deleteRoom(int id);
-	unsigned int getRoomState(int id);
+	unsigned int createRoom(LoggedUser& user, RoomData roomData);
+	void deleteRoom(unsigned int id);
+	unsigned int getRoomState(unsigned int id);
 	vector<RoomData> getRooms();
 
-	Room& getRoom(int id);
+	Room& getRoom(unsigned int id);
+	bool doesRoomExist(unsigned int id);
 };
 

@@ -15,7 +15,10 @@ void LoginManager::signup(string username, string password, string email)
 	if (m_database->doesUserExist(username))
 		throw SignupException();
 	else
+	{
 		m_database->addNewUser(username, password, email);
+		m_loggedUsers.push_back(LoggedUser(username));
+	}
 }
 
 /*
