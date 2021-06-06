@@ -63,7 +63,7 @@ typedef vector<byte> Buffer;
 #define CLOSE_ROOM_CODE 7
 #define START_GAME_CODE 6
 #define GET_ROOM_STATE_CODE 5
-#define LEAVE_ROOM 4
+#define LEAVE_ROOM_CODE 4
 
 //magic values
 #define MAX_BYTE_NUM 1024

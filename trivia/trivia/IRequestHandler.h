@@ -14,3 +14,5 @@ private:
 
 };
 
+enum RequestHandlerType {Login, Menu, RoomAdmin, RoomMember};
+

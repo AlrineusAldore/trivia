@@ -114,3 +114,15 @@ bool Helper::sortBySec(const pair<string, float>& a, const pair<string, float>& 
 {
 	return (a.second < b.second);
 }
+
+GetRoomStateResponse Helper::putRoomDataInRoomState(RoomData roomData, vector<string> users)
+{
+	GetRoomStateResponse getRoomStateRes;
+	getRoomStateRes.status = GET_ROOM_STATE_CODE;
+	getRoomStateRes.answerTimeout = roomData.timePerQuestion;
+	getRoomStateRes.hasGameBegan = roomData.isActive;
+	getRoomStateRes.questionCount = roomData.numOfQuestionsInGame;
+	getRoomStateRes.players = users;
+
+	return getRoomStateRes;
+}

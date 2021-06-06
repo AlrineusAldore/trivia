@@ -117,15 +117,8 @@ RequestResult RoomAdminRequestHandler::getRoomState(RequestInfo reqInfo)
 
 	try
 	{
-		RoomData roomData = m_room.getRoomData();
-
 		//Serialize response buffer
-		GetRoomStateResponse getRoomStateRes;
-		getRoomStateRes.status = GET_ROOM_STATE_CODE;
-		getRoomStateRes.answerTimeout = roomData.timePerQuestion;
-		getRoomStateRes.hasGameBegan = roomData.isActive;
-		getRoomStateRes.questionCount = roomData.numOfQuestionsInGame;
-		getRoomStateRes.players = m_room.getAllUsers();
+		GetRoomStateResponse getRoomStateRes = Helper::putRoomDataInRoomState(m_room.getRoomData(), m_room.getAllUsers());
 
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(getRoomStateRes);
 		reqRes.newHandler = this;
