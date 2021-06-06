@@ -9,7 +9,8 @@ Communicator::Communicator(RequestHandlerFactory& RHF) : m_handlerFactory(RHF)
 	if (m_serverSocket == INVALID_SOCKET)
 		throw exception(__FUNCTION__ " - socket");
 	
-	cout << "\nwhen the socket is sus imgur.com/a/hVABhCu" << endl << endl;
+	cout << "\nwhen the socket is sus" << endl;
+	Helper::sus();
 }
 
 Communicator::~Communicator()
@@ -82,52 +83,167 @@ The method that handles a new client that connects and is called 1 time per clie
 Input: clientSocket
 Output: none
 */
-void Communicator::handleNewClient(SOCKET clientSocket)
+void Communicator::handleNewClient(SOCKET clientSock)
 {
 	try
 	{
-		m_clients.insert({ clientSocket, m_handlerFactory.createLoginRequestHandler() });
+		m_clients.insert({ clientSock, m_handlerFactory.createLoginRequestHandler() });
 
+		pair<RequestInfo, RequestResult> requestPair;
 		RequestInfo reqInfo;
 		RequestResult reqResu;
-		Buffer buffer;
-		string clientMsg = "";
-		string msg = "";
 
-		Helper::sendData(clientSocket, "Welcome! Please sign up or log in to continue.");
-
-		clientMsg = Helper::getPartFromSocket(clientSocket, MAX_BYTE_NUM);
-		
-		//Turn client's msg to buffer and make RequestInfo struct from it
-		buffer = Helper::binStrToBuffer(clientMsg);
-		reqInfo.id = buffer[0];
-		time(&reqInfo.receivalTime);
-		reqInfo.buffer = buffer;
-
-		//Handle the request
-		reqResu = m_clients[clientSocket]->handleRequest(reqInfo);
-
-		//Print the cilent's message details
-		if (reqInfo.id == LOGIN_CODE)
+		//Until client closes program
+		while (true)
 		{
-			LoginRequest lr = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer);
-			cout << "username: " << lr.username << "\t\tpassword: " << lr.password << endl;
+			handleGeneralRequest(clientSock);
 		}
-		else if (reqInfo.id == SIGNUP_CODE)
-		{
-			SignupRequest sr = JsonRequestPacketDeserializer::deserializeSingupRequest(buffer);
-			cout << "username: " << sr.username << "\t\tpassword: " << sr.password << "\t\temail: " << sr.email << endl;
-		}
-		else
-			cout << "Not login nor signup" << endl;
-		
-		//Send response to client
-		msg = Helper::bufferToBinStr(reqResu.buffer);
-		Helper::sendData(clientSocket, msg);
 	}
 	catch (const exception& e)
 	{
-		closesocket(clientSocket);
+		//If client already logged in and crashed/left somewhen after
+		if (m_clients[clientSock] == nullptr || m_clients[clientSock]->getHandlerType() != HandlerType::Login)
+		{
+			//Remove his user from communicator
+			m_socketByUser.erase(m_userBySocket[clientSock]);
+			m_userBySocket.erase(clientSock);
+		}
+		
+		closesocket(clientSock);
 		cerr << "error: " << e.what() << endl;
+	}
+}
+
+/*
+Function returns the current handler type
+Input: clientSock
+Output: HandlerType
+*/
+HandlerType Communicator::getClientHandlerType(SOCKET clientSock)
+{
+	//if null then return null
+	if (m_clients[clientSock] == nullptr)
+		return HandlerType::Null;
+	
+	//otherwise, return its type
+	return m_clients[clientSock]->getHandlerType();
+}
+
+/*
+Function handles a client and calls the appropriate RequestHandler
+Input: clientSock, handlerType
+Output: pair of RequestInfo from client & RequestResult from server
+*/
+pair<RequestInfo, RequestResult> Communicator::handleGeneralRequest(SOCKET clientSock)
+{
+	RequestResult reqResu;
+	RequestInfo reqInfo;
+	string clientMsg = "";
+	Buffer buffer;
+
+	//waiting to get client's request
+	clientMsg = Helper::getPartFromSocket(clientSock, MAX_BYTE_NUM);
+
+	//Turn client's msg to buffer and make RequestInfo struct from it
+	buffer = Helper::strToBuffer(clientMsg);
+	reqInfo.id = buffer[0];
+	time(&reqInfo.receivalTime);
+	reqInfo.buffer = buffer;
+
+	//If request is relevant, handle it. Otherwise throw the appropriate exception
+	if (m_clients[clientSock]->isRequestRelevant(reqInfo))
+		reqResu = m_clients[clientSock]->handleRequest(reqInfo);
+	else
+		throw getIrrelevantException(getClientHandlerType(clientSock));
+
+	handleSpecialCodes(clientSock, reqInfo, reqResu);
+
+	//Send the server's response to the client
+	Helper::sendData(clientSock, Helper::bufferToStr(reqResu.buffer));
+
+	//change client's handler to the new one
+	m_clients[clientSock] = reqResu.newHandler;
+
+	return make_pair(reqInfo, reqResu);
+}
+
+
+//Returns the relevant irrelevant exception based on the handler type
+exception Communicator::getIrrelevantException(HandlerType handlerType)
+{
+	switch (handlerType)
+	{
+	case HandlerType::Login:
+		return IrrelevantLoginException();
+		break;
+
+	case HandlerType::Menu:
+		return IrrelevantMenuException();
+		break;
+
+	case HandlerType::RoomAdmin:
+		return IrrelevantRoomAdminException();
+		break;
+
+	case HandlerType::RoomMember:
+		return IrrelevantRoomMemberException();
+		break;
+
+	case HandlerType::Null:
+		return exception(__FUNCTION__" - unexpected nullptr exception");
+		break;
+
+	default:
+		return exception(__FUNCTION__" - unexpected exception");
+	}
+}
+
+/*
+Handles special codes that use communicator's LoggedUsers
+Input: clientSock, reqInfo, reqResu
+Output: none
+*/
+void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, RequestResult reqResu)
+{
+	Buffer buffer = reqInfo.buffer;
+
+	switch (reqInfo.id)
+	{
+		//Print the cilent's message details & add them to users if succeeded
+		case LOGIN_CODE:
+		{
+			LoginRequest lr = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer);
+			cout << "username: " << lr.username << "\t\tpassword: " << lr.password << endl;
+			if (reqResu.newHandler != nullptr) //successfully logged in or signed up
+			{
+				m_socketByUser.insert({ lr.username, clientSock }); //insert user to communicator
+				m_userBySocket.insert({ clientSock, lr.username });
+			}
+			break;
+		}
+
+		//Print the cilent's message details & add them to users if succeeded
+		case SIGNUP_CODE:
+		{
+			SignupRequest sr = JsonRequestPacketDeserializer::deserializeSingupRequest(buffer);
+			cout << "username: " << sr.username << "\t\tpassword: " << sr.password << "\t\temail: " << sr.email << endl;
+			if (reqResu.newHandler != nullptr) //successfully logged in or signed up
+			{
+				m_socketByUser.insert({ sr.username, clientSock }); //insert user to communicator
+				m_userBySocket.insert({ clientSock, sr.username });
+			}
+			break;
+		}
+
+		//If user logged out, log him out of communicator
+		case LOGOUT_CODE:
+		{
+			//Makes sure the logout was successful by confirming the result's parameters
+			if (reqResu.newHandler != nullptr && reqResu.newHandler->getHandlerType() == HandlerType::Login)
+			{
+				m_socketByUser.erase(m_userBySocket[clientSock]);
+				m_userBySocket.erase(clientSock);
+			}
+		}
 	}
 }
