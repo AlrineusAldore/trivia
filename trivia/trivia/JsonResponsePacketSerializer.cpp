@@ -230,7 +230,50 @@ Buffer JsonResponsePacketSerializer::serializeResponse(LeaveRoomResponse leaveRo
     return createBuffer(leaveRoomRes.status, jsonStr);
 }
 
+/* Json looks like:
+{
+    "results":
+    [
+        {
+            "username": "string(value)",
+            "correctAnswerCount": unsigned int(value),
+            "wrongAnswerCount": unsigned int(value),
+            "averageAnswerTime": unsigned int(value)
+        },
+        {
+            "username": "string(value)",
+            "correctAnswerCount": unsigned int(value),
+            "wrongAnswerCount": unsigned int(value),
+            "averageAnswerTime": unsigned int(value)
+        },
+        //etc
+    ]
+}
+*/
+Buffer JsonResponsePacketSerializer::serializeResponse(GetGameResultsResponse gameResultsResp)
+{
+    string jsonStr = "{ \"results\": [ ";
+    vector<PlayerResults> results = gameResultsResp.results;
+    
+    for (auto it = results.begin(); it != results.end(); it++)
+    {
+        jsonStr += "{ \"username\": \"" + it->username + "\"";
+        jsonStr += ", \"correctAnswerCount\": " + it->correctAnswerCount;
+        jsonStr += ", \"wrongAnswerCount\": " + it->wrongAnswerCount;
+        jsonStr += ", \"averageAnswerTime\": " + it->averageAnswerTime;
 
+        if (it != results.end()) //if there are more users, add comma
+            jsonStr += " }, ";
+        else                   //if its the last user, close array & json
+            jsonStr += " } ] }";
+    }
+
+    return createBuffer(gameResultsResp.status, jsonStr);
+}
+
+Buffer JsonResponsePacketSerializer::serializeResponse(SubmitAnswerResponse submitAnsResp);
+Buffer JsonResponsePacketSerializer::serializeResponse(GetQuestionResponse getQuestionResp);
+Buffer JsonResponsePacketSerializer::serializeResponse(LeaveGameResponse leaveGameResp);
 
 /*
 Gets a string and returns it as binary buffer
