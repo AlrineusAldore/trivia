@@ -118,4 +118,4 @@ typedef struct GetGameResultsResponse
 {
 	unsigned int status;
 	vector<PlayerResults> results;
-};
+} GetGameResultsResponse;
