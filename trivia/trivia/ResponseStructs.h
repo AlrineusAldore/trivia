@@ -84,3 +84,38 @@ typedef struct LeaveRoomResponse
 {
 	unsigned int status;
 } LeaveRoomResponse;
+
+//V4 structs
+
+//struct that'll be inside another struct
+typedef struct PlayerResults
+{
+	string username;
+	unsigned int correctAnswerCount;
+	unsigned int wrongAnswerCount;
+	unsigned int averageAnswerTime;
+};
+
+typedef struct LeaveGameResponse
+{
+	unsigned int status;
+} LeaveGameResponse;
+
+typedef struct GetQuestionResponse
+{
+	unsigned int status;
+	string question;
+	map<unsigned int, string> answers;
+} GetQuestionResponse;
+
+typedef struct SubmitAnswerResponse
+{
+	unsigned int status;
+	unsigned int correctAnswerId;
+} SubmitAnswerResponse;
+
+typedef struct GetGameResultsResponse
+{
+	unsigned int status;
+	vector<PlayerResults> results;
+};
