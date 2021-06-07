@@ -16,7 +16,7 @@ namespace TriviaGame
         {
             TcpClient client = new TcpClient();
 
-            IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 4242);
+            IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8820);
 
             client.Connect(serverEndPoint);
 
