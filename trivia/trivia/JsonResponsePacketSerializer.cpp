@@ -271,9 +271,59 @@ Buffer JsonResponsePacketSerializer::serializeResponse(GetGameResultsResponse ga
     return createBuffer(gameResultsResp.status, jsonStr);
 }
 
-Buffer JsonResponsePacketSerializer::serializeResponse(SubmitAnswerResponse submitAnsResp);
-Buffer JsonResponsePacketSerializer::serializeResponse(GetQuestionResponse getQuestionResp);
-Buffer JsonResponsePacketSerializer::serializeResponse(LeaveGameResponse leaveGameResp);
+// Json looks like: { "correctAnswerId": unsigned int(value) }
+Buffer JsonResponsePacketSerializer::serializeResponse(SubmitAnswerResponse submitAnsResp)
+{
+    string jsonStr = "{ \"correctAnswerId\": " +to_string(submitAnsResp.correctAnswerId)+ " }";
+
+    return createBuffer(submitAnsResp.status, jsonStr);
+}
+
+/* Json looks like:
+{
+    "question": "string(value)",
+    "answers":
+    [
+        {
+            "answerId": unsinged int(value),
+            "answer": "string(value)"
+        },
+        {
+            "answerId": unsinged int(value),
+            "answer": "string(value)"
+        },
+        //etc (2 more times for 4 answers)
+    ]
+}
+*/
+Buffer JsonResponsePacketSerializer::serializeResponse(GetQuestionResponse getQuestionResp)
+{
+    string jsonStr = "{ \"question\": \"" + getQuestionResp.question + "\", ";
+    jsonStr += "\"answers\": [ ";
+
+    map<unsigned int, string> answers = getQuestionResp.answers;
+
+    for (auto it = answers.begin(); it != answers.end(); it++)
+    {
+        jsonStr += "{ \"answerId\": " + it->first;
+        jsonStr += ", \"answer\": \"" + it->second + "\" }";
+
+        if (it != answers.end()) //if there are more users, add comma
+            jsonStr += ", ";
+        else                   //if its the last user, close array & json
+            jsonStr += " ] }";
+    }
+
+    return createBuffer(getQuestionResp.status, jsonStr);
+}
+
+//Json looks like: { }
+Buffer JsonResponsePacketSerializer::serializeResponse(LeaveGameResponse leaveGameResp)
+{
+    return createBuffer(leaveGameResp.status, "{ }");
+}
+
+
 
 /*
 Gets a string and returns it as binary buffer
