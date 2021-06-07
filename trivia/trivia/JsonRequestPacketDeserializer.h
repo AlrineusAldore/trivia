@@ -5,7 +5,13 @@
 class JsonRequestPacketDeserializer
 {
 public:
-	static LoginRequest deserializerLoginRequest(vector<byte> buffer);
-	static SignupRequest deserializerSingupRequest(vector<byte> buffer);
+	static LoginRequest deserializeLoginRequest(Buffer buffer);
+	static SignupRequest deserializeSingupRequest(Buffer buffer);
+
+	static GetPlayersInRoomRequest deserializeGetPlayersRequest(Buffer buffer);
+	static JoinRoomRequest deserializeJoinRoomRequest(Buffer buffer);
+	static CreateRoomRequest deserializeCreateRoomRequest(Buffer buffer);
+
+
 };
 

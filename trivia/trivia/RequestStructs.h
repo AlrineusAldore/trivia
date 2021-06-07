@@ -15,3 +15,21 @@ typedef struct SignupRequest
 } SignupRequest;
 
 typedef SignupRequest User;
+
+typedef struct GetPlayersInRoomRequest
+{
+	unsigned int roomId;
+} GetPlayersInRoomRequest;
+
+typedef struct JoinRoomRequest
+{
+	unsigned int roomId;
+} JoinRoomRequest;
+
+typedef struct CreateRoomRequest
+{
+	string roomName;
+	unsigned int maxUsers;
+	unsigned int questionCount;
+	unsigned int answerTimeout;
+} CreateRoomRequest;

@@ -7,11 +7,11 @@ typedef struct RequestInfo
 {
 	int id;
 	time_t receivalTime;
-	vector<byte> buffer;
+	Buffer buffer;
 } RequestInfo;
 
 typedef struct RequestResult
 {
-	vector<byte> buffer;
-	IRequestHandler* newHandler;
+	Buffer buffer;
+	IRequestHandler* newHandler{};
 } RequestResult;

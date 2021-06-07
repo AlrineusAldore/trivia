@@ -84,3 +84,33 @@ string Helper::bufferToBinStr(vector<byte> buffer)
 
 	return binStr;
 }
+
+/*
+Function calculates the score of the given stats with a formula
+Input: stats
+Output: score
+*/
+float Helper::calculateScore(Stats stats)
+{
+	float avrgTimePerQuestion = stats.totalAnswers / stats.totalAnswerTime;
+	int wrongAnswers = stats.totalAnswers - stats.rightAnswers;
+	
+	//formula that calculates score
+	float score = 10 * ((stats.rightAnswers / avrgTimePerQuestion) * 10 + 20 - wrongAnswers + 20 * stats.rightAnswers);
+	
+	return score;
+}
+
+//Function gets an object and turns it into a string
+template <typename T> string Helper::toStr(const T& t)
+{
+	ostringstream os;
+	os << t;
+	return os.str();
+}
+
+//Function helps sorting by the second element instead of first
+bool Helper::sortBySec(const pair<string, float>& a, const pair<string, float>& b)
+{
+	return (a.second < b.second);
+}
