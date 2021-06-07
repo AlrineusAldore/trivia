@@ -25,5 +25,10 @@ public:
 	static Buffer serializeResponse(StartGameResponse startGameRes);
 	static Buffer serializeResponse(GetRoomStateResponse getRoomStateRes);
 	static Buffer serializeResponse(LeaveRoomResponse leaveRoomRes);
+
+	static Buffer serializeResponse(GetGameResultsResponse gameResultsResp);
+	static Buffer serializeResponse(SubmitAnswerResponse submitAnsResp);
+	static Buffer serializeResponse(GetQuestionResponse getQuestionResp);
+	static Buffer serializeResponse(LeaveGameResponse leaveGameResp);
 };
 
