@@ -1,0 +1,70 @@
+﻿<Page x:Class="TriviaGame.CreateRoom"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:TriviaGame"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="CreateRoom">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Frame x:Name="AllScreen" Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" NavigationUIVisibility="Hidden"/>
+
+        <TextBlock Grid.Column="1" Grid.Row="1" FontWeight="SemiBold"
+                   Text="Create Room" FontSize="60" FontFamily="Segoe UI" 
+                   HorizontalAlignment="Center" Margin="0,0,0,10"
+                   Grid.ColumnSpan="3"/>
+
+        <StackPanel Grid.Row="2" Grid.Column="1">
+
+            <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="Room name:" FontSize="24"
+                           VerticalAlignment="Center" />
+                <TextBox x:Name="RoomName" Width="142" Height="24" 
+                         VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="Number of players:" FontSize="24" 
+                           VerticalAlignment="Center" />
+                <TextBox x:Name="NumOfPlayers" Width="142" Height="24"
+                         VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="Number of question:" FontSize="24" 
+                           VerticalAlignment="Center" />
+                <TextBox x:Name="NumOfQustions" Width="142" Height="24"
+                         VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
+                <TextBlock Text="Time for question:" FontSize="24" 
+                           VerticalAlignment="Center" />
+                <TextBox x:Name="TimeForQustion" Width="142" Height="24"
+                         VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel  Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="send" 
+                        Content="send" FontSize="20" Margin="0,10"
+                        Click="send_Click" 
+                        HorizontalAlignment="Center" Width="160" 
+                        VerticalAlignment="Center"/>
+            </StackPanel>
+
+        </StackPanel>
+    </Grid>
+</Page>
