@@ -150,7 +150,7 @@ pair<RequestInfo, RequestResult> Communicator::handleGeneralRequest(SOCKET clien
 	clientMsg = Helper::getPartFromSocket(clientSock, MAX_BYTE_NUM);
 
 	//Turn client's msg to buffer and make RequestInfo struct from it
-	buffer = Helper::strToBuffer(clientMsg);
+	buffer = Helper::binStrToBuffer(clientMsg);
 	reqInfo.id = buffer[0];
 	time(&reqInfo.receivalTime);
 	reqInfo.buffer = buffer;
@@ -164,7 +164,7 @@ pair<RequestInfo, RequestResult> Communicator::handleGeneralRequest(SOCKET clien
 	handleSpecialCodes(clientSock, reqInfo, reqResu);
 
 	//Send the server's response to the client
-	Helper::sendData(clientSock, Helper::bufferToStr(reqResu.buffer));
+	Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
 
 	//change client's handler to the new one
 	m_clients[clientSock] = reqResu.newHandler;
@@ -268,7 +268,7 @@ void Communicator::sendUserLeaveRoomResponse(LoggedUser user)
 	reqResu.newHandler = m_clients[clientSock]; //Should be correct handler
 
 	//Send the server's response to the client
-	Helper::sendData(clientSock, Helper::bufferToStr(reqResu.buffer));
+	Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
 
 	//change client's handler to the new one
 	m_clients[clientSock] = reqResu.newHandler;
@@ -288,7 +288,7 @@ void Communicator::sendUserStartGameResponse(LoggedUser user)
 	reqResu.newHandler = m_clients[clientSock]; //Should be correct handler
 
 	//Send the server's response to the client
-	Helper::sendData(clientSock, Helper::bufferToStr(reqResu.buffer));
+	Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
 
 	//change client's handler to the new one
 	m_clients[clientSock] = reqResu.newHandler;
