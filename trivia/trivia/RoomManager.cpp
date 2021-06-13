@@ -10,8 +10,7 @@ unsigned int RoomManager::createRoom(LoggedUser& user, RoomData roomData)
 {
 	roomData.id = ++m_highestId; //Makes sure each room has its own id
 
-	Room* room = new Room();
-	room->setRoomData(roomData);
+	Room* room = new Room(roomData);
 	room->addUser(user);
 	m_rooms.insert(make_pair( roomData.id, *room ));
 
