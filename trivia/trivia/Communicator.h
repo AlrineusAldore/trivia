@@ -21,13 +21,16 @@ private:
 	pair<RequestInfo, RequestResult> handleGeneralRequest(SOCKET clientSock);
 	void handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, RequestResult reqResu);
 	exception getIrrelevantException(HandlerType handlerType);
+
+	void handleCloseGameRequest();
+	void handleStartGameRequest();
 public:
 	Communicator(RequestHandlerFactory& RHF);
 	~Communicator();
 
 	void startHandleRequests();
 
-	void sendUserLeaveRoomResponse(LoggedUser user);
+	void sendUserCloseRoomResponse(LoggedUser user);
 	void sendUserStartGameResponse(LoggedUser user);
 
 };

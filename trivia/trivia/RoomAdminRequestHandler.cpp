@@ -53,14 +53,7 @@ RequestResult RoomAdminRequestHandler::closeRoom(RequestInfo reqInfo)
 
 	try
 	{
-		//Send every other user a leaveRoomResponse
-		for (auto& it : m_room.getAllUsers())
-		{
-			if (it != m_user)
-				m_handlerFactory.getCommunicator().sendUserLeaveRoomResponse(it);
-		}
-		//Remove room from roomManager and delete it
-		m_roomManager.deleteRoom(m_room.getRoomData().id);
+		//Sends leave room responses in communicator
 
 		//Serialize response buffer
 		CloseRoomResponse closeRoomRes;
@@ -89,12 +82,7 @@ RequestResult RoomAdminRequestHandler::startGame(RequestInfo reqInfo)
 
 	try
 	{
-		//Start game for every other player in room
-		for (auto& it : m_room.getAllUsers())
-		{
-			if (it != m_user)
-				m_handlerFactory.getCommunicator().sendUserStartGameResponse(it);
-		}
+		//Sends responses to room members in communicator
 
 		//Serialize response buffer
 		StartGameResponse startGameRes;
@@ -138,4 +126,11 @@ RequestResult RoomAdminRequestHandler::getRoomState(RequestInfo reqInfo)
 	}
 
 	return reqRes;
+}
+
+
+//returns a reference to the admin's room
+Room& RoomAdminRequestHandler::getRoom()
+{
+	return m_room;
 }
