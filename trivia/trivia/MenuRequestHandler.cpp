@@ -198,7 +198,7 @@ RequestResult MenuRequestHandler::getHighScore(RequestInfo reqInfo)
 		getHighScoreResp.status = GET_HIGH_SCORE_CODE;
 		getHighScoreResp.highScores = m_statsManager.getHighScores();
 
-		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(getHighScoreResp);
+		//reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(getHighScoreResp);
 		reqRes.newHandler = this;
 	}
 	catch (exception& e)

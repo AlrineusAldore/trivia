@@ -4,6 +4,7 @@ Room::Room(RoomData roomData)
 {
 	m_metaData = roomData;
 }
+Room::Room() {}
 
 RoomData Room::getRoomData()
 {

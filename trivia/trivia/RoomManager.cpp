@@ -12,7 +12,7 @@ unsigned int RoomManager::createRoom(LoggedUser& user, RoomData roomData)
 
 	Room* room = new Room(roomData);
 	room->addUser(user);
-	m_rooms.insert({ roomData.id, *room });
+	m_rooms.insert(make_pair( roomData.id, *room ));
 
 	return roomData.id;
 }

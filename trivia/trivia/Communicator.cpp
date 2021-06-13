@@ -150,7 +150,7 @@ pair<RequestInfo, RequestResult> Communicator::handleGeneralRequest(SOCKET clien
 	clientMsg = Helper::getPartFromSocket(clientSock, MAX_BYTE_NUM);
 
 	//Turn client's msg to buffer and make RequestInfo struct from it
-	buffer = Helper::strToBuffer(clientMsg);
+	buffer = Helper::binStrToBuffer(clientMsg);
 	reqInfo.id = buffer[0];
 	time(&reqInfo.receivalTime);
 	reqInfo.buffer = buffer;
@@ -164,12 +164,152 @@ pair<RequestInfo, RequestResult> Communicator::handleGeneralRequest(SOCKET clien
 	handleSpecialCodes(clientSock, reqInfo, reqResu);
 
 	//Send the server's response to the client
-	Helper::sendData(clientSock, Helper::bufferToStr(reqResu.buffer));
+	Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
 
 	//change client's handler to the new one
 	m_clients[clientSock] = reqResu.newHandler;
 
 	return make_pair(reqInfo, reqResu);
+}
+
+
+/*
+Handles special codes that use communicator's LoggedUsers
+Input: clientSock, reqInfo, reqResu
+Output: none
+*/
+void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, RequestResult reqResu)
+{
+	Buffer buffer = reqInfo.buffer;
+
+	switch (reqInfo.id)
+	{
+		//Print the cilent's message details & add them to users if succeeded
+		case LOGIN_CODE:
+		{
+			LoginRequest lr = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer);
+			cout << "username: " << lr.username << "\t\tpassword: " << lr.password << endl;
+			if (reqResu.newHandler != nullptr) //successfully logged in or signed up
+			{
+				LoggedUser user = LoggedUser(lr.username);
+				m_socketByUser.insert({ user, clientSock }); //insert user to communicator
+				m_userBySocket.insert({ clientSock, user });
+			}
+			break;
+		}
+
+		//Print the cilent's message details & add them to users if succeeded
+		case SIGNUP_CODE:
+		{
+			SignupRequest sr = JsonRequestPacketDeserializer::deserializeSingupRequest(buffer);
+			cout << "username: " << sr.username << "\t\tpassword: " << sr.password << "\t\temail: " << sr.email << endl;
+			if (reqResu.newHandler != nullptr) //successfully logged in or signed up
+			{
+				LoggedUser user = LoggedUser(sr.username);
+				m_socketByUser.insert({ user, clientSock }); //insert user to communicator
+				m_userBySocket.insert({ clientSock, user });
+			}
+			break;
+		}
+
+		//If user logged out, log him out of communicator
+		case LOGOUT_CODE:
+		{
+			//Makes sure the logout was successful by confirming the result's parameters
+			if (reqResu.newHandler != nullptr && reqResu.newHandler->getHandlerType() == HandlerType::Login)
+			{
+				m_socketByUser.erase(m_userBySocket[clientSock]);
+				m_userBySocket.erase(clientSock);
+			}
+			break;
+		}
+
+		case CLOSE_ROOM_CODE:
+		{
+			if (m_clients[clientSock]->getHandlerType() != HandlerType::RoomAdmin)
+				throw exception(__FUNCTION__" - unexpected incorrect handler at close room");
+
+			//get room & all the users in it
+			Room& room = ((RoomAdminRequestHandler*)m_clients[clientSock])->getRoom();
+			vector<string> roomMembers = room.getAllUsers();
+			
+			//Send it to all users in room
+			for (auto it : roomMembers)
+			{
+				LoggedUser currUser = LoggedUser(it);
+				//if user exists in communicator & isn't room admin, send close game resp
+				if (m_socketByUser.count(currUser) > 0 && currUser != m_userBySocket[clientSock])
+					sendUserCloseRoomResponse(currUser);
+			}
+
+			//Remove room from roomManager and delete it
+			m_handlerFactory.getRoomManager().deleteRoom(room.getRoomData().id);
+
+			break;
+		}
+
+		case START_GAME_CODE:
+		{
+			if (m_clients[clientSock]->getHandlerType() != HandlerType::RoomAdmin)
+				throw exception(__FUNCTION__" - unexpected incorrect handler at start game");
+
+			//get room & all the users in it
+			Room& room = ((RoomAdminRequestHandler*)m_clients[clientSock])->getRoom();
+			vector<string> roomMembers = room.getAllUsers();
+
+			//Start game for every other player in room
+			for (auto& it : room.getAllUsers())
+			{
+				LoggedUser currUser = LoggedUser(it);
+				//if user exists in communicator & isn't the admin, send start game resp
+				if (m_socketByUser.count(currUser) > 0 && currUser != m_userBySocket[clientSock])
+					sendUserStartGameResponse(currUser);
+			}
+
+			break;
+		}
+	}
+}
+
+
+//For when 1 user needs to notify others
+void Communicator::sendUserCloseRoomResponse(LoggedUser user)
+{
+	RequestResult reqResu;
+	SOCKET clientSock = m_socketByUser[user];
+
+	//Serialize response buffer
+	CloseRoomResponse closeRoomResp;
+	closeRoomResp.status = CLOSE_ROOM_CODE;
+
+	reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(closeRoomResp);
+	reqResu.newHandler = m_clients[clientSock]; //Should be correct handler
+
+	//Send the server's response to the client
+	Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
+
+	//change client's handler to the new one
+	m_clients[clientSock] = reqResu.newHandler;
+}
+
+//For when 1 user needs to notify others
+void Communicator::sendUserStartGameResponse(LoggedUser user)
+{
+	RequestResult reqResu;
+	SOCKET clientSock = m_socketByUser[user];
+
+	//Serialize response buffer
+	StartGameResponse startGameRes;
+	startGameRes.status = START_GAME_CODE;
+
+	reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(startGameRes);
+	reqResu.newHandler = m_clients[clientSock]; //Should be correct handler
+
+	//Send the server's response to the client
+	Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
+
+	//change client's handler to the new one
+	m_clients[clientSock] = reqResu.newHandler;
 }
 
 
@@ -203,93 +343,12 @@ exception Communicator::getIrrelevantException(HandlerType handlerType)
 	}
 }
 
-/*
-Handles special codes that use communicator's LoggedUsers
-Input: clientSock, reqInfo, reqResu
-Output: none
-*/
-void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, RequestResult reqResu)
+void Communicator::handleCloseGameRequest()
 {
-	Buffer buffer = reqInfo.buffer;
-
-	switch (reqInfo.id)
-	{
-		//Print the cilent's message details & add them to users if succeeded
-		case LOGIN_CODE:
-		{
-			LoginRequest lr = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer);
-			cout << "username: " << lr.username << "\t\tpassword: " << lr.password << endl;
-			if (reqResu.newHandler != nullptr) //successfully logged in or signed up
-			{
-				m_socketByUser.insert({ lr.username, clientSock }); //insert user to communicator
-				m_userBySocket.insert({ clientSock, lr.username });
-			}
-			break;
-		}
-
-		//Print the cilent's message details & add them to users if succeeded
-		case SIGNUP_CODE:
-		{
-			SignupRequest sr = JsonRequestPacketDeserializer::deserializeSingupRequest(buffer);
-			cout << "username: " << sr.username << "\t\tpassword: " << sr.password << "\t\temail: " << sr.email << endl;
-			if (reqResu.newHandler != nullptr) //successfully logged in or signed up
-			{
-				m_socketByUser.insert({ sr.username, clientSock }); //insert user to communicator
-				m_userBySocket.insert({ clientSock, sr.username });
-			}
-			break;
-		}
-
-		//If user logged out, log him out of communicator
-		case LOGOUT_CODE:
-		{
-			//Makes sure the logout was successful by confirming the result's parameters
-			if (reqResu.newHandler != nullptr && reqResu.newHandler->getHandlerType() == HandlerType::Login)
-			{
-				m_socketByUser.erase(m_userBySocket[clientSock]);
-				m_userBySocket.erase(clientSock);
-			}
-		}
-	}
+	
 }
 
-
-//For when 1 user needs to notify others
-void Communicator::sendUserLeaveRoomResponse(LoggedUser user)
+void Communicator::handleStartGameRequest()
 {
-	RequestResult reqResu;
-	SOCKET clientSock = m_socketByUser[user];
 
-	//Serialize response buffer
-	LeaveRoomResponse leaveRoomRes;
-	leaveRoomRes.status = LEAVE_ROOM_CODE;
-
-	reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(leaveRoomRes);
-	reqResu.newHandler = m_clients[clientSock]; //Should be correct handler
-
-	//Send the server's response to the client
-	Helper::sendData(clientSock, Helper::bufferToStr(reqResu.buffer));
-
-	//change client's handler to the new one
-	m_clients[clientSock] = reqResu.newHandler;
-}
-
-//For when 1 user needs to notify others
-void Communicator::sendUserStartGameResponse(LoggedUser user)
-{
-	RequestResult reqResu;
-	SOCKET clientSock = m_socketByUser[user];
-
-	//Serialize response buffer
-	StartGameResponse startGameRes;
-	startGameRes.status = LEAVE_ROOM_CODE;
-
-	reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(startGameRes);
-	reqResu.newHandler = m_clients[clientSock]; //Should be correct handler
-
-	//Send the server's response to the client
-	Helper::sendData(clientSock, Helper::bufferToStr(reqResu.buffer));
-
-	//change client's handler to the new one
-	m_clients[clientSock] = reqResu.newHandler;
 }

@@ -10,6 +10,7 @@ private:
 
 public:
 	Room(RoomData roomData);
+	Room();
 	RoomData getRoomData();
 
 	void addUser(LoggedUser& user);
