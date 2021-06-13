@@ -1,6 +1,11 @@
 #include "Room.h"
 
-Room::Room(RoomData roomData)
+//Room::Room(RoomData roomData)
+//{
+//	m_metaData = roomData;
+//}
+
+void Room::setRoomData(RoomData roomData)
 {
 	m_metaData = roomData;
 }

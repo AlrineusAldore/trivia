@@ -9,7 +9,8 @@ private:
 	vector<LoggedUser> m_users;
 
 public:
-	Room(RoomData roomData);
+	//Room(RoomData roomData);
+	void setRoomData(RoomData roomData);
 	RoomData getRoomData();
 
 	void addUser(LoggedUser& user);

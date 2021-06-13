@@ -3,6 +3,7 @@
 #include <WinSock2.h> //sockets
 #include <Windows.h>
 #include <iostream>
+#include <sstream>
 #include <thread>
 #include <string>
 #include <vector>

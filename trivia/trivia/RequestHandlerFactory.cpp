@@ -3,9 +3,8 @@
 #include "MenuRequestHandler.h"
 #include "RoomAdminRequestHandler.h"
 #include "RoomMemberRequestHandler.h"
-#include "Communicator.h"
 
-RequestHandlerFactory::RequestHandlerFactory(Communicator& com, IDatabase* db) : m_communicator(com), m_loginManager(LoginManager(db)), m_roomManager(RoomManager()), m_statsManager(StatisticsManager(db))
+RequestHandlerFactory::RequestHandlerFactory(IDatabase* db) : m_loginManager(LoginManager(db)), m_roomManager(RoomManager()), m_statsManager(StatisticsManager(db))
 {
 	m_database = db;
 }
@@ -32,10 +31,6 @@ RoomMemberRequestHandler* RequestHandlerFactory::createRoomMemberRequestHandler(
 }
 
 //Getters (references)
-Communicator& RequestHandlerFactory::getCommunicator()
-{
-	return m_communicator;
-}
 LoginManager& RequestHandlerFactory::getLoginManager()
 {
 	return m_loginManager;
