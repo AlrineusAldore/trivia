@@ -136,7 +136,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(GetHighScoreResponse high
 
     for (int i = 0; i < stats.size(); i++)
     {
-        jsonStr += "{ \"" + stats[i].first + "\": " + Helper::toStr(stats[i].second);
+        jsonStr += "{ \"" + stats[i].first + "\": " + toStr(stats[i].second);
         if (i < stats.size() - 1) //add comma if not last one
             jsonStr += " }, ";
     }
@@ -160,12 +160,12 @@ Buffer JsonResponsePacketSerializer::serializeResponse(GetPersonalStatsResponse 
     string jsonStr = "{ ";
     Stats stats = personalStatsRes.stats;
     float avrgAnswerTime = stats.totalAnswerTime / stats.totalAnswers;
-
+    to_string(avrgAnswerTime);
     jsonStr += "\"username\": \"" + stats.username + "\"";
     jsonStr += ", \"gamesPlayed\": " + stats.gamesPlayed;
     jsonStr += ", \"totalAnswers\": " + stats.totalAnswers;
     jsonStr += ", \"rightAnswers\": " + stats.rightAnswers;
-    jsonStr += ", \"averageAnswerTime\": " + Helper::toStr(avrgAnswerTime);
+    jsonStr += ", \"averageAnswerTime\": " + toStr(avrgAnswerTime);
     jsonStr += ", \"bestScore\": " + stats.bestScore;
     
     jsonStr += " }";
@@ -264,4 +264,11 @@ Buffer JsonResponsePacketSerializer::createBuffer(int code, string jsonStr)
     }
 
     return Buffer();
+}
+
+string JsonResponsePacketSerializer::toStr(float num)
+{
+    ostringstream os;
+    os << num;
+    return os.str();
 }
