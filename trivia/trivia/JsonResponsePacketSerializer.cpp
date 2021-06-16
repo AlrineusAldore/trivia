@@ -159,14 +159,24 @@ Buffer JsonResponsePacketSerializer::serializeResponse(GetPersonalStatsResponse 
 {
     string jsonStr = "{ ";
     Stats stats = personalStatsRes.stats;
-    float avrgAnswerTime = stats.totalAnswerTime / stats.totalAnswers;
-    to_string(avrgAnswerTime);
+    string avrgAnswerTime = toStr(stats.totalAnswerTime / stats.totalAnswers);
+    string gamesPlayed = "" +stats.gamesPlayed, totalAnswers = "" + stats.totalAnswers, rightAnswers = "" + stats.rightAnswers, bestScore = "" + stats.bestScore;
+    if (stats.totalAnswers == 0) avrgAnswerTime = "0";
+    if (stats.gamesPlayed == 0)
+    {
+        gamesPlayed = "0";
+        totalAnswers = "0";
+        rightAnswers = "0";
+        bestScore = "0";
+    }
+
+
     jsonStr += "\"username\": \"" + stats.username + "\"";
-    jsonStr += ", \"gamesPlayed\": " + stats.gamesPlayed;
-    jsonStr += ", \"totalAnswers\": " + stats.totalAnswers;
-    jsonStr += ", \"rightAnswers\": " + stats.rightAnswers;
-    jsonStr += ", \"averageAnswerTime\": " + toStr(avrgAnswerTime);
-    jsonStr += ", \"bestScore\": " + stats.bestScore;
+    jsonStr += ", \"gamesPlayed\": " + gamesPlayed;
+    jsonStr += ", \"totalAnswers\": " + totalAnswers;
+    jsonStr += ", \"rightAnswers\": " + rightAnswers;
+    jsonStr += ", \"averageAnswerTime\": " + avrgAnswerTime;
+    jsonStr += ", \"bestScore\": " + bestScore;
     
     jsonStr += " }";
 

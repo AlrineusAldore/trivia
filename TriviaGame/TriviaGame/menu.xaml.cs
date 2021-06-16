@@ -42,7 +42,8 @@ namespace TriviaGame
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-
+            roomsM RM = JsonC.SetClassRooms(client.SendResvMsg("{}", Global.LOGOUT_CODE));
+            System.Windows.Application.Current.Shutdown();
         }
     }
 }

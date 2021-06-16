@@ -47,19 +47,13 @@ namespace TriviaGame
 
     class statsM
     {
-<<<<<<< HEAD
         public string username { get; set; }
         public string gamesPlayed { get; set; }
         public string totalAnswer { get; set; }
-=======
-        public string gamesPlayed { get; set; }
-        public string totalAnswers { get; set; }
->>>>>>> f7ce8a7212498c1e606e29e4d52ab319e5222e1a
         public string rightAnswers { get; set; }
         public string averageAnswerTime { get; set; }
         public string bestScore { get; set; }
 
-<<<<<<< HEAD
         public statsM(string GamesPlayed, string TotalAnswer, string RightAnswers, string averageAnswerTime, string username, string BestScores)
         {
             this.gamesPlayed = GamesPlayed;
@@ -68,15 +62,6 @@ namespace TriviaGame
             this.averageAnswerTime = averageAnswerTime;
             this.username = username;
             this.bestScore = BestScores;
-=======
-        public statsM(string gamesPlayed, string totalAnswers, string rightAnswers, string averageAnswerTime, string bestScore)
-        {
-            this.gamesPlayed = gamesPlayed;
-            this.totalAnswers = totalAnswers;
-            this.rightAnswers = rightAnswers;
-            this.averageAnswerTime = averageAnswerTime;
-            this.bestScore = bestScore;
->>>>>>> f7ce8a7212498c1e606e29e4d52ab319e5222e1a
         }
 
         public string GetJson()

@@ -41,7 +41,10 @@ namespace TriviaGame
         public static string ResvMsg()
         {
             byte[] buffer = new byte[32]; //4 * 8
-            clientStream.Read(new byte[8], 0, 8); //get rid of code
+            byte[] bufferC = new byte[8];
+            clientStream.Read(bufferC, 0, 8); //get rid of code
+            int code = Encoding.UTF8.GetBytes(binToStr(Encoding.UTF8.GetString(bufferC)))[0];
+            if (code == Global.ERROR_CODE) return "0";
             int bytesRead = clientStream.Read(buffer, 0, 32);
             Console.WriteLine("bin len from server: " + Encoding.UTF8.GetString(buffer));
             byte[] lenBytes = Encoding.UTF8.GetBytes(binToStr(Encoding.UTF8.GetString(buffer)));
@@ -73,7 +76,7 @@ namespace TriviaGame
             {
                 return ResvMsg();
             }
-            return "Error";
+            return "0";
         }
 
         //public json StringToJson()
