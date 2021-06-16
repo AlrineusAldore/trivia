@@ -16,20 +16,20 @@ namespace TriviaGame
         {
             TcpClient client = new TcpClient();
 
-            IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8820);
+            IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse(Global.IP), Global.PORT);
 
             client.Connect(serverEndPoint);
 
             clientStream = client.GetStream();
         }
 
-        public static bool SendMsg(string msg, string code)
+        public static bool SendMsg(string msg, int code)
         {
             byte[] buf = new byte[msg.Length+5]; //code(1) + len(4) + msg(len)
-            Array.Copy(Encoding.ASCII.GetBytes(code), buf, 1); //add code to buffer
-            byte[] lenBytes = NumTo4Bytes(msg.Length); //get the length in bytes arr
-            Array.Copy(lenBytes, buf, lenBytes.Length); //add length to buffer
-            Array.Copy(Encoding.ASCII.GetBytes(msg), buf, msg.Length); //add msg to buffer
+
+            buf[0] = Convert.ToByte(code); //add code to buffer
+            Array.Copy(NumTo4Bytes(msg.Length), 0, buf, 1, 4); //add length to buffer
+            Array.Copy(Encoding.ASCII.GetBytes(msg), 0, buf, 5, msg.Length); //add msg to buffer
 
             clientStream.Write(buf, 0, buf.Length);
             clientStream.Flush();
@@ -44,7 +44,7 @@ namespace TriviaGame
             return System.Text.Encoding.UTF8.GetString(buffer.Skip(5).ToArray());
         }
         
-        public static string SendResvMsg(string msg, string code)
+        public static string SendResvMsg(string msg, int code)
         {
             if (SendMsg(msg, code))
             {

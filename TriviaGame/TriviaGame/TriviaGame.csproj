@@ -61,11 +61,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Class1.cs" />
     <Compile Include="client.cs" />
     <Compile Include="CreateRoom.xaml.cs">
       <DependentUpon>CreateRoom.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Global.cs" />
     <Compile Include="JoinRoom.xaml.cs">
       <DependentUpon>JoinRoom.xaml</DependentUpon>
     </Compile>

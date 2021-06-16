@@ -23,7 +23,7 @@ namespace TriviaGame
         public Room()
         {
             InitializeComponent();
-            roomsM RM = JsonC.SetClassRooms(client.SendResvMsg("{\"" + MainFrame.RoomId +  "\" : }", "3"));
+            roomsM RM = JsonC.SetClassRooms(client.SendResvMsg("{\"" + MainFrame.RoomId +  "\" : }", Global.GET_PLAYERS_IN_ROOM_CODE));
             string printM = "";
 
             for (int i = 0; i < RM.Rooms.Length; i++)
@@ -35,7 +35,7 @@ namespace TriviaGame
 
         private void refres_Click(object sender, RoutedEventArgs e)
         {
-            roomsM RM = JsonC.SetClassRooms(client.SendResvMsg("{\"" + MainFrame.RoomId + "\" : }", "3"));
+            roomsM RM = JsonC.SetClassRooms(client.SendResvMsg("{\"" + MainFrame.RoomId + "\" : }", Global.GET_PLAYERS_IN_ROOM_CODE));
             string printM = "";
 
             for (int i = 0; i < RM.Rooms.Length; i++)

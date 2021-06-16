@@ -23,7 +23,7 @@ namespace TriviaGame
         public JoinRoom()
         {
             InitializeComponent();
-            roomsM RM = JsonC.SetClassRooms( client.SendResvMsg("{}", "8"));
+            roomsM RM = JsonC.SetClassRooms( client.SendResvMsg("{}", Global.JOIN_ROOM_CODE));
             string printM = "";
 
             for (int i = 0; i < RM.Rooms.Length; i++)
@@ -41,7 +41,7 @@ namespace TriviaGame
 
         private void refres_Click(object sender, RoutedEventArgs e)
         {
-            roomsM RM = JsonC.SetClassRooms(client.SendResvMsg("{}", "8"));
+            roomsM RM = JsonC.SetClassRooms(client.SendResvMsg("{}", Global.JOIN_ROOM_CODE));
             string printM = "";
 
             for (int i = 0; i < RM.Rooms.Length; i++)

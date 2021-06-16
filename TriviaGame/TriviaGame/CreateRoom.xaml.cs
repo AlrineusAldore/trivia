@@ -29,7 +29,7 @@ namespace TriviaGame
         {
             CroomsM ToMsg = new CroomsM(this.RoomName.Text, this.NumOfQustions.Text, this.NumOfPlayers.Text, this.TimeForQustion.Text);
 
-            client.SendResvMsg(ToMsg.GetJson(), "11");
+            client.SendResvMsg(ToMsg.GetJson(), Global.CREATE_ROOM_CODE);
 
             MainFrame.GetMainFrame().thisFrame.NavigationService.Navigate(new Room());
         }
