@@ -27,6 +27,9 @@ namespace TriviaGame
         public const string IP = "127.0.0.1";
         public const int PORT = 8820;
 
+        public const int OK_STATUS = 1;
+        public const int FAIL_STATUS = 0;
+
         public const int LOGIN_CODE = 100;
         public const int SIGNUP_CODE = 69;
         public const int ERROR_CODE = 42;

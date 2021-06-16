@@ -4,6 +4,8 @@
 #include <Windows.h>
 #include <iostream>
 #include <sstream>
+#include <fstream>
+#include <iomanip>
 #include <thread>
 #include <string>
 #include <vector>
@@ -68,7 +70,7 @@ typedef vector<byte> Buffer;
 #define LEAVE_ROOM_CODE 4
 
 //magic values
-#define MAX_BYTE_NUM 1024
+#define MAX_BYTE_NUM 8192
 #define MAX_HIGHSCORES 5
 #define MAX_QUESTIONS 10
 #define BITS_IN_CHAR 8

@@ -16,7 +16,7 @@ int main()
 	}
 	catch (exception& e)
 	{
-		cout << "Error occured: " << e.what() << endl;
+		cout << __FUNCTION__ << " - Error occured: " << e.what() << endl;
 	}
 	system("PAUSE");
 	return 0;

@@ -9,13 +9,13 @@ namespace TriviaGame
 {
     class loginM
     {
-        public string name { get; set; }
+        public string username { get; set; }
         public string password { get; set; }
 
-        public loginM(string name, string password)
+        public loginM(string username, string password)
         {
             this.password = password;
-            this.name = name;
+            this.username = username;
         }
 
         public string GetJson()
@@ -26,14 +26,14 @@ namespace TriviaGame
 
     class signupM
     {
-        public string name { get; set; }
+        public string username { get; set; }
         public string password { get; set; }
         public string email { get; set; }
 
-        public signupM(string name, string password, string email)
+        public signupM(string username, string password, string email)
         {
             this.password = password;
-            this.name = name;
+            this.username = username;
             this.email = email;
         }
 
@@ -82,15 +82,15 @@ namespace TriviaGame
 
     class CroomsM
     {
-        public string name { get; set; }
+        public string username { get; set; }
         public string Qustions { get; set; }
         public string NumOfPlayers { get; set; }
         public string time { get; set; }
 
 
-        public CroomsM(string name, string Qustions, string NumOfPlayers, string time)
+        public CroomsM(string username, string Qustions, string NumOfPlayers, string time)
         {
-            this.name = name;
+            this.username = username;
             this.Qustions = Qustions;
             this.NumOfPlayers = NumOfPlayers;
             this.time = time;
