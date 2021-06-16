@@ -159,8 +159,10 @@ Buffer JsonResponsePacketSerializer::serializeResponse(GetPersonalStatsResponse 
 {
     string jsonStr = "{ ";
     Stats stats = personalStatsRes.stats;
-    float avrgAnswerTime = stats.totalAnswerTime / stats.totalAnswers;
-    to_string(avrgAnswerTime);
+    float avrgAnswerTime = 0;
+    if (stats.totalAnswers != 0)
+        avrgAnswerTime = stats.totalAnswerTime / stats.totalAnswers;
+
     jsonStr += "\"username\": \"" + stats.username + "\"";
     jsonStr += ", \"gamesPlayed\": " + stats.gamesPlayed;
     jsonStr += ", \"totalAnswers\": " + stats.totalAnswers;

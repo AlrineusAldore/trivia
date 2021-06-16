@@ -228,21 +228,7 @@ vector<string> SqliteDatabase::getAllUsers()
 	return usernames;
 }
 
-///////////////////////////////////////////////////////////////////////
-////////////////////////// Helper functions ///////////////////////////
-/////////////////////////////////////////////////////////////////////// 
-
-//Function checks the result after executing an sql statement
-void SqliteDatabase::checkResult(int res, string subject)
-{
-	if (res != SQLITE_OK)
-	{
-		if (subject == "" || nullptr)
-			subject = "something";
-		cerr << "Error at \"" << subject << "\", err code: " << res << endl;
-	}
-}
-
+//Returns a Stats struct containing all the user's stats
 Stats SqliteDatabase::getStatsOfUser(string username)
 {
 	char** errMsg = nullptr;
@@ -259,7 +245,23 @@ Stats SqliteDatabase::getStatsOfUser(string username)
 		return stats.front();
 	}
 
-	return Stats();
+	Stats s{ username, 0, 0, 0, 0, 0, false };
+	return s;
+}
+
+///////////////////////////////////////////////////////////////////////
+////////////////////////// Helper functions ///////////////////////////
+/////////////////////////////////////////////////////////////////////// 
+
+//Function checks the result after executing an sql statement
+void SqliteDatabase::checkResult(int res, string subject)
+{
+	if (res != SQLITE_OK)
+	{
+		if (subject == "" || nullptr)
+			subject = "something";
+		cerr << "Error at \"" << subject << "\", err code: " << res << endl;
+	}
 }
 
 //callback function for users

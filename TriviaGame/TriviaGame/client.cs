@@ -57,7 +57,8 @@ namespace TriviaGame
             {
                 Console.Write(element + " ");
             }
-            int len = lenBytes[0] | (lenBytes[1] << 8) | (lenBytes[2] << 16) | (lenBytes[3] << 24); ;
+            int len = 0;
+            len = lenBytes[0] | (lenBytes[1] << 8) | (lenBytes[2] << 16) | (lenBytes[3] << 24); ;
             Console.WriteLine("\nserver len: " +len);
 
             buffer = new byte[len * 8];
