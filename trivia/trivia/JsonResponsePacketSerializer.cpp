@@ -159,6 +159,7 @@ Buffer JsonResponsePacketSerializer::serializeResponse(GetPersonalStatsResponse 
 {
     string jsonStr = "{ ";
     Stats stats = personalStatsRes.stats;
+<<<<<<< HEAD
     string avrgAnswerTime = toStr(stats.totalAnswerTime / stats.totalAnswers);
     string gamesPlayed = "" +stats.gamesPlayed, totalAnswers = "" + stats.totalAnswers, rightAnswers = "" + stats.rightAnswers, bestScore = "" + stats.bestScore;
     if (stats.totalAnswers == 0) avrgAnswerTime = "0";
@@ -170,6 +171,11 @@ Buffer JsonResponsePacketSerializer::serializeResponse(GetPersonalStatsResponse 
         bestScore = "0";
     }
 
+=======
+    float avrgAnswerTime = 0;
+    if (stats.totalAnswers != 0)
+        avrgAnswerTime = stats.totalAnswerTime / stats.totalAnswers;
+>>>>>>> b8335c145ef5a4ee9781afb0a990bbc307657d95
 
     jsonStr += "\"username\": \"" + stats.username + "\"";
     jsonStr += ", \"gamesPlayed\": " + gamesPlayed;

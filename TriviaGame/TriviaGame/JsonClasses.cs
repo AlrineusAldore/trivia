@@ -83,15 +83,15 @@ namespace TriviaGame
     class CroomsM
     {
         public string roomName { get; set; }
-        public int questionsCount { get; set; }
+        public int questionCount { get; set; }
         public int maxUsers { get; set; }
         public int answerTimeout { get; set; }
 
 
-        public CroomsM(string roomName, int questionsCount, int maxUsers, int answerTimeout)
+        public CroomsM(string roomName, int questionCount, int maxUsers, int answerTimeout)
         {
             this.roomName = roomName;
-            this.questionsCount = questionsCount;
+            this.questionCount = questionCount;
             this.maxUsers = maxUsers;
             this.answerTimeout = answerTimeout;
         }

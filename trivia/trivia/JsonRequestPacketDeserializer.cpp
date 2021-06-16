@@ -81,7 +81,7 @@ GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersRequ
 
 		j = json::parse(str);
 
-		playersInRoomReq.roomId = stoi(string(j.value("roomId", "0")));
+		playersInRoomReq.roomId = j.value("roomId", 0);
 	}
 
 	return playersInRoomReq;
@@ -108,7 +108,7 @@ JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(Buffer
 
 		j = json::parse(str);
 
-		joinRoomReq.roomId = stoi(string(j.value("roomId", "0")));
+		joinRoomReq.roomId = j.value("roomId", 0);
 	}
 
 	return joinRoomReq;
@@ -136,9 +136,9 @@ CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(Bu
 		j = json::parse(str);
 
 		createRoomReq.roomName = j.value("roomName", "");
-		createRoomReq.maxUsers = stoi(string(j.value("roomName", "")));
-		createRoomReq.questionCount = stoi(string(j.value("roomName", "")));
-		createRoomReq.answerTimeout = stoi(string(j.value("roomName", "")));
+		createRoomReq.maxUsers = j.value("maxUsers", 0);
+		createRoomReq.questionCount = j.value("questionCount", 0);
+		createRoomReq.answerTimeout = j.value("answerTimeout", 0);
 	}
 
 	return createRoomReq;

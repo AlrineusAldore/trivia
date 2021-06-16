@@ -106,7 +106,7 @@ void Communicator::handleNewClient(SOCKET clientSock)
 			buffer = Helper::getBufferFromClient(clientSock);
 
 			cout << "client msg len: " << buffer.size() - 5 << endl;
-			cout << "client msg: " << Helper::bufferToStr(reqInfo.buffer) << endl;
+			cout << "client msg: " << Helper::bufferToStr(buffer) << endl << endl;
 			//Turn client's msg to buffer and make RequestInfo struct from it
 			reqInfo.id = buffer[0];
 			time(&reqInfo.receivalTime);
