@@ -29,7 +29,6 @@ namespace TriviaGame
         private void signupB_Click(object sender, RoutedEventArgs e)
         {
             signupM ToMsg = new signupM(this.name.Text, this.password.Text, this.email.Text);
-
             MessageBox.Show( client.SendResvMsg(ToMsg.GetJson(), Global.SIGNUP_CODE));
 
             this.NavigationService.Navigate(new menu());

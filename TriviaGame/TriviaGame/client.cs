@@ -31,7 +31,13 @@ namespace TriviaGame
             Array.Copy(NumTo4Bytes(msg.Length), 0, buf, 1, 4); //add length to buffer
             Array.Copy(Encoding.ASCII.GetBytes(msg), 0, buf, 5, msg.Length); //add msg to buffer
 
-            clientStream.Write(buf, 0, buf.Length);
+            Console.WriteLine("before binary send-msg is: " + msg);
+            string binStr = "";
+
+            for (int i = 0; i < buf.Length; i++)
+                binStr += Convert.ToString(buf[i], 2).PadLeft(8, '0');
+            Console.WriteLine("binary send-msg is: " + binStr);
+            clientStream.Write(bytesToBinBytes(buf), 0, buf.Length);
             clientStream.Flush();
             return true;
         }
@@ -41,7 +47,7 @@ namespace TriviaGame
             byte[]  buffer = new byte[4096];
             int bytesRead = clientStream.Read(buffer, 0, 4096);
 
-            return System.Text.Encoding.UTF8.GetString(buffer.Skip(5).ToArray());
+            return binToStr(Encoding.UTF8.GetString(buffer)).Substring(5);
         }
         
         public static string SendResvMsg(string msg, int code)
@@ -74,6 +80,41 @@ namespace TriviaGame
             }
 
             return bytes;
+        }
+
+        public static byte[] bytesToBinBytes(byte[] bytes)
+        {
+            string binStr = "";
+
+            for (int i = 0; i < bytes.Length; i++)
+                binStr += Convert.ToString(bytes[i], 2).PadLeft(8, '0');
+
+
+            return Encoding.ASCII.GetBytes(binStr);
+        }
+
+        public static string binToStr(string data)
+        {
+            List<Byte> byteList = new List<Byte>();
+            Console.WriteLine("binStr len: " + data.Length);
+            if (!isBin(data))
+            {
+                Console.WriteLine("client::binToStr - error: string isnt binary");
+                return "error";
+            }
+            for (int i = 0; i < data.Length; i += 8)
+            {
+                byteList.Add(Convert.ToByte(data.Substring(i, 8), 2));
+            }
+            return Encoding.ASCII.GetString(byteList.ToArray());
+        }
+
+        public static bool isBin(string s)
+        {
+            foreach (var c in s)
+                if (c != '0' && c != '1')
+                    return false;
+            return true;
         }
     }
 }

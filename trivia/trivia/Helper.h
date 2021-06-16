@@ -5,6 +5,12 @@
 class Helper
 {
 public:
+	static int getMessageTypeCode(SOCKET sc);
+	static int getIntPartFromSocket(SOCKET sc, int bytesNum);
+	static string getStringPartFromSocket(SOCKET sc, int bytesNum);
+	static void send_update_message_to_client(SOCKET sc, const string& file_content, const string& second_username, const string& all_users);
+	static string getPaddedNumber(int num, int digits);
+
 	static void sendData(SOCKET sc, string message);
 	static char* getPartFromSocket(SOCKET sc, int bytesNum);
 	static char* getPartFromSocket(SOCKET sc, int bytesNum, int flags);
