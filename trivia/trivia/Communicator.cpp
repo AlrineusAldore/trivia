@@ -92,6 +92,7 @@ void Communicator::handleNewClient(SOCKET clientSock)
 		pair<RequestInfo, RequestResult> requestPair;
 		RequestInfo reqInfo;
 		RequestResult reqResu;
+		Buffer buffer;
 
 		if (reqInfo.id == CLOSE_ROOM_CODE)
 		{
@@ -101,7 +102,34 @@ void Communicator::handleNewClient(SOCKET clientSock)
 		//Until client closes program
 		while (true)
 		{
-			handleGeneralRequest(clientSock);
+			//waiting to get client's request
+			buffer = Helper::getBufferFromClient(clientSock);
+
+			cout << "client msg len: " << buffer.size() - 5 << endl;
+			cout << "client msg: " << Helper::bufferToStr(reqInfo.buffer) << endl;
+			//Turn client's msg to buffer and make RequestInfo struct from it
+			reqInfo.id = buffer[0];
+			time(&reqInfo.receivalTime);
+			reqInfo.buffer = buffer;
+
+			//If request is relevant, handle it. Otherwise throw the appropriate exception
+			if (m_clients[clientSock]->isRequestRelevant(reqInfo))
+				reqResu = m_clients[clientSock]->handleRequest(reqInfo);
+			else
+				throw getIrrelevantException(getClientHandlerType(clientSock));
+
+			handleSpecialCodes(clientSock, reqInfo, reqResu);
+
+			cout << "server msg len in bin: " << reqResu.buffer.size() << endl;
+			cout << "server msg: " << Helper::bufferToStr(reqResu.buffer) << endl;
+			//Send the server's response to the client
+			Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
+
+			//change client's handler to the new one
+			/*
+			if (m_clients[clientSock] != reqResu.newHandler)
+				delete m_clients[clientSock];*/
+			m_clients[clientSock] = reqResu.newHandler;
 		}
 	}
 	catch (const exception& e)
@@ -143,45 +171,11 @@ pair<RequestInfo, RequestResult> Communicator::handleGeneralRequest(SOCKET clien
 {
 	RequestResult reqResu;
 	RequestInfo reqInfo;
-	string clientMsg = "";
 	Buffer buffer;
 
 	try
 	{
-		int typeCode = Helper::getMessageTypeCode(clientSock);
-		int len = Helper::getIntPartFromSocket(clientSock, 4);
-		string binStrr = Helper::getStringPartFromSocket(clientSock, len);
-		//waiting to get client's request
-		clientMsg = Helper::getPartFromSocket(clientSock, MAX_BYTE_NUM);
-		cout << "binary msg: " << clientMsg << endl;
-
-		//Turn client's msg to buffer and make RequestInfo struct from it
-		buffer = Helper::binStrToBuffer(clientMsg);
-		reqInfo.id = buffer[0];
-		time(&reqInfo.receivalTime);
-		reqInfo.buffer = buffer;
-
-		cout << "comms - client msg len: " << buffer.size() << endl;
-		cout << "comms - client msg: " << Helper::bufferToStr(buffer) << endl;
-
-		//If request is relevant, handle it. Otherwise throw the appropriate exception
-		if (m_clients[clientSock]->isRequestRelevant(reqInfo))
-			reqResu = m_clients[clientSock]->handleRequest(reqInfo);
-		else
-			throw getIrrelevantException(getClientHandlerType(clientSock));
-
-		handleSpecialCodes(clientSock, reqInfo, reqResu);
-
-		cout << "server msg len in bin: " << reqResu.buffer.size() << endl;
-		cout << "server msg: " << Helper::bufferToStr(reqResu.buffer) << endl;
-		//Send the server's response to the client
-		Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
-
-		//change client's handler to the new one
-		/*
-		if (m_clients[clientSock] != reqResu.newHandler)
-			delete m_clients[clientSock];*/
-		m_clients[clientSock] = reqResu.newHandler;
+		
 	}
 	catch (exception e)
 	{

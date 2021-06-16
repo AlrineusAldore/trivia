@@ -94,8 +94,6 @@ RequestResult LoginRequestHandler::signup(RequestInfo reqInfo)
 
 	try
 	{
-		cout << "client msg len in bin: " << reqInfo.buffer.size() << endl;
-		cout << "client msg: " << Helper::bufferToStr(reqInfo.buffer) << endl;
 		//Make a signup-request to sign up with
 		SignupRequest signupReq = JsonRequestPacketDeserializer::deserializeSingupRequest(reqInfo.buffer);
 		checkSignupForNull(signupReq);

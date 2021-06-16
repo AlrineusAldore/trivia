@@ -1,16 +1,38 @@
 #include "Helper.h"
 
+Buffer Helper::getBufferFromClient(SOCKET sc)
+{
+	Buffer buffer;
+
+	int code = getMessageTypeCode(sc);
+	int len = getLenPartFromSocket(sc, 32);
+	string binMsg = getStringPartFromSocket(sc, len * 8);
+
+	//code
+	buffer.push_back(code);
+	//len
+	buffer.push_back((len >> 24) & 0xFF);
+	buffer.push_back((len >> 16) & 0xFF);
+	buffer.push_back((len >> 8) & 0xFF);
+	buffer.push_back(len & 0xFF);
+	
+	//json msg
+	Buffer msgBuf = binStrToBuffer(binMsg);
+	buffer.insert(buffer.end(), msgBuf.begin(), msgBuf.end());
+
+	return buffer;
+}
+
 // recieves the type code of the message from socket (3 bytes)
 // and returns the code. if no message found in the socket returns 0 (which means the client disconnected)
 int Helper::getMessageTypeCode(SOCKET sc)
 {
-	char* s = getPartFromSocket(sc, 3);
-	std::string msg(s);
-
+	char* s = getPartFromSocket(sc, 8);
+	string msg(s);
 	if (msg == "")
 		return 0;
 
-	int res = std::atoi(s);
+	int res = binStrToBuffer(msg)[0];
 	delete s;
 	return  res;
 }
@@ -30,10 +52,15 @@ void Helper::send_update_message_to_client(SOCKET sc, const string& file_content
 
 // recieve data from socket according byteSize
 // returns the data as int
-int Helper::getIntPartFromSocket(SOCKET sc, int bytesNum)
+int Helper::getLenPartFromSocket(SOCKET sc, int bytesNum)
 {
 	char* s = getPartFromSocket(sc, bytesNum, 0);
-	return atoi(s);
+	Buffer buffer = binStrToBuffer(s);
+	int num = int((unsigned char)(buffer[0]) << 24 |
+            (unsigned char)(buffer[1]) << 16 |
+            (unsigned char)(buffer[2]) << 8 |
+            (unsigned char)(buffer[3]));
+	return num;
 }
 
 // recieve data from socket according byteSize
@@ -98,25 +125,13 @@ Output: buffer
 */
 vector<byte> Helper::binStrToBuffer(string binStr)
 {
-	vector<byte> buffer;
-	int len = 0;
-
-	bitset<BITS_IN_CHAR> status(binStr);
-	buffer.push_back(status.to_ulong());
+	Buffer buffer;
 
 	//Get the len part of the buffer
-	for (int i = CODE_PART; i < LEN_PART; i++) //iterate for each byte
+	for (int i = 0; i < binStr.length(); i += 8) //iterate for each byte
 	{
-		bitset<BITS_IN_CHAR> lenByte(binStr.substr(i * BITS_IN_CHAR, BITS_IN_CHAR)); //get each byte
-		len += lenByte.to_ulong();
-		buffer.push_back(lenByte.to_ulong());
-	}
-	
-	//Get each byte in the message
-	for (int i = LEN_PART; i < binStr.length() / BITS_IN_CHAR; i++)
-	{
-		bitset<BITS_IN_CHAR> strByte(binStr.substr(i * BITS_IN_CHAR, BITS_IN_CHAR)); //get each byte
-		buffer.push_back(strByte.to_ulong());
+		bitset<BITS_IN_CHAR> currByte(binStr.substr(i, BITS_IN_CHAR)); //get each byte
+		buffer.push_back(currByte.to_ulong());
 	}
 	
 	return buffer;
