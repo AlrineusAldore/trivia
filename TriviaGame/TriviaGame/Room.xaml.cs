@@ -26,9 +26,9 @@ namespace TriviaGame
             roomsM RM = JsonC.SetClassRooms(client.SendResvMsg("{\"" + MainFrame.RoomId +  "\" : }", Global.GET_PLAYERS_IN_ROOM_CODE));
             string printM = "";
 
-            for (int i = 0; i < RM.Rooms.Length; i++)
+            for (int i = 0; i < RM.rooms.Length; i++)
             {
-                printM += "\n" + RM.Rooms[i];
+                printM += "\n" + RM.rooms[i];
             }
             this.Players.Text = printM;
         }
@@ -38,9 +38,9 @@ namespace TriviaGame
             roomsM RM = JsonC.SetClassRooms(client.SendResvMsg("{\"" + MainFrame.RoomId + "\" : }", Global.GET_PLAYERS_IN_ROOM_CODE));
             string printM = "";
 
-            for (int i = 0; i < RM.Rooms.Length; i++)
+            for (int i = 0; i < RM.rooms.Length; i++)
             {
-                printM += "\n" + RM.Rooms[i];
+                printM += "\n" + RM.rooms[i];
             }
             this.Players.Text = printM;
         }
