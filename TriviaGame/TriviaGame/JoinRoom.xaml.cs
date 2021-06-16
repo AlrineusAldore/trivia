@@ -23,12 +23,12 @@ namespace TriviaGame
         public JoinRoom()
         {
             InitializeComponent();
-            roomsM RM = JsonC.SetClassRooms( client.SendResvMsg("{}", Global.JOIN_ROOM_CODE));
+            roomsM RM = JsonC.SetClassRooms( client.SendResvMsg("{}", Global.GET_PLAYERS_IN_ROOM_CODE));
             string printM = "";
 
-            for (int i = 0; i < RM.Rooms.Length; i++)
+            for (int i = 0; i < RM.rooms.Length; i++)
             {
-                printM += "\n" +  RM.Rooms[i];
+                printM += "\n" +  RM.rooms[i];
             }
             this.rooms.Text = printM;
         }
@@ -44,9 +44,9 @@ namespace TriviaGame
             roomsM RM = JsonC.SetClassRooms(client.SendResvMsg("{}", Global.JOIN_ROOM_CODE));
             string printM = "";
 
-            for (int i = 0; i < RM.Rooms.Length; i++)
+            for (int i = 0; i < RM.rooms.Length; i++)
             {
-                printM += "\n" + RM.Rooms[i];
+                printM += "\n" + RM.rooms[i];
             }
             this.rooms.Text = printM;
         }

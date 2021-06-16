@@ -64,7 +64,7 @@ namespace TriviaGame
             bytesRead = clientStream.Read(buffer, 0, len * 8);
 
             Console.WriteLine("bytes read: " + bytesRead);
-            return binToStr(Encoding.UTF8.GetString(buffer)).Substring(5);
+            return binToStr(Encoding.UTF8.GetString(buffer));
         }
         
         public static string SendResvMsg(string msg, int code)
