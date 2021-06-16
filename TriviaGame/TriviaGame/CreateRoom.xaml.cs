@@ -24,7 +24,7 @@ namespace TriviaGame
         {
             InitializeComponent();
         }
-
+        
         private void send_Click(object sender, RoutedEventArgs e)
         {
             CroomsM ToMsg = new CroomsM(this.RoomName.Text, this.NumOfQustions.Text, this.NumOfPlayers.Text, this.TimeForQustion.Text);

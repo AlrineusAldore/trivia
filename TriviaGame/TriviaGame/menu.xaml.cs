@@ -37,7 +37,7 @@ namespace TriviaGame
 
         private void Statistics_Click(object sender, RoutedEventArgs e)
         {
-
+            this.show.NavigationService.Navigate(new Stats());
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
