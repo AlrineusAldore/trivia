@@ -40,11 +40,25 @@ namespace TriviaGame
 
         public static string ResvMsg()
         {
-            byte[] buffer = new byte[40]; //5 * 8
-            int bytesRead = clientStream.Read(buffer, 0, 40); 
-            byte[] lenBytes = Encoding.UTF8.GetBytes(binToStr(Encoding.UTF8.GetString(buffer)).Substring(1));
-            int len = BitConverter.ToInt32(lenBytes, 0);
-            Console.WriteLine("server len: " +len);
+            byte[] buffer = new byte[32]; //4 * 8
+            clientStream.Read(new byte[8], 0, 8); //get rid of code
+            int bytesRead = clientStream.Read(buffer, 0, 32);
+            Console.WriteLine("bin len from server: " + Encoding.UTF8.GetString(buffer));
+            byte[] lenBytes = Encoding.UTF8.GetBytes(binToStr(Encoding.UTF8.GetString(buffer)));
+
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(lenBytes);
+                Console.WriteLine("reversed");
+            }
+            //int len = BitConverter.ToInt32(lenBytes, 0);
+            Console.Write("lenBytes bin: ");
+            foreach(byte element in lenBytes)
+            {
+                Console.Write(element + " ");
+            }
+            int len = lenBytes[0] | (lenBytes[1] << 8) | (lenBytes[2] << 16) | (lenBytes[3] << 24); ;
+            Console.WriteLine("\nserver len: " +len);
 
             buffer = new byte[len * 8];
             bytesRead = clientStream.Read(buffer, 0, len * 8);
