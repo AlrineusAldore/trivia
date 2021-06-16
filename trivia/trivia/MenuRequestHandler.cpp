@@ -22,6 +22,7 @@ RequestResult MenuRequestHandler::handleRequest(RequestInfo reqInfo)
 		errResp.message = "the request is not relevent";
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
 		reqRes.newHandler = nullptr;
+		throw (IrrelevantMenuException());
 	}
 	else if (id == GET_ROOMS_CODE)
 		reqRes = getRooms(reqInfo);
@@ -198,7 +199,7 @@ RequestResult MenuRequestHandler::getHighScore(RequestInfo reqInfo)
 		getHighScoreResp.status = GET_HIGH_SCORE_CODE;
 		getHighScoreResp.highScores = m_statsManager.getHighScores();
 
-		//reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(getHighScoreResp);
+		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(getHighScoreResp);
 		reqRes.newHandler = this;
 	}
 	catch (exception& e)
@@ -207,6 +208,7 @@ RequestResult MenuRequestHandler::getHighScore(RequestInfo reqInfo)
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
 		reqRes.newHandler = nullptr;
+		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
 	return reqRes;
@@ -243,6 +245,7 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo reqInfo)
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
 		reqRes.newHandler = nullptr;
+		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
 	return reqRes;
@@ -287,6 +290,7 @@ RequestResult MenuRequestHandler::createRoom(RequestInfo reqInfo)
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
 		reqRes.newHandler = nullptr;
+		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
 	return reqRes;

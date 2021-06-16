@@ -1,5 +1,5 @@
 #include "RoomAdminRequestHandler.h"
-#include "Communicator.h"
+#include "MenuRequestHandler.h"
 
 RoomAdminRequestHandler::RoomAdminRequestHandler(RequestHandlerFactory& RHF, RoomManager& RM, LoggedUser user, Room room) : m_handlerFactory(RHF), m_roomManager(RM), m_user(user), m_room(room)
 { }
@@ -37,6 +37,7 @@ RequestResult RoomAdminRequestHandler::handleRequest(RequestInfo reqInfo)
 		errResp.message = "The request is not relevent";
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
 		reqRes.newHandler = nullptr;
+		throw(IrrelevantRoomAdminException());
 		break;
 	}
 
@@ -60,7 +61,7 @@ RequestResult RoomAdminRequestHandler::closeRoom(RequestInfo reqInfo)
 		closeRoomRes.status = CLOSE_ROOM_CODE;
 
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(closeRoomRes);
-		reqRes.newHandler = this;
+		reqRes.newHandler = m_handlerFactory.createMenuRequestHandler(m_user);
 	}
 	catch (exception& e)
 	{
@@ -68,6 +69,7 @@ RequestResult RoomAdminRequestHandler::closeRoom(RequestInfo reqInfo)
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
 		reqRes.newHandler = nullptr;
+		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
 	return reqRes;
@@ -97,6 +99,7 @@ RequestResult RoomAdminRequestHandler::startGame(RequestInfo reqInfo)
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
 		reqRes.newHandler = nullptr;
+		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
 	return reqRes;
@@ -123,6 +126,7 @@ RequestResult RoomAdminRequestHandler::getRoomState(RequestInfo reqInfo)
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
 		reqRes.newHandler = nullptr;
+		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
 	return reqRes;

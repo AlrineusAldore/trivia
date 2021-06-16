@@ -115,7 +115,7 @@ void Communicator::handleNewClient(SOCKET clientSock)
 		}
 		
 		closesocket(clientSock);
-		cerr << "error: " << e.what() << endl;
+		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 }
 
@@ -146,28 +146,35 @@ pair<RequestInfo, RequestResult> Communicator::handleGeneralRequest(SOCKET clien
 	string clientMsg = "";
 	Buffer buffer;
 
-	//waiting to get client's request
-	clientMsg = Helper::getPartFromSocket(clientSock, MAX_BYTE_NUM);
+	try
+	{
+		//waiting to get client's request
+		clientMsg = Helper::getPartFromSocket(clientSock, MAX_BYTE_NUM);
 
-	//Turn client's msg to buffer and make RequestInfo struct from it
-	buffer = Helper::binStrToBuffer(clientMsg);
-	reqInfo.id = buffer[0];
-	time(&reqInfo.receivalTime);
-	reqInfo.buffer = buffer;
+		//Turn client's msg to buffer and make RequestInfo struct from it
+		buffer = Helper::binStrToBuffer(clientMsg);
+		reqInfo.id = buffer[0];
+		time(&reqInfo.receivalTime);
+		reqInfo.buffer = buffer;
 
-	//If request is relevant, handle it. Otherwise throw the appropriate exception
-	if (m_clients[clientSock]->isRequestRelevant(reqInfo))
-		reqResu = m_clients[clientSock]->handleRequest(reqInfo);
-	else
-		throw getIrrelevantException(getClientHandlerType(clientSock));
+		//If request is relevant, handle it. Otherwise throw the appropriate exception
+		if (m_clients[clientSock]->isRequestRelevant(reqInfo))
+			reqResu = m_clients[clientSock]->handleRequest(reqInfo);
+		else
+			throw getIrrelevantException(getClientHandlerType(clientSock));
 
-	handleSpecialCodes(clientSock, reqInfo, reqResu);
+		handleSpecialCodes(clientSock, reqInfo, reqResu);
 
-	//Send the server's response to the client
-	Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
+		//Send the server's response to the client
+		Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
 
-	//change client's handler to the new one
-	m_clients[clientSock] = reqResu.newHandler;
+		//change client's handler to the new one
+		m_clients[clientSock] = reqResu.newHandler;
+	}
+	catch (exception e)
+	{
+		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
+	}
 
 	return make_pair(reqInfo, reqResu);
 }
@@ -182,9 +189,11 @@ void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, Re
 {
 	Buffer buffer = reqInfo.buffer;
 
-	switch (reqInfo.id)
+	try
 	{
-		//Print the cilent's message details & add them to users if succeeded
+		switch (reqInfo.id)
+		{
+			//Print the cilent's message details & add them to users if succeeded
 		case LOGIN_CODE:
 		{
 			LoginRequest lr = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer);
@@ -232,7 +241,7 @@ void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, Re
 			//get room & all the users in it
 			Room& room = ((RoomAdminRequestHandler*)m_clients[clientSock])->getRoom();
 			vector<string> roomMembers = room.getAllUsers();
-			
+
 			//Send it to all users in room
 			for (auto it : roomMembers)
 			{
@@ -268,6 +277,11 @@ void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, Re
 
 			break;
 		}
+		}
+	}
+	catch (exception e)
+	{
+		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 }
 
