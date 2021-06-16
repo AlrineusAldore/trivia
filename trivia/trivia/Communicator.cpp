@@ -69,7 +69,7 @@ void Communicator::bindAndRequests()
 	if (client_socket == INVALID_SOCKET)
 		throw exception(__FUNCTION__);
 
-	cout << "Client accepted. Server and client can speak" << endl;
+	cout << "\nClient accepted. Server and client can speak" << endl;
 
 	// the function that handle the conversation with the client
 

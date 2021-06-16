@@ -48,14 +48,15 @@ typedef vector<byte> Buffer;
 #define ERROR_INVALID_ROOM_ID	ERROR
 #define UNINITIALIZED	ERROR
 
+#define OK_STATUS 1
+#define FAIL_STATUS 0
 //codes
-#define OK_CODE 60
 #define LOGIN_CODE 100
 #define SIGNUP_CODE 69
 #define ERROR_CODE 42
 #define GET_PLAYERS_IN_ROOM_CODE 3
 #define CREATE_ROOM_CODE 2
-#define JOIN_ROOM_CODE 1
+#define JOIN_ROOM_CODE 12
 #define GET_PERSONAL_STATS_CODE 11
 //codes without deserializer
 #define GET_HIGH_SCORE_CODE 10
