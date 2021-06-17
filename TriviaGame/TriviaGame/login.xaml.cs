@@ -28,7 +28,11 @@ namespace TriviaGame
         {
             loginM ToMsg = new loginM(this.name.Text, this.password.Text);
 
-            MessageBox.Show(client.SendResvMsg(ToMsg.GetJson(), Global.LOGIN_CODE));
+            if (client.SendResvMsg(ToMsg.GetJson(), Global.LOGIN_CODE) == "0")
+            {
+                MessageBox.Show("Error");
+                return;
+            }
 
             this.NavigationService.Navigate( new menu());
         }
