@@ -207,7 +207,7 @@ bool Helper::sortBySec(const pair<string, float>& a, const pair<string, float>& 
 
 GetRoomStateResponse Helper::putRoomDataInRoomState(RoomData roomData, vector<string> users)
 {
-	GetRoomStateResponse getRoomStateRes;
+	GetRoomStateResponse getRoomStateRes {0, false, users, 0, 0};
 	getRoomStateRes.status = GET_ROOM_STATE_CODE;
 	getRoomStateRes.answerTimeout = roomData.timePerQuestion;
 	getRoomStateRes.hasGameBegan = roomData.isActive;

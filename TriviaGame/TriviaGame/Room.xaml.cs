@@ -23,26 +23,25 @@ namespace TriviaGame
         public Room()
         {
             InitializeComponent();
-            roomsM RM = JsonC.SetClassRooms(client.SendResvMsg("{\"" + MainFrame.RoomId +  "\" : }", Global.GET_PLAYERS_IN_ROOM_CODE));
-            string printM = "";
+            roomStateM roomState = JsonC.SetClassRoomState(client.SendResvMsg("{}", Global.GET_ROOM_STATE_CODE));
+            string printPlayers = "";
+            string printSettings = "";
 
-            for (int i = 0; i < RM.rooms.Length; i++)
+            printSettings += "Number of players: " + roomState.players.Length;
+            printSettings += "\tNumber of questions: " + roomState.questionCount;
+            printSettings += "\tTime per question: " + roomState.answerTimeout;
+            this.settings.Text = printSettings;
+
+            for (int i = 0; i < roomState.players.Length; i++)
             {
-                printM += "\n" + RM.rooms[i];
+                printPlayers += "\n" + roomState.players[i];
             }
-            this.Players.Text = printM;
+            this.Players.Text = printPlayers;
         }
 
         private void refres_Click(object sender, RoutedEventArgs e)
         {
-            roomsM RM = JsonC.SetClassRooms(client.SendResvMsg("{\"" + MainFrame.RoomId + "\" : }", Global.GET_PLAYERS_IN_ROOM_CODE));
-            string printM = "";
-
-            for (int i = 0; i < RM.rooms.Length; i++)
-            {
-                printM += "\n" + RM.rooms[i];
-            }
-            this.Players.Text = printM;
+            this.NavigationService.Refresh();
         }
     }
 }

@@ -88,7 +88,7 @@ void Communicator::handleNewClient(SOCKET clientSock)
 	try
 	{
 		m_clients.insert({ clientSock, m_handlerFactory.createLoginRequestHandler() });
-
+		
 		pair<RequestInfo, RequestResult> requestPair;
 		RequestInfo reqInfo;
 		RequestResult reqResu;
@@ -120,7 +120,7 @@ void Communicator::handleNewClient(SOCKET clientSock)
 
 			handleSpecialCodes(clientSock, reqInfo, reqResu);
 
-			cout << "server msg len in bin: " << reqResu.buffer.size() << endl;
+			cout << "server msg len: " << reqResu.buffer.size()-5 << endl;
 			cout << "server msg: " << Helper::bufferToStr(reqResu.buffer) << endl;
 			//Send the server's response to the client
 			Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
@@ -134,6 +134,8 @@ void Communicator::handleNewClient(SOCKET clientSock)
 	}
 	catch (const exception& e)
 	{
+		m_handlerFactory.getLoginManager().logout(m_userBySocket[clientSock].getUsername());
+		
 		//If client already logged in and crashed/left somewhen after
 		if (m_clients[clientSock] == nullptr || m_clients[clientSock]->getHandlerType() != HandlerType::Login)
 		{
@@ -141,7 +143,9 @@ void Communicator::handleNewClient(SOCKET clientSock)
 			m_socketByUser.erase(m_userBySocket[clientSock]);
 			m_userBySocket.erase(clientSock);
 		}
-		
+
+		m_clients.erase(clientSock);
+
 		closesocket(clientSock);
 		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}

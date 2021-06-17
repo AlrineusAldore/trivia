@@ -60,12 +60,12 @@ Buffer JsonResponsePacketSerializer::serializeResponse(GetRoomsResponse getRooms
     //add each json (roomdata) each iteration
     for (int i = 0; i < rooms.size(); i++)
     {
-        jsonStr += "{ \"id\": " +rooms[i].id;
+        jsonStr += "{ \"id\": " +toStr(rooms[i].id);
         jsonStr += ", \"name\": \"" +rooms[i].name+ "\"";
-        jsonStr += ", \"maxPlayers\": " +rooms[i].maxPlayers;
-        jsonStr += ", \"numOfQuestionsInGame\": " +rooms[i].numOfQuestionsInGame;
-        jsonStr += ", \"timerPerQuestion\": " +rooms[i].timePerQuestion;
-        jsonStr += ", \"isActive\": " +rooms[i].isActive;
+        jsonStr += ", \"maxPlayers\": " + toStr(rooms[i].maxPlayers);
+        jsonStr += ", \"numOfQuestionsInGame\": " + toStr(rooms[i].numOfQuestionsInGame);
+        jsonStr += ", \"timerPerQuestion\": " + toStr(rooms[i].timePerQuestion);
+        jsonStr += ", \"isActive\": " + toStr(rooms[i].isActive);
 
         if (i == rooms.size() - 1) //if last one close it for good
             jsonStr += " }";
@@ -206,17 +206,19 @@ Buffer JsonResponsePacketSerializer::serializeResponse(GetRoomStateResponse getR
 {
     string jsonStr = "{ ";
     vector<string> users = getRoomStateRes.players;
-
-    jsonStr += "\"hasGameBegan\": " + getRoomStateRes.hasGameBegan;
-    jsonStr += ", \"questionCount\": " + getRoomStateRes.questionCount;
-    jsonStr += ", \"answerTimeout\": " + getRoomStateRes.answerTimeout;
+    if (getRoomStateRes.hasGameBegan)
+        jsonStr += "\"hasGameBegan\": true";
+    else
+        jsonStr += "\"hasGameBegan\": false";
+    jsonStr += ", \"questionCount\": " + toStr(getRoomStateRes.questionCount);
+    jsonStr += ", \"answerTimeout\": " + toStr(getRoomStateRes.answerTimeout);
     jsonStr += ", \"players\": [ ";
 
-    for (auto it = users.begin(); it != users.end(); it++)
+    for (int i = 0; i < users.size(); i++)
     {
-        jsonStr += "\"" + *it + "\"";
+        jsonStr += "\"" + users[i] + "\"";
 
-        if (it != users.end()) //if there are more users, add comma
+        if (i != users.size()-1) //if there are more users, add comma
             jsonStr += ", ";
         else                   //if its the last user, close array & json
             jsonStr += " ] }";
@@ -268,9 +270,9 @@ Buffer JsonResponsePacketSerializer::createBuffer(int code, string jsonStr)
     return Buffer();
 }
 
-string JsonResponsePacketSerializer::toStr(float num)
+template <typename T> string JsonResponsePacketSerializer::toStr(const T& t)
 {
     ostringstream os;
-    os << num;
+    os << t;
     return os.str();
 }

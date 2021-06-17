@@ -5,7 +5,8 @@ class JsonResponsePacketSerializer
 {
 private:
 	static Buffer createBuffer(int code, string jsonStr);
-	static string toStr(float num);
+	template <typename T>
+	static string toStr(const T& t);
 
 public:
 

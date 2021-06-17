@@ -70,11 +70,48 @@ namespace TriviaGame
 
     class roomsM
     {
-        public string[] rooms { get; set; }
+        public roomDataM[] rooms { get; set; }
 
-        public roomsM(string[] rooms)
+        public roomsM(roomDataM[] rooms)
         {
             this.rooms = rooms;
+        }
+    }
+
+    class roomDataM
+    {
+        public uint roomId { get; set; }
+        public string name { get; set; }
+        public uint maxPlayers { get; set; }
+        public uint numOfQuestionsInGame { get; set; }
+        public uint timePerQuestion { get; set; }
+        public bool isActive { get; set; }
+
+        public roomDataM(uint roomId, string name, uint maxPlayers, uint numOfQuestionsInGame, uint timePerQuestion, bool isActive)
+        {
+            this.roomId = roomId;
+            this.name = name;
+            this.maxPlayers = maxPlayers;
+            this.numOfQuestionsInGame = numOfQuestionsInGame;
+            this.timePerQuestion = timePerQuestion;
+            this.isActive = isActive;
+
+        }
+    }
+
+    class roomStateM
+    {
+        public bool hasGameBegan { get; set; }
+        public int questionCount { get; set; }
+        public int answerTimeout { get; set; }
+        public string[] players { get; set; }
+
+        public roomStateM(bool hasGameBegan, int questionCount, int answerTimeout, string[] players)
+        {
+            this.hasGameBegan = hasGameBegan;
+            this.questionCount = questionCount;
+            this.answerTimeout = answerTimeout;
+            this.players = players;
         }
     }
 
@@ -136,6 +173,10 @@ namespace TriviaGame
         public static playersInRoomM SetClassPlayersInRoom(string jsonM)
         {
             return JsonConvert.DeserializeObject<playersInRoomM>(jsonM);
+        }
+        public static roomStateM SetClassRoomState(string jsonM)
+        {
+            return JsonConvert.DeserializeObject<roomStateM>(jsonM);
         }
     }
 
