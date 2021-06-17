@@ -20,5 +20,7 @@ public:
 	virtual RequestResult handleRequest(RequestInfo reqInfo);
 
 	virtual HandlerType getHandlerType();
+
+	Room* getRoom();
 };
 

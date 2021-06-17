@@ -85,14 +85,13 @@ Output: none
 */
 void Communicator::handleNewClient(SOCKET clientSock)
 {
+	RequestInfo reqInfo;
+	RequestResult reqResu;
+	Buffer buffer;
+
 	try
 	{
 		m_clients.insert({ clientSock, m_handlerFactory.createLoginRequestHandler() });
-		
-		pair<RequestInfo, RequestResult> requestPair;
-		RequestInfo reqInfo;
-		RequestResult reqResu;
-		Buffer buffer;
 		
 		//Until client closes program
 		while (true)
@@ -130,20 +129,47 @@ void Communicator::handleNewClient(SOCKET clientSock)
 	}
 	catch (const exception& e)
 	{
-		m_handlerFactory.getLoginManager().logout(m_userBySocket[clientSock].getUsername());
-		
-		//If client already logged in and crashed/left somewhen after
-		if (m_clients[clientSock] == nullptr || m_clients[clientSock]->getHandlerType() != HandlerType::Login)
+		try
 		{
-			//Remove his user from communicator
-			m_socketByUser.erase(m_userBySocket[clientSock]);
-			m_userBySocket.erase(clientSock);
+			if (m_clients[clientSock] != nullptr)
+			{
+				switch (m_clients[clientSock]->getHandlerType())
+				{
+				case HandlerType::RoomAdmin:
+				{
+					//close room admin's room
+					reqInfo.id = CLOSE_ROOM_CODE;
+					handleSpecialCodes(clientSock, reqInfo, reqResu);
+					break;
+				}
+				case HandlerType::RoomMember:
+				{
+					//remove room member from room
+					Room* room = ((RoomMemberRequestHandler*)m_clients[clientSock])->getRoom();
+					room->removeUser(m_userBySocket[clientSock]);
+					break;
+				}
+				}
+			}
+			m_handlerFactory.getLoginManager().logout(m_userBySocket[clientSock].getUsername());
+
+			//If client already logged in and crashed/left somewhen after
+			if (m_clients[clientSock] == nullptr || m_clients[clientSock]->getHandlerType() != HandlerType::Login)
+			{
+				//Remove his user from communicator
+				m_socketByUser.erase(m_userBySocket[clientSock]);
+				m_userBySocket.erase(clientSock);
+			}
+
+			m_clients.erase(clientSock);
+
+			closesocket(clientSock);
+			cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 		}
-
-		m_clients.erase(clientSock);
-
-		closesocket(clientSock);
-		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
+		catch (exception e)
+		{
+			cerr << __FUNCTION__ << "- nested catch, error: " << e.what() << endl;
+		}
 	}
 }
 

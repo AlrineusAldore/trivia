@@ -99,3 +99,10 @@ RequestResult RoomMemberRequestHandler::getRoomState(RequestInfo reqInfo)
 
 	return reqRes;
 }
+
+
+//returns the room
+Room* RoomMemberRequestHandler::getRoom()
+{
+	return m_room;
+}

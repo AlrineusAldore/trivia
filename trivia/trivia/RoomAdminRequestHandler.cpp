@@ -133,7 +133,7 @@ RequestResult RoomAdminRequestHandler::getRoomState(RequestInfo reqInfo)
 }
 
 
-//returns a reference to the admin's room
+//returns the admin's room
 Room* RoomAdminRequestHandler::getRoom()
 {
 	return m_room;

@@ -44,10 +44,7 @@ namespace TriviaGame
             byte[] bufferC = new byte[8];//4 * 8
             clientStream.Read(bufferC, 0, 8); //get rid of code
             Console.WriteLine("MsgCode - " + binBytesToBytes(bufferC)[0]);
-            if (binBytesToBytes(bufferC)[0] == Global.ERROR_CODE)
-                return Global.FAIL_STATUS_STR;
-            if (binBytesToBytes(bufferC)[0] == Global.FAIL_STATUS)
-                return Global.FAIL_STATUS_STR;
+            int code = binBytesToBytes(bufferC)[0];
 
             int bytesRead = clientStream.Read(buffer, 0, 32);
             Console.WriteLine("bin len from server: " + Encoding.UTF8.GetString(buffer));
@@ -72,6 +69,9 @@ namespace TriviaGame
             bytesRead = clientStream.Read(buffer, 0, len * 8);
 
             Console.WriteLine("bytes read: " + bytesRead);
+
+            if (code == Global.ERROR_CODE || code == Global.FAIL_STATUS)
+                return Global.FAIL_STATUS_STR;
             return binToStr(Encoding.UTF8.GetString(buffer));
         }
         
