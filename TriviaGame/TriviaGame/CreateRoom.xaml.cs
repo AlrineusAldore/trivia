@@ -31,6 +31,7 @@ namespace TriviaGame
 
             client.SendResvMsg(ToMsg.GetJson(), Global.CREATE_ROOM_CODE);
 
+            MainFrame.IsAdmin = true;
             MainFrame.GetMainFrame().thisFrame.NavigationService.Navigate(new Room());
         }
     }

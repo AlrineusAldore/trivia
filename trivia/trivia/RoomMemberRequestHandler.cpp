@@ -65,7 +65,7 @@ RequestResult RoomMemberRequestHandler::leaveRoom(RequestInfo reqInfo)
 		//Make an error response
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqRes.newHandler = nullptr;
+		reqRes.newHandler = this;
 		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
@@ -93,7 +93,7 @@ RequestResult RoomMemberRequestHandler::getRoomState(RequestInfo reqInfo)
 		//Make an error response
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqRes.newHandler = nullptr;
+		reqRes.newHandler = this;
 		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 

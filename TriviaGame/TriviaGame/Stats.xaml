@@ -31,7 +31,7 @@
                    Grid.ColumnSpan="3"/>
 
         <StackPanel Grid.Column="1" Grid.Row="3">
-            <TextBlock x:Name="Players" Foreground="Black" 
+            <TextBlock x:Name="Players" Foreground="Black" FontSize="25"
                        Height="200" Width="500" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"/>
         </StackPanel>
     </Grid>

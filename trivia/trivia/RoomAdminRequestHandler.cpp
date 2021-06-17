@@ -68,7 +68,7 @@ RequestResult RoomAdminRequestHandler::closeRoom(RequestInfo reqInfo)
 		//Make an error response
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqRes.newHandler = nullptr;
+		reqRes.newHandler = this;
 		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
@@ -98,7 +98,7 @@ RequestResult RoomAdminRequestHandler::startGame(RequestInfo reqInfo)
 		//Make an error response
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqRes.newHandler = nullptr;
+		reqRes.newHandler = this;
 		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
@@ -125,7 +125,7 @@ RequestResult RoomAdminRequestHandler::getRoomState(RequestInfo reqInfo)
 		//Make an error response
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqRes.newHandler = nullptr;
+		reqRes.newHandler = this;
 		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 

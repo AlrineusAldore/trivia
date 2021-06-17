@@ -40,8 +40,15 @@ namespace TriviaGame
 
         public static string ResvMsg()
         {
-            byte[] buffer = new byte[32]; //4 * 8
-            clientStream.Read(new byte[8], 0, 8); //get rid of code
+            byte[] buffer = new byte[32];
+            byte[] bufferC = new byte[8];//4 * 8
+            clientStream.Read(bufferC, 0, 8); //get rid of code
+            Console.WriteLine("MsgCode - " + binBytesToBytes(bufferC)[0]);
+            if (binBytesToBytes(bufferC)[0] == Global.ERROR_CODE)
+                return Global.FAIL_STATUS_STR;
+            if (binBytesToBytes(bufferC)[0] == Global.FAIL_STATUS)
+                return Global.FAIL_STATUS_STR;
+
             int bytesRead = clientStream.Read(buffer, 0, 32);
             Console.WriteLine("bin len from server: " + Encoding.UTF8.GetString(buffer));
             byte[] lenBytes = binBytesToBytes(buffer);
@@ -113,6 +120,9 @@ namespace TriviaGame
         public static byte[] binBytesToBytes(byte[] binBytes)
         {
             string binStr = Encoding.ASCII.GetString(binBytes);
+            if (!isBin(binStr))
+                Console.WriteLine("bytes arr isn't binary");
+
             int numOfBytes = binStr.Length / 8;
             byte[] bytes = new byte[numOfBytes];
             for (int i = 0; i < numOfBytes; ++i)

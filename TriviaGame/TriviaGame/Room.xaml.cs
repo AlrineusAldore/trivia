@@ -35,17 +35,31 @@ namespace TriviaGame
             roomStateM roomState = JsonC.SetClassRoomState(client.SendResvMsg("{}", Global.GET_ROOM_STATE_CODE));
             string printPlayers = "";
             string printSettings = "";
+            MainFrame.IsActive = true;
 
             printSettings += "Number of players: " + roomState.players.Length;
             printSettings += "\tNumber of questions: " + roomState.questionCount;
             printSettings += "\tTime per question: " + roomState.answerTimeout;
             this.settings.Text = printSettings;
 
+            //prints players on screen
             for (int i = 0; i < roomState.players.Length; i++)
             {
                 printPlayers += "\n" + roomState.players[i];
             }
             this.Players.Text = printPlayers;
+            
+            if (MainFrame.IsAdmin) this.exit.Content = "close room";
+        }
+
+        private void exit_Click(object sender, RoutedEventArgs e)
+        {
+            if (MainFrame.IsAdmin) client.SendResvMsg("{}", Global.CLOSE_ROOM_CODE);
+            else client.SendResvMsg("{}", Global.LEAVE_ROOM_CODE);
+
+            MainFrame.IsActive = false;
+
+            this.NavigationService.GoBack();
         }
     }
 }

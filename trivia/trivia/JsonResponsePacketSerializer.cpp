@@ -164,11 +164,11 @@ Buffer JsonResponsePacketSerializer::serializeResponse(GetPersonalStatsResponse 
         avrgAnswerTime = stats.totalAnswerTime / stats.totalAnswers;
 
     jsonStr += "\"username\": \"" + stats.username + "\"";
-    jsonStr += ", \"gamesPlayed\": " + stats.gamesPlayed;
-    jsonStr += ", \"totalAnswers\": " + stats.totalAnswers;
-    jsonStr += ", \"rightAnswers\": " + stats.rightAnswers;
+    jsonStr += ", \"gamesPlayed\": " + toStr(stats.gamesPlayed);
+    jsonStr += ", \"totalAnswers\": " + toStr(stats.totalAnswers);
+    jsonStr += ", \"rightAnswers\": " + toStr(stats.rightAnswers);
     jsonStr += ", \"averageAnswerTime\": " + toStr(avrgAnswerTime);
-    jsonStr += ", \"bestScore\": " + stats.bestScore;
+    jsonStr += ", \"bestScore\": " + toStr(stats.bestScore);
     
     jsonStr += " }";
 

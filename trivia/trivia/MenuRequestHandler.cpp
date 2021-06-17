@@ -1,4 +1,5 @@
 #include "MenuRequestHandler.h"
+#include "LoginRequestHandler.h"
 
 MenuRequestHandler::MenuRequestHandler(RequestHandlerFactory& RHF, RoomManager& RM, StatisticsManager& SM, LoggedUser user) : m_handlerFactory(RHF), m_roomManager(RM), m_statsManager(SM), m_user(user)
 {
@@ -67,14 +68,14 @@ RequestResult MenuRequestHandler::logout(RequestInfo reqInfo)
 		//Serialize logout buffer
 		LogoutResponse logoutResp = { LOGOUT_CODE };
 		reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(logoutResp);
-		reqResu.newHandler = nullptr;
+		reqResu.newHandler = m_handlerFactory.createLoginRequestHandler();
 	}
 	catch (exception& e)
 	{
 		//Make a logout error result
 		ErrorResponse errResp = { e.what() };
 		reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqResu.newHandler = nullptr;
+		reqResu.newHandler = this;
 	}
 
 	return reqResu;
@@ -107,7 +108,7 @@ RequestResult MenuRequestHandler::getRooms(RequestInfo reqInfo)
 		//Make an error response
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqRes.newHandler = nullptr;
+		reqRes.newHandler = this;
 	}
 
 	return reqRes;
@@ -141,7 +142,7 @@ RequestResult MenuRequestHandler::getPlayesrInRoom(RequestInfo reqInfo)
 		//Make an error response
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqRes.newHandler = nullptr;
+		reqRes.newHandler = this;
 	}
 
 	return reqRes;
@@ -174,7 +175,7 @@ RequestResult MenuRequestHandler::getPersonalStats(RequestInfo reqInfo)
 		//Make an error response
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqRes.newHandler = nullptr;
+		reqRes.newHandler = this;
 	}
 
 	return reqRes;
@@ -207,7 +208,7 @@ RequestResult MenuRequestHandler::getHighScore(RequestInfo reqInfo)
 		//Make an error response
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqRes.newHandler = nullptr;
+		reqRes.newHandler = this;
 		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
@@ -244,7 +245,7 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo reqInfo)
 		//Make an error response
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqRes.newHandler = nullptr;
+		reqRes.newHandler = this;
 		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
@@ -289,7 +290,7 @@ RequestResult MenuRequestHandler::createRoom(RequestInfo reqInfo)
 		//Make an error response
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqRes.newHandler = nullptr;
+		reqRes.newHandler = this;
 		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
