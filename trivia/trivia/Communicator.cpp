@@ -304,12 +304,14 @@ void Communicator::sendUserCloseRoomResponse(LoggedUser user)
 	closeRoomResp.status = CLOSE_ROOM_CODE;
 
 	reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(closeRoomResp);
-	reqResu.newHandler = m_clients[clientSock]; //Should be correct handler
+	reqResu.newHandler = m_handlerFactory.createMenuRequestHandler(user);
 
-	//Send the server's response to the client
-	Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
+	//not sending since gui doesnt have threads
+	//Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
 
-	//change client's handler to the new one
+	//change client's handler to the new one & delete old one
+	if (m_clients[clientSock] != reqResu.newHandler)
+		delete m_clients[clientSock];
 	m_clients[clientSock] = reqResu.newHandler;
 }
 
