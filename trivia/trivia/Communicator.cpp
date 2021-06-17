@@ -93,11 +93,6 @@ void Communicator::handleNewClient(SOCKET clientSock)
 		RequestInfo reqInfo;
 		RequestResult reqResu;
 		Buffer buffer;
-
-		if (reqInfo.id == CLOSE_ROOM_CODE)
-		{
-			
-		}
 		
 		//Until client closes program
 		while (true)
@@ -126,9 +121,8 @@ void Communicator::handleNewClient(SOCKET clientSock)
 			Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
 
 			//change client's handler to the new one
-			/*
 			if (m_clients[clientSock] != reqResu.newHandler)
-				delete m_clients[clientSock];*/
+				delete m_clients[clientSock];
 			m_clients[clientSock] = reqResu.newHandler;
 		}
 	}
@@ -164,29 +158,6 @@ HandlerType Communicator::getClientHandlerType(SOCKET clientSock)
 	
 	//otherwise, return its type
 	return m_clients[clientSock]->getHandlerType();
-}
-
-/*
-Function handles a client and calls the appropriate RequestHandler
-Input: clientSock, handlerType
-Output: pair of RequestInfo from client & RequestResult from server
-*/
-pair<RequestInfo, RequestResult> Communicator::handleGeneralRequest(SOCKET clientSock)
-{
-	RequestResult reqResu;
-	RequestInfo reqInfo;
-	Buffer buffer;
-
-	try
-	{
-		
-	}
-	catch (exception e)
-	{
-		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
-	}
-
-	return make_pair(reqInfo, reqResu);
 }
 
 
