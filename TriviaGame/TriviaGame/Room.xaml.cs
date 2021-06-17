@@ -50,6 +50,8 @@ namespace TriviaGame
         {
             if (MainFrame.IsAdmin) client.SendResvMsg("{}", Global.CLOSE_ROOM_CODE);
             else client.SendResvMsg("{}", Global.LEAVE_ROOM_CODE);
+
+            this.NavigationService.GoBack();
         }
     }
 }
