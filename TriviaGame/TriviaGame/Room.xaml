@@ -39,7 +39,7 @@
                        HorizontalAlignment="Center" FontSize="20"/>
             <Button x:Name="refres" Content="refres" Margin="300,0,300,0"
                         Click="refres_Click"/>
-            <TextBlock x:Name="Players" Foreground="Black" 
+            <TextBlock x:Name="Players" Foreground="Black" FontSize="20"
                        Height="200" Width="500" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"/>
             <Button x:Name="exit" Content="leave" Margin="300,0,300,0"
                         Click="exit_Click"/>

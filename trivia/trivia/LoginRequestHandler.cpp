@@ -73,7 +73,7 @@ RequestResult LoginRequestHandler::login(RequestInfo reqInfo)
 		//Make a login error result
 		ErrorResponse errResp = { e.what() };
 		reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqResu.newHandler = nullptr;
+		reqResu.newHandler = this;
 		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
@@ -109,7 +109,7 @@ RequestResult LoginRequestHandler::signup(RequestInfo reqInfo)
 		//Make a signup error result
 		ErrorResponse errResp = { e.what() };
 		reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqResu.newHandler = nullptr;
+		reqResu.newHandler = this;
 		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 

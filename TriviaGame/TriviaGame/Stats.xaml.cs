@@ -23,6 +23,15 @@ namespace TriviaGame
         public Stats()
         {
             InitializeComponent();
+            statsM SM = JsonC.SetClassStats(client.SendResvMsg("{}", Global.GET_PERSONAL_STATS_CODE));
+            string  printM = "name - " + SM.username;
+                    printM += "\nGames Played - " + SM.gamesPlayed;
+                    printM += "\nTotal Answer - " + SM.totalAnswers;
+                    printM += "\nRight Answers - " + SM.rightAnswers;
+                    printM += "\naverage Answer Time - " + SM.averageAnswerTime;
+                    printM += "\nBest Score - " + SM.bestScore;
+            this.Players.Text = printM;
+
         }
     }
 }

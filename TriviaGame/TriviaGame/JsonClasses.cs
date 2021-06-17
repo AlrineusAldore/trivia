@@ -47,6 +47,7 @@ namespace TriviaGame
 
     class statsM
     {
+        public string username { get; set; }
         public string gamesPlayed { get; set; }
         public string totalAnswers { get; set; }
         public string rightAnswers { get; set; }

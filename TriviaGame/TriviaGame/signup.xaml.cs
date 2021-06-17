@@ -29,13 +29,14 @@ namespace TriviaGame
         private void signupB_Click(object sender, RoutedEventArgs e)
         {
             signupM ToMsg = new signupM(this.name.Text, this.password.Text, this.email.Text);
-            if (client.SendResvMsg(ToMsg.GetJson(), Global.SIGNUP_CODE) == "0")
+            if (client.SendResvMsg(ToMsg.GetJson(), Global.SIGNUP_CODE) != Global.FAIL_STATUSs)
             {
-                MessageBox.Show("Error");
-                return;
+                this.NavigationService.Navigate(new menu());
             }
-
-            this.NavigationService.Navigate(new menu());
+            else
+            {
+                MessageBox.Show("Try Asain");
+            }
         }
 
         private void login_Click(object sender, RoutedEventArgs e)

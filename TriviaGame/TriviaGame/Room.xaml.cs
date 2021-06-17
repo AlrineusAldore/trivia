@@ -26,6 +26,7 @@ namespace TriviaGame
             roomStateM roomState = JsonC.SetClassRoomState(client.SendResvMsg("{}", Global.GET_ROOM_STATE_CODE));
             string printPlayers = "";
             string printSettings = "";
+            MainFrame.IsActive = true;
 
             printSettings += "Number of players: " + roomState.players.Length;
             printSettings += "\tNumber of questions: " + roomState.questionCount;
@@ -50,6 +51,8 @@ namespace TriviaGame
         {
             if (MainFrame.IsAdmin) client.SendResvMsg("{}", Global.CLOSE_ROOM_CODE);
             else client.SendResvMsg("{}", Global.LEAVE_ROOM_CODE);
+
+            MainFrame.IsActive = false;
 
             this.NavigationService.GoBack();
         }
