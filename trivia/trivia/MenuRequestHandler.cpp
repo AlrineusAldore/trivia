@@ -131,7 +131,7 @@ RequestResult MenuRequestHandler::getPlayesrInRoom(RequestInfo reqInfo)
 		
 		//Serialize response buffer
 		GetPlayersInRoomResponse getPlayersInRoomResp;
-		getPlayersInRoomResp.players = m_roomManager.getRoom(roomId).getAllUsers();
+		getPlayersInRoomResp.players = m_roomManager.getRoom(roomId)->getAllUsers();
 		
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(getPlayersInRoomResp);
 		reqRes.newHandler = this;
@@ -230,7 +230,7 @@ RequestResult MenuRequestHandler::joinRoom(RequestInfo reqInfo)
 	{
 		//Add user to room
 		unsigned int roomId = JsonRequestPacketDeserializer::deserializeJoinRoomRequest(reqInfo.buffer).roomId;
-		m_roomManager.getRoom(roomId).addUser(m_user);
+		m_roomManager.getRoom(roomId)->addUser(m_user);
 
 		//Serialize response buffer
 		JoinRoomResponse joinRoomRes;

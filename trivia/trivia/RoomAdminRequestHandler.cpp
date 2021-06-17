@@ -1,7 +1,7 @@
 #include "RoomAdminRequestHandler.h"
 #include "MenuRequestHandler.h"
 
-RoomAdminRequestHandler::RoomAdminRequestHandler(RequestHandlerFactory& RHF, RoomManager& RM, LoggedUser user, Room room) : m_handlerFactory(RHF), m_roomManager(RM), m_user(user), m_room(room)
+RoomAdminRequestHandler::RoomAdminRequestHandler(RequestHandlerFactory& RHF, RoomManager& RM, LoggedUser user, Room* room) : m_handlerFactory(RHF), m_roomManager(RM), m_user(user), m_room(room)
 { }
 
 bool RoomAdminRequestHandler::isRequestRelevant(RequestInfo reqInfo)
@@ -115,7 +115,7 @@ RequestResult RoomAdminRequestHandler::getRoomState(RequestInfo reqInfo)
 	try
 	{
 		//Serialize response buffer
-		GetRoomStateResponse getRoomStateRes = Helper::putRoomDataInRoomState(m_room.getRoomData(), m_room.getAllUsers());
+		GetRoomStateResponse getRoomStateRes = Helper::putRoomDataInRoomState(m_room->getRoomData(), m_room->getAllUsers());
 
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(getRoomStateRes);
 		reqRes.newHandler = this;
@@ -134,7 +134,7 @@ RequestResult RoomAdminRequestHandler::getRoomState(RequestInfo reqInfo)
 
 
 //returns a reference to the admin's room
-Room& RoomAdminRequestHandler::getRoom()
+Room* RoomAdminRequestHandler::getRoom()
 {
 	return m_room;
 }

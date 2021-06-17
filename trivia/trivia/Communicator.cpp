@@ -101,7 +101,7 @@ void Communicator::handleNewClient(SOCKET clientSock)
 			buffer = Helper::getBufferFromClient(clientSock);
 
 			cout << "client msg len: " << buffer.size() - 5 << endl;
-			cout << "client msg: " << Helper::bufferToStr(buffer) << endl << endl;
+			cout << "client msg: " << Helper::bufferToStr(buffer) << endl;
 			//Turn client's msg to buffer and make RequestInfo struct from it
 			reqInfo.id = buffer[0];
 			time(&reqInfo.receivalTime);
@@ -116,7 +116,9 @@ void Communicator::handleNewClient(SOCKET clientSock)
 			handleSpecialCodes(clientSock, reqInfo, reqResu);
 
 			cout << "server msg len: " << reqResu.buffer.size()-5 << endl;
-			cout << "server msg: " << Helper::bufferToStr(reqResu.buffer) << endl;
+			Buffer binLenBuf (reqResu.buffer.begin() + 1, reqResu.buffer.begin() + 5);
+			cout << "server msg len bin: " << Helper::bufferToBinStr(binLenBuf) << endl;
+			cout << "\nserver msg: " << Helper::bufferToStr(reqResu.buffer) << endl << endl;
 			//Send the server's response to the client
 			Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
 
@@ -178,7 +180,6 @@ void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, Re
 		case LOGIN_CODE:
 		{
 			LoginRequest lr = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer);
-			cout << "username: " << lr.username << "\t\tpassword: " << lr.password << endl;
 			if (reqResu.newHandler != nullptr) //successfully logged in or signed up
 			{
 				LoggedUser user = LoggedUser(lr.username);
@@ -192,7 +193,6 @@ void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, Re
 		case SIGNUP_CODE:
 		{
 			SignupRequest sr = JsonRequestPacketDeserializer::deserializeSingupRequest(buffer);
-			cout << "username: " << sr.username << "\t\tpassword: " << sr.password << "\t\temail: " << sr.email << endl;
 			if (reqResu.newHandler != nullptr) //successfully logged in or signed up
 			{
 				LoggedUser user = LoggedUser(sr.username);
@@ -220,8 +220,8 @@ void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, Re
 				throw exception(__FUNCTION__" - unexpected incorrect handler at close room");
 
 			//get room & all the users in it
-			Room& room = ((RoomAdminRequestHandler*)m_clients[clientSock])->getRoom();
-			vector<string> roomMembers = room.getAllUsers();
+			Room* room = ((RoomAdminRequestHandler*)m_clients[clientSock])->getRoom();
+			vector<string> roomMembers = room->getAllUsers();
 
 			//Send it to all users in room
 			for (auto it : roomMembers)
@@ -233,7 +233,7 @@ void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, Re
 			}
 
 			//Remove room from roomManager and delete it
-			m_handlerFactory.getRoomManager().deleteRoom(room.getRoomData().id);
+			m_handlerFactory.getRoomManager().deleteRoom(room->getRoomData().id);
 
 			break;
 		}
@@ -244,11 +244,11 @@ void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, Re
 				throw exception(__FUNCTION__" - unexpected incorrect handler at start game");
 
 			//get room & all the users in it
-			Room& room = ((RoomAdminRequestHandler*)m_clients[clientSock])->getRoom();
-			vector<string> roomMembers = room.getAllUsers();
+			Room* room = ((RoomAdminRequestHandler*)m_clients[clientSock])->getRoom();
+			vector<string> roomMembers = room->getAllUsers();
 
 			//Start game for every other player in room
-			for (auto& it : room.getAllUsers())
+			for (auto& it : room->getAllUsers())
 			{
 				LoggedUser currUser = LoggedUser(it);
 				//if user exists in communicator & isn't the admin, send start game resp

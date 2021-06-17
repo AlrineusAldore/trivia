@@ -23,6 +23,15 @@ namespace TriviaGame
         public Room()
         {
             InitializeComponent();
+            setRoom();
+        }
+
+        private void refres_Click(object sender, RoutedEventArgs e)
+        {
+            setRoom();
+        }
+        private void setRoom()
+        {
             roomStateM roomState = JsonC.SetClassRoomState(client.SendResvMsg("{}", Global.GET_ROOM_STATE_CODE));
             string printPlayers = "";
             string printSettings = "";
@@ -37,11 +46,6 @@ namespace TriviaGame
                 printPlayers += "\n" + roomState.players[i];
             }
             this.Players.Text = printPlayers;
-        }
-
-        private void refres_Click(object sender, RoutedEventArgs e)
-        {
-            this.NavigationService.Refresh();
         }
     }
 }

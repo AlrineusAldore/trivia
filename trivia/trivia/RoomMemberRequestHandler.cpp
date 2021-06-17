@@ -1,7 +1,7 @@
 #include "RoomMemberRequestHandler.h"
 #include "MenuRequestHandler.h"
 
-RoomMemberRequestHandler::RoomMemberRequestHandler(RequestHandlerFactory& RHF, RoomManager& RM, LoggedUser user, Room room) : m_handlerFactory(RHF), m_roomManager(RM), m_user(user), m_room(room)
+RoomMemberRequestHandler::RoomMemberRequestHandler(RequestHandlerFactory& RHF, RoomManager& RM, LoggedUser user, Room* room) : m_handlerFactory(RHF), m_roomManager(RM), m_user(user), m_room(room)
 { }
 
 bool RoomMemberRequestHandler::isRequestRelevant(RequestInfo reqInfo)
@@ -51,7 +51,7 @@ RequestResult RoomMemberRequestHandler::leaveRoom(RequestInfo reqInfo)
 	try
 	{
 		//Leaves the room
-		m_room.removeUser(m_user);
+		m_room->removeUser(m_user);
 
 		//Serialize response buffer
 		LeaveRoomResponse leaveRoomRes;
@@ -83,7 +83,7 @@ RequestResult RoomMemberRequestHandler::getRoomState(RequestInfo reqInfo)
 	{
 
 		//Serialize response buffer
-		GetRoomStateResponse getRoomStateRes = Helper::putRoomDataInRoomState(m_room.getRoomData(), m_room.getAllUsers());
+		GetRoomStateResponse getRoomStateRes = Helper::putRoomDataInRoomState(m_room->getRoomData(), m_room->getAllUsers());
 
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(getRoomStateRes);
 		reqRes.newHandler = this;

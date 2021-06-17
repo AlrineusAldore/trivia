@@ -43,7 +43,15 @@ namespace TriviaGame
 
         private void refres_Click(object sender, RoutedEventArgs e)
         {
-            this.NavigationService.Refresh();
+            roomsM RM = JsonC.SetClassRooms(client.SendResvMsg("{}", Global.GET_ROOMS_CODE));
+            string printM = "";
+
+            for (int i = 0; i < RM.rooms.Length; i++)
+            {
+                printM += "\n" + RM.rooms[i].roomId + " - " + RM.rooms[i].name + " - hasGameBegan:" + RM.rooms[i].isActive;
+            }
+            this.rooms.Text = printM;
+            //MainFrame.GetMainFrame().thisFrame.NavigationService.Navigate(new Room());
         }
     }
 }

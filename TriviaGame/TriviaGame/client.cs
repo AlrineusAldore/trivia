@@ -44,7 +44,7 @@ namespace TriviaGame
             clientStream.Read(new byte[8], 0, 8); //get rid of code
             int bytesRead = clientStream.Read(buffer, 0, 32);
             Console.WriteLine("bin len from server: " + Encoding.UTF8.GetString(buffer));
-            byte[] lenBytes = Encoding.UTF8.GetBytes(binToStr(Encoding.UTF8.GetString(buffer)));
+            byte[] lenBytes = binBytesToBytes(buffer);
 
             if (BitConverter.IsLittleEndian)
             {
@@ -109,6 +109,18 @@ namespace TriviaGame
 
 
             return Encoding.ASCII.GetBytes(binStr);
+        }
+        public static byte[] binBytesToBytes(byte[] binBytes)
+        {
+            string binStr = Encoding.ASCII.GetString(binBytes);
+            int numOfBytes = binStr.Length / 8;
+            byte[] bytes = new byte[numOfBytes];
+            for (int i = 0; i < numOfBytes; ++i)
+            {
+                bytes[i] = Convert.ToByte(binStr.Substring(8 * i, 8), 2);
+            }
+
+            return bytes;
         }
 
         public static string binToStr(string data)
