@@ -43,7 +43,7 @@ namespace TriviaGame
 
         private void refres_Click(object sender, RoutedEventArgs e)
         {
-            this.NavigationService.Refresh();
+            this.NavigationService.Navigate(new JoinRoom());
         }
     }
 }

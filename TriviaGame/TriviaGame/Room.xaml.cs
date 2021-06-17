@@ -37,11 +37,19 @@ namespace TriviaGame
                 printPlayers += "\n" + roomState.players[i];
             }
             this.Players.Text = printPlayers;
+
+            if (MainFrame.IsAdmin) this.exit.Content = "close room";
         }
 
         private void refres_Click(object sender, RoutedEventArgs e)
         {
             this.NavigationService.Refresh();
+        }
+
+        private void exit_Click(object sender, RoutedEventArgs e)
+        {
+            if (MainFrame.IsAdmin) client.SendResvMsg("{}", Global.CLOSE_ROOM_CODE);
+            else client.SendResvMsg("{}", Global.LEAVE_ROOM_CODE);
         }
     }
 }

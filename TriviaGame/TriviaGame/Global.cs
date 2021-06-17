@@ -10,6 +10,7 @@ namespace TriviaGame
     {
         public static MainWindow MFrame;
         public static string RoomId;
+        public static bool IsAdmin = false;
 
         public MainFrame(MainWindow MW)
         {
