@@ -5,7 +5,7 @@
 class RoomAdminRequestHandler : public IRequestHandler
 {
 private:
-	Room m_room;
+	Room* m_room;
 	LoggedUser m_user;
 	RoomManager& m_roomManager;
 	RequestHandlerFactory& m_handlerFactory;
@@ -15,13 +15,13 @@ private:
 	RequestResult getRoomState(RequestInfo reqInfo);
 
 public:
-	RoomAdminRequestHandler(RequestHandlerFactory& RHF, RoomManager& RM, LoggedUser user, Room room);
+	RoomAdminRequestHandler(RequestHandlerFactory& RHF, RoomManager& RM, LoggedUser user, Room* room);
 
 	virtual bool isRequestRelevant(RequestInfo reqInfo);
 	virtual RequestResult handleRequest(RequestInfo reqInfo);
 
 	virtual HandlerType getHandlerType();
 
-	Room& getRoom();
+	Room* getRoom();
 };
 

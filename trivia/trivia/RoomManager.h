@@ -5,7 +5,7 @@
 class RoomManager
 {
 private:
-	map<unsigned int, Room> m_rooms;
+	map<unsigned int, Room*> m_rooms;
 	unsigned int m_highestId;
 
 public:
@@ -16,7 +16,7 @@ public:
 	unsigned int getRoomState(unsigned int id);
 	vector<RoomData> getRooms();
 
-	Room& getRoom(unsigned int id);
+	Room* getRoom(unsigned int id);
 	bool doesRoomExist(unsigned int id);
 };
 

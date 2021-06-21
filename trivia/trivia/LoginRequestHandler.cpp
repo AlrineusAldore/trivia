@@ -25,6 +25,7 @@ RequestResult LoginRequestHandler::handleRequest(RequestInfo reqInfo)
 		errResp.message = "the request is not relevent";
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
 		reqRes.newHandler = nullptr;
+		throw(IrrelevantLoginException());
 	}
 	else if (reqInfo.id == LOGIN_CODE)
 	{
@@ -72,7 +73,8 @@ RequestResult LoginRequestHandler::login(RequestInfo reqInfo)
 		//Make a login error result
 		ErrorResponse errResp = { e.what() };
 		reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqResu.newHandler = nullptr;
+		reqResu.newHandler = this;
+		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
 	return reqResu;
@@ -107,7 +109,8 @@ RequestResult LoginRequestHandler::signup(RequestInfo reqInfo)
 		//Make a signup error result
 		ErrorResponse errResp = { e.what() };
 		reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqResu.newHandler = nullptr;
+		reqResu.newHandler = this;
+		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
 	return reqResu;

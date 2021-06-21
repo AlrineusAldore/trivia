@@ -34,7 +34,7 @@
                        HorizontalAlignment="Center" FontSize="20"/>
                 <Button x:Name="refres" Content="refres" Margin="300,0,300,0"
                         Click="refres_Click"/>
-                <TextBlock x:Name="rooms" Foreground="Black" 
+                <TextBlock x:Name="rooms" Foreground="Black" FontSize="25" 
                        Height="200" Width="400" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"/>
             </StackPanel>
 

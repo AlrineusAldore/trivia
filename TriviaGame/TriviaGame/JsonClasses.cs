@@ -9,13 +9,13 @@ namespace TriviaGame
 {
     class loginM
     {
-        public string name { get; set; }
+        public string username { get; set; }
         public string password { get; set; }
 
-        public loginM(string name, string password)
+        public loginM(string username, string password)
         {
             this.password = password;
-            this.name = name;
+            this.username = username;
         }
 
         public string GetJson()
@@ -26,14 +26,14 @@ namespace TriviaGame
 
     class signupM
     {
-        public string name { get; set; }
+        public string username { get; set; }
         public string password { get; set; }
         public string email { get; set; }
 
-        public signupM(string name, string password, string email)
+        public signupM(string username, string password, string email)
         {
             this.password = password;
-            this.name = name;
+            this.username = username;
             this.email = email;
         }
 
@@ -47,21 +47,20 @@ namespace TriviaGame
 
     class statsM
     {
-        public string GamesPlayed { get; set; }
-        public string TotalAnswer { get; set; }
-        public string RightAnswers { get; set; }
+        public string username { get; set; }
+        public string gamesPlayed { get; set; }
+        public string totalAnswers { get; set; }
+        public string rightAnswers { get; set; }
         public string averageAnswerTime { get; set; }
-        public string BestUserScore { get; set; }
-        public string BestScores { get; set; }
+        public string bestScore { get; set; }
 
-        public statsM(string GamesPlayed, string TotalAnswer, string RightAnswers, string averageAnswerTime, string BestUserScore, string BestScores)
+        public statsM(string gamesPlayed, string totalAnswers, string rightAnswers, string averageAnswerTime, string bestScore)
         {
-            this.GamesPlayed = GamesPlayed;
-            this.TotalAnswer = TotalAnswer;
-            this.RightAnswers = RightAnswers;
+            this.gamesPlayed = gamesPlayed;
+            this.totalAnswers = totalAnswers;
+            this.rightAnswers = rightAnswers;
             this.averageAnswerTime = averageAnswerTime;
-            this.BestUserScore = BestUserScore;
-            this.BestScores = BestScores;
+            this.bestScore = bestScore;
         }
 
         public string GetJson()
@@ -72,28 +71,65 @@ namespace TriviaGame
 
     class roomsM
     {
-        public string[] Rooms { get; set; }
+        public roomDataM[] rooms { get; set; }
 
-        public roomsM(string[] Rooms)
+        public roomsM(roomDataM[] rooms)
         {
-            this.Rooms = Rooms;
+            this.rooms = rooms;
+        }
+    }
+
+    class roomDataM
+    {
+        public uint roomId { get; set; }
+        public string name { get; set; }
+        public uint maxPlayers { get; set; }
+        public uint numOfQuestionsInGame { get; set; }
+        public uint timePerQuestion { get; set; }
+        public bool isActive { get; set; }
+
+        public roomDataM(uint roomId, string name, uint maxPlayers, uint numOfQuestionsInGame, uint timePerQuestion, bool isActive)
+        {
+            this.roomId = roomId;
+            this.name = name;
+            this.maxPlayers = maxPlayers;
+            this.numOfQuestionsInGame = numOfQuestionsInGame;
+            this.timePerQuestion = timePerQuestion;
+            this.isActive = isActive;
+
+        }
+    }
+
+    class roomStateM
+    {
+        public bool hasGameBegan { get; set; }
+        public int questionCount { get; set; }
+        public int answerTimeout { get; set; }
+        public string[] players { get; set; }
+
+        public roomStateM(bool hasGameBegan, int questionCount, int answerTimeout, string[] players)
+        {
+            this.hasGameBegan = hasGameBegan;
+            this.questionCount = questionCount;
+            this.answerTimeout = answerTimeout;
+            this.players = players;
         }
     }
 
     class CroomsM
     {
-        public string name { get; set; }
-        public string Qustions { get; set; }
-        public string NumOfPlayers { get; set; }
-        public string time { get; set; }
+        public string roomName { get; set; }
+        public int questionCount { get; set; }
+        public int maxUsers { get; set; }
+        public int answerTimeout { get; set; }
 
 
-        public CroomsM(string name, string Qustions, string NumOfPlayers, string time)
+        public CroomsM(string roomName, int questionCount, int maxUsers, int answerTimeout)
         {
-            this.name = name;
-            this.Qustions = Qustions;
-            this.NumOfPlayers = NumOfPlayers;
-            this.time = time;
+            this.roomName = roomName;
+            this.questionCount = questionCount;
+            this.maxUsers = maxUsers;
+            this.answerTimeout = answerTimeout;
         }
 
         public string GetJson()
@@ -104,11 +140,11 @@ namespace TriviaGame
 
     class playersInRoomM
     {
-        public string playersInRoom { get; set; }
+        public int roomId { get; set; }
 
-        public playersInRoomM(string playersInRoom)
+        public playersInRoomM(int roomId)
         {
-            this.playersInRoom = playersInRoom;
+            this.roomId = roomId;
         }
 
         public string GetJson()
@@ -138,6 +174,10 @@ namespace TriviaGame
         public static playersInRoomM SetClassPlayersInRoom(string jsonM)
         {
             return JsonConvert.DeserializeObject<playersInRoomM>(jsonM);
+        }
+        public static roomStateM SetClassRoomState(string jsonM)
+        {
+            return JsonConvert.DeserializeObject<roomStateM>(jsonM);
         }
     }
 

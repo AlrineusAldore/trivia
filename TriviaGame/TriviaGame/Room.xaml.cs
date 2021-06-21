@@ -23,26 +23,43 @@ namespace TriviaGame
         public Room()
         {
             InitializeComponent();
-            roomsM RM = JsonC.SetClassRooms(client.SendResvMsg("{\"" + MainFrame.RoomId +  "\" : }", "3"));
-            string printM = "";
-
-            for (int i = 0; i < RM.Rooms.Length; i++)
-            {
-                printM += "\n" + RM.Rooms[i];
-            }
-            this.Players.Text = printM;
+            setRoom();
         }
 
         private void refres_Click(object sender, RoutedEventArgs e)
         {
-            roomsM RM = JsonC.SetClassRooms(client.SendResvMsg("{\"" + MainFrame.RoomId + "\" : }", "3"));
-            string printM = "";
+            setRoom();
+        }
+        private void setRoom()
+        {
+            roomStateM roomState = JsonC.SetClassRoomState(client.SendResvMsg("{}", Global.GET_ROOM_STATE_CODE));
+            string printPlayers = "";
+            string printSettings = "";
+            MainFrame.IsActive = true;
 
-            for (int i = 0; i < RM.Rooms.Length; i++)
+            printSettings += "Number of players: " + roomState.players.Length;
+            printSettings += "\tNumber of questions: " + roomState.questionCount;
+            printSettings += "\tTime per question: " + roomState.answerTimeout;
+            this.settings.Text = printSettings;
+
+            //prints players on screen
+            for (int i = 0; i < roomState.players.Length; i++)
             {
-                printM += "\n" + RM.Rooms[i];
+                printPlayers += "\n" + roomState.players[i];
             }
-            this.Players.Text = printM;
+            this.Players.Text = printPlayers;
+            
+            if (MainFrame.IsAdmin) this.exit.Content = "close room";
+        }
+
+        private void exit_Click(object sender, RoutedEventArgs e)
+        {
+            if (MainFrame.IsAdmin) client.SendResvMsg("{}", Global.CLOSE_ROOM_CODE);
+            else client.SendResvMsg("{}", Global.LEAVE_ROOM_CODE);
+
+            MainFrame.IsActive = false;
+
+            this.NavigationService.GoBack();
         }
     }
 }

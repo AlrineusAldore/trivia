@@ -1,7 +1,7 @@
 #include "RoomAdminRequestHandler.h"
-#include "Communicator.h"
+#include "MenuRequestHandler.h"
 
-RoomAdminRequestHandler::RoomAdminRequestHandler(RequestHandlerFactory& RHF, RoomManager& RM, LoggedUser user, Room room) : m_handlerFactory(RHF), m_roomManager(RM), m_user(user), m_room(room)
+RoomAdminRequestHandler::RoomAdminRequestHandler(RequestHandlerFactory& RHF, RoomManager& RM, LoggedUser user, Room* room) : m_handlerFactory(RHF), m_roomManager(RM), m_user(user), m_room(room)
 { }
 
 bool RoomAdminRequestHandler::isRequestRelevant(RequestInfo reqInfo)
@@ -37,6 +37,7 @@ RequestResult RoomAdminRequestHandler::handleRequest(RequestInfo reqInfo)
 		errResp.message = "The request is not relevent";
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
 		reqRes.newHandler = nullptr;
+		throw(IrrelevantRoomAdminException());
 		break;
 	}
 
@@ -60,14 +61,15 @@ RequestResult RoomAdminRequestHandler::closeRoom(RequestInfo reqInfo)
 		closeRoomRes.status = CLOSE_ROOM_CODE;
 
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(closeRoomRes);
-		reqRes.newHandler = this;
+		reqRes.newHandler = m_handlerFactory.createMenuRequestHandler(m_user);
 	}
 	catch (exception& e)
 	{
 		//Make an error response
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqRes.newHandler = nullptr;
+		reqRes.newHandler = this;
+		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
 	return reqRes;
@@ -96,7 +98,8 @@ RequestResult RoomAdminRequestHandler::startGame(RequestInfo reqInfo)
 		//Make an error response
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqRes.newHandler = nullptr;
+		reqRes.newHandler = this;
+		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
 	return reqRes;
@@ -112,7 +115,7 @@ RequestResult RoomAdminRequestHandler::getRoomState(RequestInfo reqInfo)
 	try
 	{
 		//Serialize response buffer
-		GetRoomStateResponse getRoomStateRes = Helper::putRoomDataInRoomState(m_room.getRoomData(), m_room.getAllUsers());
+		GetRoomStateResponse getRoomStateRes = Helper::putRoomDataInRoomState(m_room->getRoomData(), m_room->getAllUsers());
 
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(getRoomStateRes);
 		reqRes.newHandler = this;
@@ -122,15 +125,16 @@ RequestResult RoomAdminRequestHandler::getRoomState(RequestInfo reqInfo)
 		//Make an error response
 		ErrorResponse errResp = { e.what() };
 		reqRes.buffer = JsonResponsePacketSerializer::serializeResponse(errResp);
-		reqRes.newHandler = nullptr;
+		reqRes.newHandler = this;
+		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 
 	return reqRes;
 }
 
 
-//returns a reference to the admin's room
-Room& RoomAdminRequestHandler::getRoom()
+//returns the admin's room
+Room* RoomAdminRequestHandler::getRoom()
 {
 	return m_room;
 }

@@ -18,7 +18,6 @@ private:
 	void handleNewClient(SOCKET clientSock);
 
 	HandlerType getClientHandlerType(SOCKET clientSock);
-	pair<RequestInfo, RequestResult> handleGeneralRequest(SOCKET clientSock);
 	void handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, RequestResult reqResu);
 	exception getIrrelevantException(HandlerType handlerType);
 

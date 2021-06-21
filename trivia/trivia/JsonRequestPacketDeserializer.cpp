@@ -21,8 +21,8 @@ LoginRequest JsonRequestPacketDeserializer::deserializeLoginRequest(Buffer buffe
 		
 		j = json::parse(str);
 
-		lr.password = j["password"];
-		lr.username = j["username"];
+		lr.username = j.value("username", "");
+		lr.password = j.value("password", "");
 	}
 
 	return lr;
@@ -51,10 +51,10 @@ SignupRequest JsonRequestPacketDeserializer::deserializeSingupRequest(Buffer buf
 		}
 
 		j = json::parse(str);
-
-		sr.username = j["username"];
-		sr.password = j["password"];
-		sr.email = j["email"];
+		
+		sr.username = j.value("username", "");
+		sr.password = j.value("password", "");
+		sr.email = j.value("email", "");
 	}
 
 	return sr;
@@ -81,7 +81,7 @@ GetPlayersInRoomRequest JsonRequestPacketDeserializer::deserializeGetPlayersRequ
 
 		j = json::parse(str);
 
-		playersInRoomReq.roomId = stoi(string(j["id"]));
+		playersInRoomReq.roomId = j.value("roomId", 0);
 	}
 
 	return playersInRoomReq;
@@ -108,7 +108,7 @@ JoinRoomRequest JsonRequestPacketDeserializer::deserializeJoinRoomRequest(Buffer
 
 		j = json::parse(str);
 
-		joinRoomReq.roomId = stoi(string(j["id"]));
+		joinRoomReq.roomId = j.value("roomId", 0);
 	}
 
 	return joinRoomReq;
@@ -135,10 +135,10 @@ CreateRoomRequest JsonRequestPacketDeserializer::deserializeCreateRoomRequest(Bu
 
 		j = json::parse(str);
 
-		createRoomReq.roomName = j["roomName"];
-		createRoomReq.maxUsers = stoi(string(j["maxUsers"]));
-		createRoomReq.questionCount = stoi(string(j["questionCount"]));
-		createRoomReq.answerTimeout = stoi(string(j["answerTimeout"]));
+		createRoomReq.roomName = j.value("roomName", "");
+		createRoomReq.maxUsers = j.value("maxUsers", 0);
+		createRoomReq.questionCount = j.value("questionCount", 0);
+		createRoomReq.answerTimeout = j.value("answerTimeout", 0);
 	}
 
 	return createRoomReq;

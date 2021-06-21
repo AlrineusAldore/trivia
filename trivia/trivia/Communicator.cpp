@@ -69,7 +69,7 @@ void Communicator::bindAndRequests()
 	if (client_socket == INVALID_SOCKET)
 		throw exception(__FUNCTION__);
 
-	cout << "Client accepted. Server and client can speak" << endl;
+	cout << "\nClient accepted. Server and client can speak" << endl;
 
 	// the function that handle the conversation with the client
 
@@ -85,37 +85,91 @@ Output: none
 */
 void Communicator::handleNewClient(SOCKET clientSock)
 {
+	RequestInfo reqInfo;
+	RequestResult reqResu;
+	Buffer buffer;
+
 	try
 	{
 		m_clients.insert({ clientSock, m_handlerFactory.createLoginRequestHandler() });
-
-		pair<RequestInfo, RequestResult> requestPair;
-		RequestInfo reqInfo;
-		RequestResult reqResu;
-
-		if (reqInfo.id == CLOSE_ROOM_CODE)
-		{
-			
-		}
 		
 		//Until client closes program
 		while (true)
 		{
-			handleGeneralRequest(clientSock);
+			//waiting to get client's request
+			buffer = Helper::getBufferFromClient(clientSock);
+
+			cout << "client msg len: " << buffer.size() - 5 << endl;
+			cout << "client msg: " << Helper::bufferToStr(buffer) << endl;
+			//Turn client's msg to buffer and make RequestInfo struct from it
+			reqInfo.id = buffer[0];
+			time(&reqInfo.receivalTime);
+			reqInfo.buffer = buffer;
+
+			//If request is relevant, handle it. Otherwise throw the appropriate exception
+			if (m_clients[clientSock]->isRequestRelevant(reqInfo))
+				reqResu = m_clients[clientSock]->handleRequest(reqInfo);
+			else
+				throw getIrrelevantException(getClientHandlerType(clientSock));
+
+			handleSpecialCodes(clientSock, reqInfo, reqResu);
+
+			cout << "server msg len: " << reqResu.buffer.size()-5 << endl;
+			Buffer binLenBuf (reqResu.buffer.begin() + 1, reqResu.buffer.begin() + 5);
+			cout << "server msg len bin: " << Helper::bufferToBinStr(binLenBuf) << endl;
+			cout << "\nserver msg: " << Helper::bufferToStr(reqResu.buffer) << endl << endl;
+			//Send the server's response to the client
+			Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
+
+			//change client's handler to the new one
+			if (m_clients[clientSock] != reqResu.newHandler)
+				delete m_clients[clientSock];
+			m_clients[clientSock] = reqResu.newHandler;
 		}
 	}
 	catch (const exception& e)
 	{
-		//If client already logged in and crashed/left somewhen after
-		if (m_clients[clientSock] == nullptr || m_clients[clientSock]->getHandlerType() != HandlerType::Login)
+		try
 		{
-			//Remove his user from communicator
-			m_socketByUser.erase(m_userBySocket[clientSock]);
-			m_userBySocket.erase(clientSock);
+			if (m_clients[clientSock] != nullptr)
+			{
+				switch (m_clients[clientSock]->getHandlerType())
+				{
+				case HandlerType::RoomAdmin:
+				{
+					//close room admin's room
+					reqInfo.id = CLOSE_ROOM_CODE;
+					handleSpecialCodes(clientSock, reqInfo, reqResu);
+					break;
+				}
+				case HandlerType::RoomMember:
+				{
+					//remove room member from room
+					Room* room = ((RoomMemberRequestHandler*)m_clients[clientSock])->getRoom();
+					room->removeUser(m_userBySocket[clientSock]);
+					break;
+				}
+				}
+			}
+			m_handlerFactory.getLoginManager().logout(m_userBySocket[clientSock].getUsername());
+
+			//If client already logged in and crashed/left somewhen after
+			if (m_clients[clientSock] == nullptr || m_clients[clientSock]->getHandlerType() != HandlerType::Login)
+			{
+				//Remove his user from communicator
+				m_socketByUser.erase(m_userBySocket[clientSock]);
+				m_userBySocket.erase(clientSock);
+			}
+
+			m_clients.erase(clientSock);
+
+			closesocket(clientSock);
+			cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 		}
-		
-		closesocket(clientSock);
-		cerr << "error: " << e.what() << endl;
+		catch (exception e)
+		{
+			cerr << __FUNCTION__ << "- nested catch, error: " << e.what() << endl;
+		}
 	}
 }
 
@@ -134,44 +188,6 @@ HandlerType Communicator::getClientHandlerType(SOCKET clientSock)
 	return m_clients[clientSock]->getHandlerType();
 }
 
-/*
-Function handles a client and calls the appropriate RequestHandler
-Input: clientSock, handlerType
-Output: pair of RequestInfo from client & RequestResult from server
-*/
-pair<RequestInfo, RequestResult> Communicator::handleGeneralRequest(SOCKET clientSock)
-{
-	RequestResult reqResu;
-	RequestInfo reqInfo;
-	string clientMsg = "";
-	Buffer buffer;
-
-	//waiting to get client's request
-	clientMsg = Helper::getPartFromSocket(clientSock, MAX_BYTE_NUM);
-
-	//Turn client's msg to buffer and make RequestInfo struct from it
-	buffer = Helper::binStrToBuffer(clientMsg);
-	reqInfo.id = buffer[0];
-	time(&reqInfo.receivalTime);
-	reqInfo.buffer = buffer;
-
-	//If request is relevant, handle it. Otherwise throw the appropriate exception
-	if (m_clients[clientSock]->isRequestRelevant(reqInfo))
-		reqResu = m_clients[clientSock]->handleRequest(reqInfo);
-	else
-		throw getIrrelevantException(getClientHandlerType(clientSock));
-
-	handleSpecialCodes(clientSock, reqInfo, reqResu);
-
-	//Send the server's response to the client
-	Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
-
-	//change client's handler to the new one
-	m_clients[clientSock] = reqResu.newHandler;
-
-	return make_pair(reqInfo, reqResu);
-}
-
 
 /*
 Handles special codes that use communicator's LoggedUsers
@@ -182,13 +198,14 @@ void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, Re
 {
 	Buffer buffer = reqInfo.buffer;
 
-	switch (reqInfo.id)
+	try
 	{
-		//Print the cilent's message details & add them to users if succeeded
+		switch (reqInfo.id)
+		{
+			//Print the cilent's message details & add them to users if succeeded
 		case LOGIN_CODE:
 		{
 			LoginRequest lr = JsonRequestPacketDeserializer::deserializeLoginRequest(buffer);
-			cout << "username: " << lr.username << "\t\tpassword: " << lr.password << endl;
 			if (reqResu.newHandler != nullptr) //successfully logged in or signed up
 			{
 				LoggedUser user = LoggedUser(lr.username);
@@ -202,7 +219,6 @@ void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, Re
 		case SIGNUP_CODE:
 		{
 			SignupRequest sr = JsonRequestPacketDeserializer::deserializeSingupRequest(buffer);
-			cout << "username: " << sr.username << "\t\tpassword: " << sr.password << "\t\temail: " << sr.email << endl;
 			if (reqResu.newHandler != nullptr) //successfully logged in or signed up
 			{
 				LoggedUser user = LoggedUser(sr.username);
@@ -230,9 +246,9 @@ void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, Re
 				throw exception(__FUNCTION__" - unexpected incorrect handler at close room");
 
 			//get room & all the users in it
-			Room& room = ((RoomAdminRequestHandler*)m_clients[clientSock])->getRoom();
-			vector<string> roomMembers = room.getAllUsers();
-			
+			Room* room = ((RoomAdminRequestHandler*)m_clients[clientSock])->getRoom();
+			vector<string> roomMembers = room->getAllUsers();
+
 			//Send it to all users in room
 			for (auto it : roomMembers)
 			{
@@ -243,7 +259,7 @@ void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, Re
 			}
 
 			//Remove room from roomManager and delete it
-			m_handlerFactory.getRoomManager().deleteRoom(room.getRoomData().id);
+			m_handlerFactory.getRoomManager().deleteRoom(room->getRoomData().id);
 
 			break;
 		}
@@ -254,11 +270,11 @@ void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, Re
 				throw exception(__FUNCTION__" - unexpected incorrect handler at start game");
 
 			//get room & all the users in it
-			Room& room = ((RoomAdminRequestHandler*)m_clients[clientSock])->getRoom();
-			vector<string> roomMembers = room.getAllUsers();
+			Room* room = ((RoomAdminRequestHandler*)m_clients[clientSock])->getRoom();
+			vector<string> roomMembers = room->getAllUsers();
 
 			//Start game for every other player in room
-			for (auto& it : room.getAllUsers())
+			for (auto& it : room->getAllUsers())
 			{
 				LoggedUser currUser = LoggedUser(it);
 				//if user exists in communicator & isn't the admin, send start game resp
@@ -268,6 +284,11 @@ void Communicator::handleSpecialCodes(SOCKET clientSock, RequestInfo reqInfo, Re
 
 			break;
 		}
+		}
+	}
+	catch (exception e)
+	{
+		cerr << __FUNCTION__ << " - error: " << e.what() << endl;
 	}
 }
 
@@ -283,12 +304,14 @@ void Communicator::sendUserCloseRoomResponse(LoggedUser user)
 	closeRoomResp.status = CLOSE_ROOM_CODE;
 
 	reqResu.buffer = JsonResponsePacketSerializer::serializeResponse(closeRoomResp);
-	reqResu.newHandler = m_clients[clientSock]; //Should be correct handler
+	reqResu.newHandler = m_handlerFactory.createMenuRequestHandler(user);
 
-	//Send the server's response to the client
-	Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
+	//not sending since gui doesnt have threads
+	//Helper::sendData(clientSock, Helper::bufferToBinStr(reqResu.buffer));
 
-	//change client's handler to the new one
+	//change client's handler to the new one & delete old one
+	if (m_clients[clientSock] != reqResu.newHandler)
+		delete m_clients[clientSock];
 	m_clients[clientSock] = reqResu.newHandler;
 }
 

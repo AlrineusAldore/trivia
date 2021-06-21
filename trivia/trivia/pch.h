@@ -4,6 +4,8 @@
 #include <Windows.h>
 #include <iostream>
 #include <sstream>
+#include <fstream>
+#include <iomanip>
 #include <thread>
 #include <string>
 #include <vector>
@@ -48,14 +50,15 @@ typedef vector<byte> Buffer;
 #define ERROR_INVALID_ROOM_ID	ERROR
 #define UNINITIALIZED	ERROR
 
+#define OK_STATUS 1
+#define FAIL_STATUS 0
 //codes
-#define OK_CODE 60
 #define LOGIN_CODE 100
 #define SIGNUP_CODE 69
 #define ERROR_CODE 42
 #define GET_PLAYERS_IN_ROOM_CODE 3
 #define CREATE_ROOM_CODE 2
-#define JOIN_ROOM_CODE 1
+#define JOIN_ROOM_CODE 12
 #define GET_PERSONAL_STATS_CODE 11
 //codes without deserializer
 #define GET_HIGH_SCORE_CODE 10
@@ -67,7 +70,7 @@ typedef vector<byte> Buffer;
 #define LEAVE_ROOM_CODE 4
 
 //magic values
-#define MAX_BYTE_NUM 1024
+#define MAX_BYTE_NUM 8192
 #define MAX_HIGHSCORES 5
 #define MAX_QUESTIONS 10
 #define BITS_IN_CHAR 8

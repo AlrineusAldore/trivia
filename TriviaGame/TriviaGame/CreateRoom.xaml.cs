@@ -27,10 +27,11 @@ namespace TriviaGame
 
         private void send_Click(object sender, RoutedEventArgs e)
         {
-            CroomsM ToMsg = new CroomsM(this.RoomName.Text, this.NumOfQustions.Text, this.NumOfPlayers.Text, this.TimeForQustion.Text);
+            CroomsM ToMsg = new CroomsM(this.RoomName.Text, int.Parse(this.NumOfQustions.Text), int.Parse(this.NumOfPlayers.Text), int.Parse(this.TimeForQustion.Text));
 
-            client.SendResvMsg(ToMsg.GetJson(), "11");
+            client.SendResvMsg(ToMsg.GetJson(), Global.CREATE_ROOM_CODE);
 
+            MainFrame.IsAdmin = true;
             MainFrame.GetMainFrame().thisFrame.NavigationService.Navigate(new Room());
         }
     }

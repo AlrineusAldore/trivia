@@ -28,9 +28,15 @@ namespace TriviaGame
         {
             loginM ToMsg = new loginM(this.name.Text, this.password.Text);
 
-            MessageBox.Show(client.SendResvMsg(ToMsg.GetJson(), "100"));
+            if (client.SendResvMsg(ToMsg.GetJson(), Global.LOGIN_CODE) != Global.FAIL_STATUS_STR)
+            {
+                this.NavigationService.Navigate(new menu());
+            }
+            else 
+            {
+                MessageBox.Show("Try Asain");
+            }
 
-            this.NavigationService.Navigate( new menu());
         }
 
         private void signup_Click(object sender, RoutedEventArgs e)
