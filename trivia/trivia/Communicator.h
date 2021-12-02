@@ -23,6 +23,8 @@ private:
 
 	void handleCloseGameRequest();
 	void handleStartGameRequest();
+
+	void closeServer();
 public:
 	Communicator(RequestHandlerFactory& RHF);
 	~Communicator();

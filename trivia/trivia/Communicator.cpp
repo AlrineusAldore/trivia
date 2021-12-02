@@ -45,7 +45,7 @@ void Communicator::startHandleRequests()
 		throw exception(__FUNCTION__ " - listen");
 	cout << "Listening on port " << PORT << endl;
 
-
+	thread thr(&Communicator::closeServer, this);
 
 	while (true)
 	{
@@ -57,6 +57,18 @@ void Communicator::startHandleRequests()
 	}
 }
 
+void Communicator::closeServer()
+{
+	while (true)
+	{
+		cout << "enter 'exit' to exit" << endl;
+		string input = "";
+
+		cin >> input;
+		if (input == "exit")
+			exit(1);
+	}
+}
 
 void Communicator::bindAndRequests()
 {
