@@ -1,0 +1,48 @@
+﻿<Page x:Class="TriviaGame.Room"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:TriviaGame"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Room">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+
+        <Frame x:Name="AllScreen" Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" NavigationUIVisibility="Hidden"/>
+
+        <TextBlock Grid.Column="1" Grid.Row="1" FontWeight="SemiBold"
+                   Text="you are connected to a Room" FontSize="50" FontFamily="Segoe UI" 
+                   HorizontalAlignment="Center" Margin="0,0,0,10"
+                   Grid.ColumnSpan="3"/>
+        
+        <TextBlock x:Name="settings" Grid.Column="1" Grid.Row="2" 
+                   Text="number of playesrs: , number of questions: ,time for question" 
+                   HorizontalAlignment="Center" FontSize="24" Foreground="Blue"/>
+
+        <StackPanel Grid.Column="1" Grid.Row="3">
+            <TextBlock Margin="0,10,0,0" Text="participents:"  
+                       HorizontalAlignment="Center" FontSize="20"/>
+            <Button x:Name="refres" Content="refres" Margin="300,0,300,0"
+                        Click="refres_Click"/>
+            <TextBlock x:Name="Players" Foreground="Black" FontSize="20"
+                       Height="200" Width="500" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"/>
+            <Button x:Name="exit" Content="leave" Margin="300,0,300,0"
+                        Click="exit_Click"/>
+        </StackPanel>
+    </Grid>
+</Page>
